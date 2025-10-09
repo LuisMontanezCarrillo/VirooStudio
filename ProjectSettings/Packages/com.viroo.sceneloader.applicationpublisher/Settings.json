@@ -1,0 +1,21 @@
+{
+    "m_Dictionary": {
+        "m_DictionaryValues": [
+            {
+                "type": "Viroo.SceneLoader.ApplicationPublisher.Editor.ApplicationSceneBuilderItemData[], Viroo.SceneLoader.ApplicationPublisher.Editor, Version=3.0.606.0, Culture=neutral, PublicKeyToken=null",
+                "key": "items",
+                "value": "{\"m_Value\":[{\"identifier\":\"53847361-cc9f-4764-91db-5388531e8ae5\",\"title\":\"NewScene\",\"thumbnail\":{\"instanceID\":0},\"sceneAsset\":{\"instanceID\":0},\"enabled\":true}]}"
+            },
+            {
+                "type": "System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                "key": "compress",
+                "value": "{\"m_Value\":true}"
+            },
+            {
+                "type": "System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                "key": "defaultItemIndex",
+                "value": "{\"m_Value\":0}"
+            }
+        ]
+    }
+}
