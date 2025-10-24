@@ -13,7 +13,7 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: tripo_image_c0a9dc1b_0
-    second: {fileID: 2800000, guid: bf5ba6cf669c1a245804058a66433adf, type: 3}
+    second: {fileID: 2800000, guid: 56b509b8157e4ab48a91ffc2afbfc938, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
