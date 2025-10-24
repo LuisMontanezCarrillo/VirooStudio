@@ -213,6 +213,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -1109,7 +1122,47 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Prohibido hablar_0: 6792558950098531944
+      Prohibido hablar_1: 2951047048027036288
+      Prohibido hablar_10: -3491585312302090450
+      Prohibido hablar_11: 8116812468908732133
+      Prohibido hablar_12: -8625182328750767838
+      Prohibido hablar_13: -1515188626535498370
+      Prohibido hablar_14: -4087743440343908501
+      Prohibido hablar_15: 6903446378159775147
+      Prohibido hablar_16: -3338102277393706612
+      Prohibido hablar_17: -4523037199399147555
+      Prohibido hablar_18: 3412641539260455027
+      Prohibido hablar_19: -1691252181183150276
+      Prohibido hablar_2: -2606537394243673090
+      Prohibido hablar_20: 7854462059811449801
+      Prohibido hablar_21: 7269012528416491370
+      Prohibido hablar_22: -7313548751008774213
+      Prohibido hablar_23: -5677576455322392949
+      Prohibido hablar_24: 2731683218258153563
+      Prohibido hablar_25: 868543722138914198
+      Prohibido hablar_26: -8639569003664365601
+      Prohibido hablar_27: 2730902918391569350
+      Prohibido hablar_28: 3610050268072590463
+      Prohibido hablar_29: 5894848864419981729
+      Prohibido hablar_3: -3630167582237058473
+      Prohibido hablar_30: 3339877601754069893
+      Prohibido hablar_31: 3838587403405399442
+      Prohibido hablar_32: -8946749636160169784
+      Prohibido hablar_33: -8011200336364025812
+      Prohibido hablar_34: -118385346817941859
+      Prohibido hablar_35: 1369639788533068787
+      Prohibido hablar_36: 8835689458728719148
+      Prohibido hablar_37: 2193394883252172070
+      Prohibido hablar_38: -806339979166144632
+      Prohibido hablar_39: -9089772397246519941
+      Prohibido hablar_4: 898304695588285354
+      Prohibido hablar_5: 2587410746154120391
+      Prohibido hablar_6: 5872044621792968138
+      Prohibido hablar_7: -1133961035257085546
+      Prohibido hablar_8: 1844614675918527009
+      Prohibido hablar_9: 2376484729713938839
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
