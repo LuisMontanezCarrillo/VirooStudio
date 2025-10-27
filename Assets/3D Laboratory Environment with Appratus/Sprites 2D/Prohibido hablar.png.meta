@@ -1,0 +1,1196 @@
+fileFormatVersion: 2
+guid: b233131316519fa43974c44ff2f2bb90
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6792558950098531944
+    second: Prohibido hablar_0
+  - first:
+      213: 2951047048027036288
+    second: Prohibido hablar_1
+  - first:
+      213: -2606537394243673090
+    second: Prohibido hablar_2
+  - first:
+      213: -3630167582237058473
+    second: Prohibido hablar_3
+  - first:
+      213: 898304695588285354
+    second: Prohibido hablar_4
+  - first:
+      213: 2587410746154120391
+    second: Prohibido hablar_5
+  - first:
+      213: 5872044621792968138
+    second: Prohibido hablar_6
+  - first:
+      213: -1133961035257085546
+    second: Prohibido hablar_7
+  - first:
+      213: 1844614675918527009
+    second: Prohibido hablar_8
+  - first:
+      213: 2376484729713938839
+    second: Prohibido hablar_9
+  - first:
+      213: -3491585312302090450
+    second: Prohibido hablar_10
+  - first:
+      213: 8116812468908732133
+    second: Prohibido hablar_11
+  - first:
+      213: -8625182328750767838
+    second: Prohibido hablar_12
+  - first:
+      213: -1515188626535498370
+    second: Prohibido hablar_13
+  - first:
+      213: -4087743440343908501
+    second: Prohibido hablar_14
+  - first:
+      213: 6903446378159775147
+    second: Prohibido hablar_15
+  - first:
+      213: -3338102277393706612
+    second: Prohibido hablar_16
+  - first:
+      213: -4523037199399147555
+    second: Prohibido hablar_17
+  - first:
+      213: 3412641539260455027
+    second: Prohibido hablar_18
+  - first:
+      213: -1691252181183150276
+    second: Prohibido hablar_19
+  - first:
+      213: 7854462059811449801
+    second: Prohibido hablar_20
+  - first:
+      213: 7269012528416491370
+    second: Prohibido hablar_21
+  - first:
+      213: -7313548751008774213
+    second: Prohibido hablar_22
+  - first:
+      213: -5677576455322392949
+    second: Prohibido hablar_23
+  - first:
+      213: 2731683218258153563
+    second: Prohibido hablar_24
+  - first:
+      213: 868543722138914198
+    second: Prohibido hablar_25
+  - first:
+      213: -8639569003664365601
+    second: Prohibido hablar_26
+  - first:
+      213: 2730902918391569350
+    second: Prohibido hablar_27
+  - first:
+      213: 3610050268072590463
+    second: Prohibido hablar_28
+  - first:
+      213: 5894848864419981729
+    second: Prohibido hablar_29
+  - first:
+      213: 3339877601754069893
+    second: Prohibido hablar_30
+  - first:
+      213: 3838587403405399442
+    second: Prohibido hablar_31
+  - first:
+      213: -8946749636160169784
+    second: Prohibido hablar_32
+  - first:
+      213: -8011200336364025812
+    second: Prohibido hablar_33
+  - first:
+      213: -118385346817941859
+    second: Prohibido hablar_34
+  - first:
+      213: 1369639788533068787
+    second: Prohibido hablar_35
+  - first:
+      213: 8835689458728719148
+    second: Prohibido hablar_36
+  - first:
+      213: 2193394883252172070
+    second: Prohibido hablar_37
+  - first:
+      213: -806339979166144632
+    second: Prohibido hablar_38
+  - first:
+      213: -9089772397246519941
+    second: Prohibido hablar_39
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: VisionOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Prohibido hablar_0
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 638
+        width: 737
+        height: 737
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 866f5886064044e50800000000000000
+      internalID: 6792558950098531944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_1
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 425
+        width: 56
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08add15a7a934f820800000000000000
+      internalID: 2951047048027036288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_2
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 425
+        width: 65
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef3655acc08b3dbd0800000000000000
+      internalID: -2606537394243673090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_3
+      rect:
+        serializedVersion: 2
+        x: 246
+        y: 424
+        width: 68
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75a1f9141dd0f9dc0800000000000000
+      internalID: -3630167582237058473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_4
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 425
+        width: 63
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aabea987c5b677c00800000000000000
+      internalID: 898304695588285354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_5
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 425
+        width: 22
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c47b8c6d5458e320800000000000000
+      internalID: 2587410746154120391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_6
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 425
+        width: 61
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: acd763bd871bd7150800000000000000
+      internalID: 5872044621792968138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_7
+      rect:
+        serializedVersion: 2
+        x: 499
+        y: 425
+        width: 22
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6910e58427c5340f0800000000000000
+      internalID: -1133961035257085546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_8
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 425
+        width: 61
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12a98994643699910800000000000000
+      internalID: 1844614675918527009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_9
+      rect:
+        serializedVersion: 2
+        x: 599
+        y: 424
+        width: 68
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7915db04548faf020800000000000000
+      internalID: 2376484729713938839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_10
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 425
+        width: 63
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e27334d58a56b8fc0800000000000000
+      internalID: -3491585312302090450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_11
+      rect:
+        serializedVersion: 2
+        x: 771
+        y: 425
+        width: 71
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ee24cd8fe5b4a070800000000000000
+      internalID: 8116812468908732133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_12
+      rect:
+        serializedVersion: 2
+        x: 846
+        y: 425
+        width: 61
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22185d3ce523d4880800000000000000
+      internalID: -8625182328750767838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_13
+      rect:
+        serializedVersion: 2
+        x: 915
+        y: 425
+        width: 53
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7db3a3d8f7f8fae0800000000000000
+      internalID: -1515188626535498370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_14
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 425
+        width: 71
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6f3e51bffa6547c0800000000000000
+      internalID: -4087743440343908501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_15
+      rect:
+        serializedVersion: 2
+        x: 1042
+        y: 425
+        width: 65
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bad9b28a7e7fdcf50800000000000000
+      internalID: 6903446378159775147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_16
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 320
+        width: 74
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c81960c2aadaca1d0800000000000000
+      internalID: -3338102277393706612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_17
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 320
+        width: 22
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd7afe791a1fa31c0800000000000000
+      internalID: -4523037199399147555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_18
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 320
+        width: 56
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3789c5526632c5f20800000000000000
+      internalID: 3412641539260455027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_19
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 320
+        width: 63
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3749f21a177788e0800000000000000
+      internalID: -1691252181183150276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_20
+      rect:
+        serializedVersion: 2
+        x: 328
+        y: 320
+        width: 62
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cb28d0f0a7a00d60800000000000000
+      internalID: 7854462059811449801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_21
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 320
+        width: 134
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a670128b168b0e460800000000000000
+      internalID: 7269012528416491370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_22
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 319
+        width: 60
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb7ce98e82e018a90800000000000000
+      internalID: -7313548751008774213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_23
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 320
+        width: 74
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8623638b423531b0800000000000000
+      internalID: -5677576455322392949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_24
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 320
+        width: 71
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b505c27f963e8e520800000000000000
+      internalID: 2731683218258153563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_25
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 320
+        width: 63
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69d4cfdd9efad0c00800000000000000
+      internalID: 868543722138914198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_26
+      rect:
+        serializedVersion: 2
+        x: 853
+        y: 320
+        width: 22
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd72c1cf3c51a1880800000000000000
+      internalID: -8639569003664365601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_27
+      rect:
+        serializedVersion: 2
+        x: 886
+        y: 320
+        width: 56
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cb9ece3cbd16e520800000000000000
+      internalID: 2730902918391569350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_28
+      rect:
+        serializedVersion: 2
+        x: 950
+        y: 319
+        width: 63
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7c35c98799791230800000000000000
+      internalID: 3610050268072590463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_29
+      rect:
+        serializedVersion: 2
+        x: 1023
+        y: 320
+        width: 53
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a92e585fc5bec150800000000000000
+      internalID: 5894848864419981729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_30
+      rect:
+        serializedVersion: 2
+        x: 1076
+        y: 320
+        width: 71
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58bb5ddbbf0a95e20800000000000000
+      internalID: 3339877601754069893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_31
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 214
+        width: 71
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 295944bd7e6654530800000000000000
+      internalID: 3838587403405399442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_32
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 214
+        width: 53
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c8515a9b92c6d380800000000000000
+      internalID: -8946749636160169784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_33
+      rect:
+        serializedVersion: 2
+        x: 453
+        y: 214
+        width: 22
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c28488e3dbf72d090800000000000000
+      internalID: -8011200336364025812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_34
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 214
+        width: 74
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9e1e4087296b5ef0800000000000000
+      internalID: -118385346817941859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_35
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 214
+        width: 56
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f331c98120f10310800000000000000
+      internalID: 1369639788533068787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_36
+      rect:
+        serializedVersion: 2
+        x: 633
+        y: 214
+        width: 63
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c23503dcfbcae9a70800000000000000
+      internalID: 8835689458728719148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_37
+      rect:
+        serializedVersion: 2
+        x: 702
+        y: 214
+        width: 62
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 625b7647601807e10800000000000000
+      internalID: 2193394883252172070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_38
+      rect:
+        serializedVersion: 2
+        x: 765
+        y: 213
+        width: 68
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8872b95af0e4fc4f0800000000000000
+      internalID: -806339979166144632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Prohibido hablar_39
+      rect:
+        serializedVersion: 2
+        x: 837
+        y: 213
+        width: 60
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7568f41a24aad180800000000000000
+      internalID: -9089772397246519941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Prohibido hablar_0: 6792558950098531944
+      Prohibido hablar_1: 2951047048027036288
+      Prohibido hablar_10: -3491585312302090450
+      Prohibido hablar_11: 8116812468908732133
+      Prohibido hablar_12: -8625182328750767838
+      Prohibido hablar_13: -1515188626535498370
+      Prohibido hablar_14: -4087743440343908501
+      Prohibido hablar_15: 6903446378159775147
+      Prohibido hablar_16: -3338102277393706612
+      Prohibido hablar_17: -4523037199399147555
+      Prohibido hablar_18: 3412641539260455027
+      Prohibido hablar_19: -1691252181183150276
+      Prohibido hablar_2: -2606537394243673090
+      Prohibido hablar_20: 7854462059811449801
+      Prohibido hablar_21: 7269012528416491370
+      Prohibido hablar_22: -7313548751008774213
+      Prohibido hablar_23: -5677576455322392949
+      Prohibido hablar_24: 2731683218258153563
+      Prohibido hablar_25: 868543722138914198
+      Prohibido hablar_26: -8639569003664365601
+      Prohibido hablar_27: 2730902918391569350
+      Prohibido hablar_28: 3610050268072590463
+      Prohibido hablar_29: 5894848864419981729
+      Prohibido hablar_3: -3630167582237058473
+      Prohibido hablar_30: 3339877601754069893
+      Prohibido hablar_31: 3838587403405399442
+      Prohibido hablar_32: -8946749636160169784
+      Prohibido hablar_33: -8011200336364025812
+      Prohibido hablar_34: -118385346817941859
+      Prohibido hablar_35: 1369639788533068787
+      Prohibido hablar_36: 8835689458728719148
+      Prohibido hablar_37: 2193394883252172070
+      Prohibido hablar_38: -806339979166144632
+      Prohibido hablar_39: -9089772397246519941
+      Prohibido hablar_4: 898304695588285354
+      Prohibido hablar_5: 2587410746154120391
+      Prohibido hablar_6: 5872044621792968138
+      Prohibido hablar_7: -1133961035257085546
+      Prohibido hablar_8: 1844614675918527009
+      Prohibido hablar_9: 2376484729713938839
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
