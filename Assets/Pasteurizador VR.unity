@@ -730,24 +730,30 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 223088497}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< HEAD
-<<<<<<< HEAD
+  HEAD
+  HEAD
+  HEAD
 --- !u!1001 &231125672
-=======
+ 
 HEAD
 --- !u!1001 &360734024
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
-=======
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
 HEAD
 --- !u!1001 &360734024
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+HEAD
+--- !u!1001 &360734024
+   b9f129ef9b640ab89f29daff64f43337d46eb110
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-<<<<<<< HEAD
-<<<<<<< HEAD
+  HEAD
+  HEAD
+  HEAD
     m_TransformParent: {fileID: 1363526427}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 6194fed4a4a6a5e4491a922c4038083b,
@@ -781,9 +787,11 @@ PrefabInstance:
       value: 13.957143
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6194fed4a4a6a5e4491a922c4038083b,
-=======
-=======
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
@@ -817,93 +825,119 @@ PrefabInstance:
       value: 14.055
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
-<<<<<<< HEAD
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
-=======
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+  HEAD
+  HEAD
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
         type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.7071068
       objectReference: {fileID: 0}
-<<<<<<< HEAD
-<<<<<<< HEAD
+  HEAD
+  HEAD
+  HEAD
     - target: {fileID: -8679921383154817045, guid: 6194fed4a4a6a5e4491a922c4038083b,
-=======
+ 
     - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
-=======
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
     - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+    - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
+   b9f129ef9b640ab89f29daff64f43337d46eb110
         type: 3}
       propertyPath: m_LocalRotation.x
       value: -0.7071068
       objectReference: {fileID: 0}
-<<<<<<< HEAD
-<<<<<<< HEAD
+  HEAD
+  HEAD
+  HEAD
     - target: {fileID: -8679921383154817045, guid: 6194fed4a4a6a5e4491a922c4038083b,
         type: 3}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6194fed4a4a6a5e4491a922c4038083b,
-=======
-=======
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
     - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
         type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
-<<<<<<< HEAD
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
-=======
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+  HEAD
+  HEAD
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-<<<<<<< HEAD
-<<<<<<< HEAD
+  HEAD
+  HEAD
+  HEAD
     - target: {fileID: -8679921383154817045, guid: 6194fed4a4a6a5e4491a922c4038083b,
-=======
+ 
     - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
-=======
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
     - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+    - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
+   b9f129ef9b640ab89f29daff64f43337d46eb110
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-<<<<<<< HEAD
-<<<<<<< HEAD
+  HEAD
+  HEAD
+  HEAD
     - target: {fileID: -8679921383154817045, guid: 6194fed4a4a6a5e4491a922c4038083b,
-=======
+ 
     - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
-=======
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
     - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+    - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
+   b9f129ef9b640ab89f29daff64f43337d46eb110
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-<<<<<<< HEAD
-<<<<<<< HEAD
+  HEAD
+  HEAD
+  HEAD
     - target: {fileID: -8679921383154817045, guid: 6194fed4a4a6a5e4491a922c4038083b,
-=======
+ 
     - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
-=======
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
     - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+    - target: {fileID: -8679921383154817045, guid: 5d35650cb773d964a9b0a47bb00aac11,
+   b9f129ef9b640ab89f29daff64f43337d46eb110
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-<<<<<<< HEAD
-<<<<<<< HEAD
+  HEAD
+  HEAD
+  HEAD
     - target: {fileID: -7511558181221131132, guid: 6194fed4a4a6a5e4491a922c4038083b,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -913,24 +947,30 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Stainless_steel_tank (Tripo) (1)
-=======
-=======
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
     - target: {fileID: 919132149155446097, guid: 5d35650cb773d964a9b0a47bb00aac11,
         type: 3}
       propertyPath: m_Name
       value: pasteurizador
-<<<<<<< HEAD
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
-=======
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+  HEAD
+  HEAD
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-<<<<<<< HEAD
-<<<<<<< HEAD
+  HEAD
+  HEAD
+  HEAD
   m_SourcePrefab: {fileID: 100100000, guid: 6194fed4a4a6a5e4491a922c4038083b, type: 3}
 --- !u!4 &231125673 stripped
 Transform:
@@ -938,14 +978,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 231125672}
   m_PrefabAsset: {fileID: 0}
-=======
+ 
   m_SourcePrefab: {fileID: 100100000, guid: 5d35650cb773d964a9b0a47bb00aac11, type: 3}
 
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
-=======
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
   m_SourcePrefab: {fileID: 100100000, guid: 5d35650cb773d964a9b0a47bb00aac11, type: 3}
 
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+  m_SourcePrefab: {fileID: 100100000, guid: 5d35650cb773d964a9b0a47bb00aac11, type: 3}
+
+   b9f129ef9b640ab89f29daff64f43337d46eb110
 --- !u!1 &281427049
 GameObject:
   m_ObjectHideFlags: 0
@@ -2933,29 +2977,38 @@ e6c38ffebce7477d97a7a18095642f6873d1259e
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 3571493832354390924, guid: f7b886d38fcc9df4d85fdf2950838ea0,
         type: 3}
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+  HEAD
+  HEAD
+  HEAD
+ 
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
       insertIndex: 12
       addedObject: {fileID: 2004475806}
     - targetCorrespondingSourceObject: {fileID: 3571493832354390924, guid: f7b886d38fcc9df4d85fdf2950838ea0,
         type: 3}
-<<<<<<< HEAD
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
-=======
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+  HEAD
+  HEAD
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
       insertIndex: 24
       addedObject: {fileID: 207449536}
     - targetCorrespondingSourceObject: {fileID: 3571493832354390924, guid: f7b886d38fcc9df4d85fdf2950838ea0,
         type: 3}
-<<<<<<< HEAD
-<<<<<<< HEAD
+  HEAD
+  HEAD
+  HEAD
       insertIndex: 26
-=======
-=======
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
 HEAD
       insertIndex: 25
       addedObject: {fileID: 1453196188}
@@ -2964,7 +3017,7 @@ HEAD
 
  e6c38ffebce7477d97a7a18095642f6873d1259e
       insertIndex: 27
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+   b9f129ef9b640ab89f29daff64f43337d46eb110
       addedObject: {fileID: 1313732424}
     - targetCorrespondingSourceObject: {fileID: 3571493832354390924, guid: f7b886d38fcc9df4d85fdf2950838ea0,
         type: 3}
@@ -5709,11 +5762,14 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 3817571384722755373}
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+  HEAD
+  HEAD
+  HEAD
+ 
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
 HEAD
   - {fileID: 665682907}
   - {fileID: 360734024}
@@ -5724,7 +5780,10 @@ HEAD
   - {fileID: 1119283091}
   - {fileID: 1882933308}
 e6c38ffebce7477d97a7a18095642f6873d1259e
-<<<<<<< HEAD
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
-=======
->>>>>>> b9f129ef9b640ab89f29daff64f43337d46eb110
+  HEAD
+  HEAD
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
+ 
+   b9f129ef9b640ab89f29daff64f43337d46eb110
