@@ -97,7 +97,19 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-HEAD
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -125,9 +137,6 @@ HEAD
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
     buildTarget: WindowsStoreApps
-
-    buildTarget: WebGL
- e6c38ffebce7477d97a7a18095642f6873d1259e
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -179,45 +188,6 @@ HEAD
       entries: []
     nameFileIdTable:
       Prohibido hablar (1)_0: -2703183566831408413
-      Prohibido hablar (1)_1: 5778307649420655476
-      Prohibido hablar (1)_10: -2006853432999643084
-      Prohibido hablar (1)_11: 7861755875310916861
-      Prohibido hablar (1)_12: -4645827806366949891
-      Prohibido hablar (1)_13: -1618682169809905863
-      Prohibido hablar (1)_14: 4437861216515885453
-      Prohibido hablar (1)_15: 692003981844201839
-      Prohibido hablar (1)_16: 719476557882408195
-      Prohibido hablar (1)_17: -7490912587362268217
-      Prohibido hablar (1)_18: 3884496944883976279
-      Prohibido hablar (1)_19: -9184670464181400890
-      Prohibido hablar (1)_2: 4189967453975023750
-      Prohibido hablar (1)_20: 2194086994477986898
-      Prohibido hablar (1)_21: 6204247282594513379
-      Prohibido hablar (1)_22: -660255147609272345
-      Prohibido hablar (1)_23: -5594421742874086648
-      Prohibido hablar (1)_24: 6267241063048732992
-      Prohibido hablar (1)_25: -8362890848053857156
-      Prohibido hablar (1)_26: -7754478574990567033
-      Prohibido hablar (1)_27: 8493012543988089726
-      Prohibido hablar (1)_28: -4051256807036669139
-      Prohibido hablar (1)_29: 4754470413836343448
-      Prohibido hablar (1)_3: -2002324744342153160
-      Prohibido hablar (1)_30: 1694647308369663995
-      Prohibido hablar (1)_31: 2001256922346301283
-      Prohibido hablar (1)_32: -2919408006381339099
-      Prohibido hablar (1)_33: -1098834606487111229
-      Prohibido hablar (1)_34: -506713906940911599
-      Prohibido hablar (1)_35: 6438154390198705106
-      Prohibido hablar (1)_36: -382844451147293316
-      Prohibido hablar (1)_37: -1109372635115436209
-      Prohibido hablar (1)_38: 3491129836002952748
-      Prohibido hablar (1)_39: 6715122135582919317
-      Prohibido hablar (1)_4: 4740025694486997981
-      Prohibido hablar (1)_5: 466568387991701129
-      Prohibido hablar (1)_6: -8912298422894180827
-      Prohibido hablar (1)_7: 4545839857457151171
-      Prohibido hablar (1)_8: 1545350537261849806
-      Prohibido hablar (1)_9: -6143625865353989224
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
