@@ -2109,13 +2109,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Meshy_AI_Walk_in_freezer_0319230225_texture
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab23328313fdfd24aa339788ac00e43b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: ab23328313fdfd24aa339788ac00e43b,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1223082411}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab23328313fdfd24aa339788ac00e43b, type: 3}
 --- !u!4 &590778910 stripped
@@ -4007,6 +4008,99 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1121287823}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1131283824
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1363526427}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 221.02684
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 221.02684
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 219.69228
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.309689
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.1614282
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.3146834
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.51251435
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.51251435
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.48716426
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.48716426
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 87.095
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      propertyPath: m_Name
+      value: Meshy_AI_Industrial_Walk_In_Do_0428133208_texture
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1223082411}
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ccdf47cc786e7b74c9e72a1872f930a9, type: 3}
+--- !u!4 &1131283825 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ccdf47cc786e7b74c9e72a1872f930a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131283824}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1162981233
 GameObject:
   m_ObjectHideFlags: 0
@@ -4250,13 +4344,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1223082410}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: -0.0010553584, y: -0.006647853, z: 0.0066851173}
-  m_LocalScale: {x: 0.0002842939, y: 0.0002986508, z: 0.00029865085}
+  m_LocalRotation: {x: -0.010890157, y: 0.70702296, z: 0.70702296, w: -0.010890157}
+  m_LocalPosition: {x: -0.00077, y: -0.00413, z: 0.00647}
+  m_LocalScale: {x: 0.00026854387, y: 0.00027017522, z: 0.00026854392}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 590778910}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_Father: {fileID: 1131283825}
+  m_LocalEulerAnglesHint: {x: 0, y: 268.36902, z: 0}
 --- !u!212 &1223082412
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5181,18 +5275,22 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3571493832354390924, guid: f7b886d38fcc9df4d85fdf2950838ea0,
         type: 3}
       insertIndex: 21
+      addedObject: {fileID: 1131283825}
+    - targetCorrespondingSourceObject: {fileID: 3571493832354390924, guid: f7b886d38fcc9df4d85fdf2950838ea0,
+        type: 3}
+      insertIndex: 22
       addedObject: {fileID: 590778910}
     - targetCorrespondingSourceObject: {fileID: 3571493832354390924, guid: f7b886d38fcc9df4d85fdf2950838ea0,
         type: 3}
-      insertIndex: 24
+      insertIndex: 25
       addedObject: {fileID: 207449536}
     - targetCorrespondingSourceObject: {fileID: 3571493832354390924, guid: f7b886d38fcc9df4d85fdf2950838ea0,
         type: 3}
-      insertIndex: 26
+      insertIndex: 27
       addedObject: {fileID: 439496257}
     - targetCorrespondingSourceObject: {fileID: 3571493832354390924, guid: f7b886d38fcc9df4d85fdf2950838ea0,
         type: 3}
-      insertIndex: 28
+      insertIndex: 29
       addedObject: {fileID: 1822629720}
     - targetCorrespondingSourceObject: {fileID: 3571493832354390924, guid: f7b886d38fcc9df4d85fdf2950838ea0,
         type: 3}
