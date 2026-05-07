@@ -9,8 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/VIROO Main.unity
     guid: 652f2b1f369f4fc4e946e455d4919765
   - enabled: 1
-    path: Assets/Scenes/Pasteurizador2 VR.unity
+    path: Assets/Scenes/Escena 1.unity
     guid: a820e2dbffaef2f4db6acaf2025f3917
+  - enabled: 1
+    path: Assets/Scenes/Escena 2.unity
+    guid: c758e09f289442c478fde244e2325147
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 8646e1bde83fc2445be8abc1347a8e85,
       type: 2}
