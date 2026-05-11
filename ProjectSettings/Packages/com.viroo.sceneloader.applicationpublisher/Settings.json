@@ -4,7 +4,7 @@
             {
                 "type": "Viroo.SceneLoader.ApplicationPublisher.Editor.ApplicationSceneBuilderItemData[], Viroo.SceneLoader.ApplicationPublisher.Editor, Version=3.0.606.0, Culture=neutral, PublicKeyToken=null",
                 "key": "items",
-                "value": "{\"m_Value\":[{\"identifier\":\"53847361-cc9f-4764-91db-5388531e8ae5\",\"title\":\"Escena 1 Zona de alistamiento de la Planta Piloto\",\"thumbnail\":{\"instanceID\":0},\"sceneAsset\":{\"fileID\":102900000,\"guid\":\"a820e2dbffaef2f4db6acaf2025f3917\",\"type\":3},\"enabled\":true},{\"identifier\":\"d3910bef-d97b-452e-880e-da1c62e89426\",\"title\":\"Escena 2 Fundamentos y Reconocimiento del proceso de pasteurización\",\"thumbnail\":{\"instanceID\":0},\"sceneAsset\":{\"fileID\":102900000,\"guid\":\"c758e09f289442c478fde244e2325147\",\"type\":3},\"enabled\":true}]}"
+                "value": "{\"m_Value\":[{\"identifier\":\"53847361-cc9f-4764-91db-5388531e8ae5\",\"title\":\"Escena 1 Zona de alistamiento de la Planta Piloto\",\"thumbnail\":{\"instanceID\":0},\"sceneAsset\":{\"fileID\":102900000,\"guid\":\"a820e2dbffaef2f4db6acaf2025f3917\",\"type\":3},\"enabled\":true},{\"identifier\":\"d3910bef-d97b-452e-880e-da1c62e89426\",\"title\":\"Escena 2 Fundamentos y Reconocimiento del proceso de pasteurización\",\"thumbnail\":{\"instanceID\":0},\"sceneAsset\":{\"fileID\":102900000,\"guid\":\"c758e09f289442c478fde244e2325147\",\"type\":3},\"enabled\":false}]}"
             },
             {
                 "type": "System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",

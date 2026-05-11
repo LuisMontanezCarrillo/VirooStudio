@@ -51,8 +51,19 @@ public class FadeOutVR : MonoBehaviour
         // 4. ¡EL TELETRANSPORTE! (Movemos el root/cuerpo entero del jugador)
         if (puntoDeDestino != null)
         {
-            camaraVR.root.position = puntoDeDestino.position;
-            camaraVR.root.rotation = puntoDeDestino.rotation;
+            Transform rootJugador = camaraVR.root;
+
+            // A. ROTACIÓN: Giramos todo el cuarto virtual para que tus ojos miren hacia donde pide el destino
+            float diferenciaRotacion = puntoDeDestino.eulerAngles.y - camaraVR.eulerAngles.y;
+            rootJugador.Rotate(0, diferenciaRotacion, 0);
+
+            // B. CÁLCULO: Después de girar, ¿dónde quedó exactamente tu cabeza? 
+            // Calculamos cuánto nos falta para llegar a la baldosa exacta del destino
+            Vector3 diferenciaPosicion = puntoDeDestino.position - camaraVR.position;
+            diferenciaPosicion.y = 0; // Respetamos tu altura física
+
+            // C. TRASLACIÓN: Deslizamos el cuarto virtual esa distancia exacta
+            rootJugador.position += diferenciaPosicion;
         }
 
         yield return new WaitForSeconds(0.5f); // Un breve respiro en la oscuridad
