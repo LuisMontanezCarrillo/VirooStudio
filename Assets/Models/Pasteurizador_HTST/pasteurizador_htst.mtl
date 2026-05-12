@@ -1,0 +1,123 @@
+# Materiales generados a partir de PALETTE de visor.html
+# Mapeo: 15 materiales master para los 654 grupos del OBJ
+# Formato MTL estandar para que Unity los importe automaticamente
+
+newmtl Mat_Actuador_Domo
+Ka 0.0784 0.2392 0.7490
+Kd 0.0784 0.2392 0.7490
+Ks 0.2 0.2 0.2
+Ns 20
+d 1
+illum 2
+
+newmtl Mat_Solenoide_Aire
+Ka 0.1216 0.3098 0.8510
+Kd 0.1216 0.3098 0.8510
+Ks 0.2 0.2 0.2
+Ns 20
+d 1
+illum 2
+
+newmtl Mat_Vapor
+Ka 0.1216 0.3098 0.8510
+Kd 0.1216 0.3098 0.8510
+Ks 0.2 0.2 0.2
+Ns 20
+d 1
+illum 2
+
+newmtl Mat_AguaFria
+Ka 0.1216 0.3098 0.8510
+Kd 0.1216 0.3098 0.8510
+Ks 0.2 0.2 0.2
+Ns 20
+d 1
+illum 2
+
+newmtl Mat_Negro
+Ka 0.0863 0.0863 0.0863
+Kd 0.0863 0.0863 0.0863
+Ks 0.1 0.1 0.1
+Ns 10
+d 1
+illum 2
+
+newmtl Mat_HMI
+Ka 0.1490 0.4980 0.7490
+Kd 0.1490 0.4980 0.7490
+Ks 0.3 0.3 0.3
+Ns 30
+d 1
+illum 2
+
+newmtl Mat_Verde_Marcha
+Ka 0.0588 0.6471 0.1412
+Kd 0.0588 0.6471 0.1412
+Ks 0.3 0.3 0.3
+Ns 25
+d 1
+illum 2
+
+newmtl Mat_Rojo_Stop
+Ka 0.7686 0.0510 0.0510
+Kd 0.7686 0.0510 0.0510
+Ks 0.3 0.3 0.3
+Ns 25
+d 1
+illum 2
+
+newmtl Mat_Amarillo_Alarma
+Ka 0.7882 0.6353 0.0235
+Kd 0.7882 0.6353 0.0235
+Ks 0.3 0.3 0.3
+Ns 25
+d 1
+illum 2
+
+newmtl Mat_Cara
+Ka 0.9333 0.9451 0.9686
+Kd 0.9333 0.9451 0.9686
+Ks 0.4 0.4 0.4
+Ns 60
+d 1
+illum 2
+
+newmtl Mat_Gabinete
+Ka 0.7843 0.8000 0.8157
+Kd 0.7843 0.8000 0.8157
+Ks 0.2 0.2 0.2
+Ns 20
+d 1
+illum 2
+
+newmtl Mat_Skid_Metal
+Ka 0.6235 0.6392 0.6588
+Kd 0.6235 0.6392 0.6588
+Ks 0.7 0.7 0.7
+Ns 80
+d 1
+illum 2
+
+newmtl Mat_PHE_Metal
+Ka 0.6471 0.6627 0.6824
+Kd 0.6471 0.6627 0.6824
+Ks 0.7 0.7 0.7
+Ns 80
+d 1
+illum 2
+
+newmtl Mat_Backing
+Ka 0.0471 0.0471 0.0471
+Kd 0.0471 0.0471 0.0471
+Ks 0.05 0.05 0.05
+Ns 5
+d 1
+illum 2
+
+newmtl Mat_Inox_Default
+Ka 0.8157 0.8275 0.8471
+Kd 0.8157 0.8275 0.8471
+Ks 0.7 0.7 0.7
+Ns 80
+d 1
+illum 2

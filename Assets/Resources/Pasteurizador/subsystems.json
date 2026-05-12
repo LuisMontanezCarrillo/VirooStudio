@@ -1,0 +1,198 @@
+{
+  "subsystems": [
+    {
+      "key": "01_Skid_Bastidor",
+      "tag": "SK-01",
+      "title": "SKID",
+      "colorHex": "a3b8d4",
+      "showLabel": false,
+      "description": "Bastidor estructural en acero inoxidable AISI 304 + drip pan con borde levantado para contencion de derrames. 4 patas niveladoras. Soporta todos los equipos del proceso."
+    },
+    {
+      "key": "02_Tablero_Control",
+      "tag": "CTRL-01",
+      "title": "TABLERO HMI",
+      "colorHex": "ffd700",
+      "showLabel": true,
+      "description": "Gabinete con PLC + HMI tactil para operacion (start/stop, modos produccion/CIP, setpoints). Incluye amperimetros, botonera, selector de modo y rejilla de ventilacion lateral."
+    },
+    {
+      "key": "03_Tanque_Balance",
+      "tag": "BAL-01",
+      "title": "TANQUE BALANCE",
+      "colorHex": "7fdbff",
+      "showLabel": true,
+      "description": "Buffer entre la leche cruda y la bomba de alimentacion. Mantiene columna hidrostatica constante y desacopla variaciones de presion. Tiene visor de nivel, manway abisagrado para limpieza, boquillas de retorno FDV y CIP."
+    },
+    {
+      "key": "04_Bomba_Alimentacion",
+      "tag": "P-01",
+      "title": "BOMBA P-01",
+      "colorHex": "ff851b",
+      "showLabel": true,
+      "description": "Bomba centrifuga sanitaria que toma leche del tanque de balance y la empuja a la seccion de regeneracion del PHE. Motor IP55 con aletas de refrigeracion, caja de bornes y voluta sanitaria."
+    },
+    {
+      "key": "05_Bomba_Booster",
+      "tag": "P-02",
+      "title": "BOMBA P-02",
+      "colorHex": "ff851b",
+      "showLabel": true,
+      "description": "Bomba booster: toma la leche pre-calentada de la seccion de regeneracion y la empuja contra el delta-P del holding tube + filtro + valvulas, asegurando la presion necesaria para que NUNCA haya descompresion (riesgo de contaminacion)."
+    },
+    {
+      "key": "06_Intercambiador_Placas",
+      "tag": "HE-01",
+      "title": "PHE HE-01",
+      "colorHex": "39cccc",
+      "showLabel": true,
+      "description": "Intercambiador de placas multi-seccion: regeneracion + calentamiento (vapor) + enfriamiento (agua/glicol). 56 placas pulidas con corrugacion herringbone. 4 tornillos de compresion. Eficiencia de regeneracion >90%."
+    },
+    {
+      "key": "07_FDV_Diversion",
+      "tag": "FCV-01",
+      "title": "FDV",
+      "colorHex": "ff4136",
+      "showLabel": true,
+      "description": "Flow Diversion Valve - elemento de SEGURIDAD CRITICA HACCP. Si la temperatura a la salida del holding tube cae bajo el setpoint (<72 C tipico), desvia el flujo automaticamente de vuelta al tanque de balance. Sin FDV no hay pasteurizacion certificable."
+    },
+    {
+      "key": "07_Valvulas",
+      "tag": "XV",
+      "title": "VALVULAS",
+      "colorHex": "01ff70",
+      "showLabel": false,
+      "description": "Valvulas sanitarias de diafragma con actuador neumatico (capucha azul). Cumple 3-A Sanitary Standards: cuerpo en AISI 316L, juntas EPDM grado alimentario, sin zonas muertas."
+    },
+    {
+      "key": "07_Valvulas_Top_PHE",
+      "tag": "XV-PHE",
+      "title": "VALVULAS SUP. PHE",
+      "colorHex": "01ff70",
+      "showLabel": true,
+      "description": "Banco de valvulas neumaticas sobre el PHE: aislan secciones individuales para mantenimiento, ruteo CIP, y conexion/desconexion de servicios (vapor, agua, glicol)."
+    },
+    {
+      "key": "08_Tubo_Retencion",
+      "tag": "HT-01",
+      "title": "HOLDING TUBE",
+      "colorHex": "ff70a6",
+      "showLabel": true,
+      "description": "Tubo de retencion: garantiza el tiempo minimo a temperatura de pasteurizacion. Calculado para >=15 segundos a >=72 C (Grade A milk, 21 CFR 1240.61). Pendiente positiva hacia FDV para drenaje completo. Aislado termicamente."
+    },
+    {
+      "key": "09_Tuberias_Proceso",
+      "tag": "PIPE",
+      "title": "TUBERIAS",
+      "colorHex": "dddddd",
+      "showLabel": false,
+      "description": "Red de tuberias sanitarias AISI 316L pulido espejo. Codos largos sin zonas muertas. Tri-clamps cada 600 mm. Pendientes calculadas para autodrenaje."
+    },
+    {
+      "key": "10_Instrumentos",
+      "tag": "PT/TT",
+      "title": "INSTRUMENTOS",
+      "colorHex": "b10dc9",
+      "showLabel": false,
+      "description": "Manometros, transmisores de presion (PT) y termometros (TT). Conectados via gooseneck/snubber para amortiguar pulsaciones. Cara de vidrio + aguja roja."
+    },
+    {
+      "key": "11_Cables_y_Conexiones",
+      "tag": "EJB",
+      "title": "CABLES",
+      "colorHex": "aaaaaa",
+      "showLabel": false,
+      "description": "Cables flexibles entre sensores de campo y la caja de conexiones (Junction Box) del tablero. Conduit flex IP65 anti-vibracion."
+    },
+    {
+      "key": "11_Manifold_Aire",
+      "tag": "AIR-01",
+      "title": "MANIFOLD AIRE",
+      "colorHex": "88aaff",
+      "showLabel": true,
+      "description": "Manifold con banco de solenoides 5/2 que distribuye aire comprimido (6 bar) a cada actuador neumatico de las valvulas. Tubos PU calibre 6 mm color azul."
+    },
+    {
+      "key": "11_Filtro_Y_Strainer",
+      "tag": "F-01",
+      "title": "FILTRO Y",
+      "colorHex": "aef9b9",
+      "showLabel": true,
+      "description": "Filtro Y sanitario antes de la bomba de alimentacion. Atrapa solidos y particulas >100 microns. Tapa abisagrada con perilla para limpieza/extraccion del tamiz sin desmontar tuberia."
+    },
+    {
+      "key": "11_Caudalimetro_FT",
+      "tag": "FT-01",
+      "title": "CAUDALIMETRO FT-01",
+      "colorHex": "aef9b9",
+      "showLabel": true,
+      "description": "Caudalimetro magnetico en la linea de salida de producto pasteurizado. Mide volumen total y caudal instantaneo. Display digital + salida 4-20 mA al PLC para totalizacion HACCP."
+    },
+    {
+      "key": "11_Check_Valves",
+      "tag": "CV",
+      "title": "CHECK VALVES",
+      "colorHex": "caffbf",
+      "showLabel": false,
+      "description": "Valvulas anti-retorno (check) inline en la descarga de cada bomba. Evitan flujo inverso al detener la bomba, protegiendo de golpe de ariete y contaminacion cruzada."
+    },
+    {
+      "key": "11_Relief_Valve_PSV",
+      "tag": "PSV-01",
+      "title": "PSV ALIVIO",
+      "colorHex": "ff8c42",
+      "showLabel": true,
+      "description": "Valvula de alivio de presion - elemento de seguridad mecanica. Si la presion en el holding tube supera el setpoint (10 barg tipico), abre y descarga a drenaje. Resorte calibrado precintado."
+    },
+    {
+      "key": "11_Reg_Presion_Vapor",
+      "tag": "PRV-01",
+      "title": "PRV REG. VAPOR",
+      "colorHex": "ff8c42",
+      "showLabel": true,
+      "description": "Regulador de presion de vapor con diafragma. Reduce la presion del vapor de red (8-10 barg) a la presion de trabajo del PHE (2-3 barg). Manometro de monitoreo integrado."
+    },
+    {
+      "key": "11_Acometidas_Externas",
+      "tag": "IN/OUT",
+      "title": "ACOMETIDAS",
+      "colorHex": "9bf6ff",
+      "showLabel": true,
+      "description": "Puntos de conexion externos del skid: vapor, agua fria/caliente, CIP, aire comprimido, electrica. Cada uno con valvula de corte manual (volante) y bulkhead fitting en el frame."
+    },
+    {
+      "key": "11_Salidas_y_Drenajes",
+      "tag": "OUT/DR",
+      "title": "SALIDAS",
+      "colorHex": "bdb2ff",
+      "showLabel": true,
+      "description": "Salida final de producto pasteurizado al llenado, salida de muestreo QA, y drenajes en los puntos bajos del PHE y el skid."
+    },
+    {
+      "key": "11_Placas_ID",
+      "tag": "TAG",
+      "title": "PLACAS ID",
+      "colorHex": "ffd6a5",
+      "showLabel": false,
+      "description": "Placas de identificacion de cada equipo principal. Incluyen tag, modelo, presion/temperatura de diseno, materiales."
+    },
+    {
+      "key": "99_Otros",
+      "tag": "?",
+      "title": "OTROS",
+      "colorHex": "888888",
+      "showLabel": false,
+      "description": "Componentes auxiliares."
+    }
+  ],
+  "specific": [
+    { "namePrefix": "HMI_Pantalla",     "description": "Display tactil 7\" del operador. Muestra temperaturas (TT-Holding, TT-Salida), presiones (PT-Bomba, PT-PHE), estado de cada valvula/bomba, alarmas activas, y permite ajustar setpoints." },
+    { "namePrefix": "Boton_Emergencia", "description": "Pulsador de emergencia tipo hongo NC con enclavamiento mecanico. Al accionarse corta TODA la energia al equipo y va a estado seguro (bombas paradas, FDV en diversion)." },
+    { "namePrefix": "Boton_Start",      "description": "Pulsador NA verde - arranque del ciclo de produccion. Solo permite arrancar si todas las precondiciones se cumplen (interlocks)." },
+    { "namePrefix": "Boton_Reset",      "description": "Reset de alarmas y reinicio del ciclo despues de una desviacion." },
+    { "namePrefix": "Selector_Modo",    "description": "Selector rotativo de 3 posiciones: MANUAL / PRODUCCION / CIP." },
+    { "namePrefix": "Tanque_Visor_Nivel", "description": "Visor de vidrio que permite ver el nivel de leche dentro del tanque de balance sin abrirlo. Junta sanitaria EPDM." },
+    { "namePrefix": "Tanque_Manway_Tapa", "description": "Tapa abisagrada del manway. Se abre solo para inspeccion/limpieza manual. Junta EPDM. Knob de cierre rapido." },
+    { "namePrefix": "Tanque_Termowell",   "description": "Vaina termometrica que protege el termopar/RTD sin contacto directo con el producto. Permite cambiar el sensor sin parar produccion." }
+  ]
+}
