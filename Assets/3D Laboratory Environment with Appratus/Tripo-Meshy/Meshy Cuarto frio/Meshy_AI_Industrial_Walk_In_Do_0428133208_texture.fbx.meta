@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ccdf47cc786e7b74c9e72a1872f930a9
+guid: a89841d9c9cf37e4db42c387e3569c5a
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,22 +8,22 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.001
-    second: {fileID: 2100000, guid: 30d0e3ffdfc5706479cb73b7d990a585, type: 2}
+    second: {fileID: 2100000, guid: cdd943cc83bda154691b8d6ff5acdcdd, type: 2}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Image_0
-    second: {fileID: 2800000, guid: da645c60c6fb0d6429d08f9cfc7684e3, type: 3}
+    second: {fileID: 2800000, guid: 194673aefe1f9b04fbe39dfff7f67545, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Image_2
-    second: {fileID: 2800000, guid: 8371c446d9c18214d80501cb1a17479f, type: 3}
+    second: {fileID: 2800000, guid: 9e772b8ec8f5a904ab8bb9cf483964a4, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Image_3
-    second: {fileID: 2800000, guid: ea6cb6dbbe40b4c4fa1a1d1f8def90cb, type: 3}
+    second: {fileID: 2800000, guid: 86251a3618bf23e4ab7cf31a57b0051e, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -66,7 +66,7 @@ ModelImporter:
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
