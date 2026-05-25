@@ -80,6 +80,18 @@ namespace ViroLab.Pasteurizador
 
         public string ResolveSubsystemKey(string partName)
         {
+            // Equipos externos auxiliares (v8+: caldera + tanques aux)
+            // Chequear PRIMERO antes que las reglas mas generales.
+            if (Regex.IsMatch(partName, "^T_RAW_01_|^T_RAW_FBX")) return "12_Silo_LecheCruda";
+            if (Regex.IsMatch(partName, "^T_PROD_01_|^T_PROD_FBX")) return "12_Tanque_Producto";
+            if (Regex.IsMatch(partName, "^T_HOT_01_")) return "12_Calderin_AguaCal";
+            if (Regex.IsMatch(partName, "^T_COOL_01_")) return "12_Chiller_AguaFria";
+            if (Regex.IsMatch(partName, "^T_WATER_01_")) return "12_TanqueAguaMakeup";
+            if (Regex.IsMatch(partName, "^TRAP_01_")) return "12_TrampaVapor";
+            if (Regex.IsMatch(partName, "^CB_01_")) return "12_Caldera_Vapor";
+            if (Regex.IsMatch(partName, "^P_03_")) return "12_BombaAguaCal_P03";
+            if (Regex.IsMatch(partName, "^P_04_")) return "12_BombaAguaFria_P04";
+
             // Same priority as topGroupOf() in visor.html
             if (Regex.IsMatch(partName, "^Skid_")) return "01_Skid_Bastidor";
             if (Regex.IsMatch(partName, "^DripPan_")) return "01_Skid_Bastidor";
@@ -89,8 +101,8 @@ namespace ViroLab.Pasteurizador
             if (Regex.IsMatch(partName, "Bomba_Booster")) return "05_Bomba_Booster";
             if (Regex.IsMatch(partName, "^PHE_")) return "06_Intercambiador_Placas";
             if (Regex.IsMatch(partName, "Valvula_FDV")) return "07_FDV_Diversion";
-            if (Regex.IsMatch(partName, "Valvula_")) return "07_Valvulas";
             if (Regex.IsMatch(partName, "^VlvSup_")) return "07_Valvulas_Top_PHE";
+            if (Regex.IsMatch(partName, "Valvula_")) return "07_Valvulas";
             if (Regex.IsMatch(partName, "^Holding_")) return "08_Tubo_Retencion";
             if (Regex.IsMatch(partName, "Manometro")) return "10_Instrumentos";
             if (Regex.IsMatch(partName, "Cable_|Caja_Conexiones|Junction|Conduit_")) return "11_Cables_y_Conexiones";

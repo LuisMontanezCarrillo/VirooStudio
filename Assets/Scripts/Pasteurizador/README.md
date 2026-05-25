@@ -1,32 +1,36 @@
 # Pasteurizador HTST — integración Unity
 
-Toda la lógica del pasteurizador HTST (654 partes con tag/descripción/color)
-empaquetada como un prefab reusable + UI 2D para hover/click/panel lateral.
+Toda la lógica del pasteurizador HTST (860 partes con tag/descripción/color,
+incluida la caldera CB-01 y todos los aux de servicios) empaquetada como un
+prefab reusable + UI 2D para hover/click/panel lateral. Todo apoya en el
+piso `y=0` (sin partes flotando ni hundidas).
 
 ## Estructura
 
 ```
 Assets/
 ├── Models/Pasteurizador_HTST/
-│   ├── pasteurizador_htst.obj         <- 109 MB, 654 grupos, via Git LFS
+│   ├── pasteurizador_htst.obj         <- 156 MB, 860 grupos, via Git LFS
 │   ├── pasteurizador_htst.mtl         <- 15 materiales master (PALETTE)
 │   └── Materials/                     <- materiales URP generados por el builder
 ├── Resources/Pasteurizador/
-│   ├── subsystems.json                <- 23 subsistemas + descripciones especificas
+│   ├── subsystems.json                <- 33 subsistemas + 14 descripciones especificas
 │   └── SubsystemDatabase.asset        <- ScriptableObject generado por el builder
 ├── Scripts/Pasteurizador/
 │   ├── PasteurizationState.cs              data class del estado del proceso
 │   ├── UnityPasteurizerController.cs       carga estado JSON, dispara eventos
 │   ├── PasteurizerSubsystemDatabase.cs     ScriptableObject + topGroupOf logic
 │   ├── PasteurizerMaterialAssigner.cs      asigna materiales URP por nombre
-│   ├── PasteurizerPartsRegistry.cs         indexa 654 partes + agrega colliders
+│   ├── PasteurizerPartsRegistry.cs         indexa 860 partes + agrega colliders
 │   ├── PasteurizerHoverHandler.cs          raycast VR + mouse, hover/click
 │   ├── PasteurizerDescriptionCard.cs       UI tarjeta con tag/desc
 │   ├── PasteurizerSidePanel.cs             arbol UI + buscador
 │   ├── PasteurizerExplodedView.cs          vista explosionada con lerp
+│   ├── PasteurizerFBXTankInfo.cs           runtime tag para los tanques FBX
 │   └── Editor/
 │       ├── PasteurizerBuilder.cs           genera materiales + prefab + reemplazo
-│       └── PasteurizerUIBuilder.cs         genera Canvas + Card + Panel UI
+│       ├── PasteurizerUIBuilder.cs         genera Canvas + Card + Panel UI
+│       └── PasteurizerFBXReplacements.cs   menus 5 y 6: tanques FBX + ocultar parametricos
 └── Prefabs/Pasteurizador_HTST/             generados por el builder
 ```
 
@@ -34,7 +38,8 @@ Assets/
 
 Al abrir Unity por primera vez con estos archivos:
 
-1. Espera a que termine de importar el OBJ (toma 1-3 min, son 109 MB con 654 sub-meshes).
+1. **Espera a que termine de importar el OBJ** (toma 2-5 min, son 156 MB con
+   860 sub-meshes incluyendo la caldera CB-01 y los aux nuevos).
 2. Menu **Viroo → Pasteurizador HTST → 1. Construir prefab desde OBJ**
    - Genera 15 materiales URP en `Assets/Models/Pasteurizador_HTST/Materials/`
    - Crea `SubsystemDatabase.asset` en `Resources/Pasteurizador/`
@@ -48,6 +53,13 @@ Al abrir Unity por primera vez con estos archivos:
 6. Menu **Viroo → Pasteurizador HTST → 4. Instanciar UI Canvas en escena + conectar**
    - Mete el Canvas en la escena y conecta automaticamente los refs del card/panel
      al `PasteurizerHoverHandler` y `PasteurizerPartsRegistry` del Pasteurizador.
+7. Menu **Viroo → Pasteurizador HTST → 5. Agregar tanques FBX (Silo + Producto)**
+   - Instancia 2 copias del `Stainless_steel_tank (Tripo).fbx` como hijos del
+     prefab, posicionadas en T-RAW-01 (silo izquierdo) y T-PROD-01 (tanque
+     producto derecho), escaladas a ~1.8 m de altura, apoyadas en piso y=0.
+8. Menu **Viroo → Pasteurizador HTST → 6. Ocultar tanques parametricos reemplazados**
+   - Desactiva los GameObjects `T_RAW_01_*` y `T_PROD_01_*` (versiones
+     parametricas chicas) para que solo se vean las FBX realistas.
 
 Despues de eso entras a Play y deberias ver:
 - Mouse hover sobre cualquier parte -> resalta naranja

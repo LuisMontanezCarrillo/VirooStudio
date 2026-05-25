@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 namespace ViroLab.Pasteurizador
 {
@@ -8,7 +11,12 @@ namespace ViroLab.Pasteurizador
     // Soporta dos modos simultaneos:
     //   - Mouse: raycast desde la camara principal en cada frame
     //   - VR: arrastras un GameObject (controlador o cabeza) en RaySource y se usa su forward
-    // Aplica un material highlight como overlay y dispara eventos.
+    //
+    // IMPORTANTE: soporta tanto el Input System nuevo (Viroo/XR) como el legacy
+    // UnityEngine.Input via #if ENABLE_INPUT_SYSTEM. No lanza excepciones si
+    // el Input legacy esta deshabilitado en Player Settings.
+    //
+    // Tambien aplica un material highlight como overlay y dispara eventos.
     [DisallowMultipleComponent]
     public class PasteurizerHoverHandler : MonoBehaviour
     {
@@ -26,7 +34,7 @@ namespace ViroLab.Pasteurizador
         public LayerMask hitLayers = ~0;
 
         [Header("Trigger de click")]
-        [Tooltip("KeyCode adicional para pin (ademas de left-click del mouse).")]
+        [Tooltip("KeyCode adicional para pin (solo si el Input Legacy esta activo).")]
         public KeyCode pinKey = KeyCode.None;
 
         [Header("Visuals")]
@@ -59,23 +67,88 @@ namespace ViroLab.Pasteurizador
         private void Awake()
         {
             if (registry == null) registry = GetComponent<PasteurizerPartsRegistry>();
+            RefreshCamera();
+        }
+
+        private void RefreshCamera()
+        {
             _mainCam = Camera.main;
+            if (_mainCam == null)
+            {
+                // Fallback: cualquier camara activa en la escena (XR Rig sin MainCamera tag)
+                var all = Camera.allCameras;
+                if (all != null && all.Length > 0) _mainCam = all[0];
+            }
         }
 
         private void Update()
         {
             if (registry == null || registry.Database == null) return;
 
+            // Re-adquirir camara si se perdio (XR a veces la crea/destruye dinamicamente)
+            if (_mainCam == null) RefreshCamera();
+
             GameObject hit = TryRaycast();
             SetHover(hit);
 
-            bool clicked = Input.GetMouseButtonDown(0)
-                           || (pinKey != KeyCode.None && Input.GetKeyDown(pinKey));
-            if (clicked)
+            if (IsClickPressed())
             {
                 if (hit != null) SetPinned(hit);
                 else SetPinned(null);
             }
+        }
+
+        private bool IsClickPressed()
+        {
+#if ENABLE_INPUT_SYSTEM
+            // Input System nuevo (Viroo/XR usa este)
+            if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+                return true;
+            if (pinKey != KeyCode.None && Keyboard.current != null)
+            {
+                var key = KeyCodeToKey(pinKey);
+                if (key != Key.None && Keyboard.current[key].wasPressedThisFrame)
+                    return true;
+            }
+            return false;
+#else
+            bool m = Input.GetMouseButtonDown(0);
+            bool k = pinKey != KeyCode.None && Input.GetKeyDown(pinKey);
+            return m || k;
+#endif
+        }
+
+#if ENABLE_INPUT_SYSTEM
+        private static Key KeyCodeToKey(KeyCode kc)
+        {
+            // Mapeo minimo (extender si haces falta). Devuelve Key.None si no se conoce.
+            switch (kc)
+            {
+                case KeyCode.Space:   return Key.Space;
+                case KeyCode.Return:  return Key.Enter;
+                case KeyCode.Escape:  return Key.Escape;
+                case KeyCode.Tab:     return Key.Tab;
+                case KeyCode.E:       return Key.E;
+                case KeyCode.F:       return Key.F;
+                case KeyCode.G:       return Key.G;
+                default:              return Key.None;
+            }
+        }
+#endif
+
+        private Vector2 GetMousePosition(out bool valid)
+        {
+            valid = false;
+#if ENABLE_INPUT_SYSTEM
+            if (Mouse.current == null) return Vector2.zero;
+            var p = Mouse.current.position.ReadValue();
+            valid = p.x >= 0 && p.x < Screen.width && p.y >= 0 && p.y < Screen.height;
+            return p;
+#else
+            var mp = Input.mousePosition;
+            valid = mp.x >= 0 && mp.x < Screen.width && mp.y >= 0 && mp.y < Screen.height;
+            return new Vector2(mp.x, mp.y);
+#endif
         }
 
         private GameObject TryRaycast()
@@ -92,8 +165,8 @@ namespace ViroLab.Pasteurizador
             // 2) Mouse fallback
             if (alsoUseMouse && _mainCam != null)
             {
-                var mp = Input.mousePosition;
-                if (mp.x >= 0 && mp.x < Screen.width && mp.y >= 0 && mp.y < Screen.height)
+                var mp = GetMousePosition(out bool valid);
+                if (valid)
                 {
                     var ray = _mainCam.ScreenPointToRay(mp);
                     if (Physics.Raycast(ray, out var rh, _mainCam.farClipPlane, hitLayers))

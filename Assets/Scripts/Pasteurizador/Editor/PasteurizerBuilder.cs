@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -8,15 +9,21 @@ using UnityEngine.SceneManagement;
 
 namespace ViroLab.Pasteurizador.EditorTools
 {
-    // Builder de un click:
-    //   1) Importa el OBJ con escala 0.001
-    //   2) Genera materiales URP y los guarda como assets
-    //   3) Crea ScriptableObject del subsystem database
-    //   4) Crea prefab Pasteurizador_HTST con todos los componentes
-    //   5) Opcionalmente reemplaza el GameObject "Pasteurizer" en la escena activa
+    /// Builder de un click (v12 - multi-OBJ split por subsistema):
+    ///   1) Asegura import settings de los 31 OBJs (escala 0.001, sin lightmap UVs)
+    ///   2) Genera materiales URP y los guarda como assets
+    ///   3) Crea ScriptableObject del subsystem database desde subsystems.json
+    ///   4) Instancia los 31 OBJs como hijos de un prefab unificado
+    ///      Pasteurizador_HTST con todos los componentes (registry, hover,
+    ///      material assigner, exploded, controller).
+    ///   5) Opcionalmente reemplaza el GameObject "Pasteurizer" en la escena.
+    ///
+    /// El OBJ original era 155 MB con 860 sub-meshes y Unity 6 se colgaba
+    /// importandolo. La solucion fue partirlo en 31 OBJs chicos por
+    /// subsistema (ver split_obj_por_subsistema.py).
     public static class PasteurizerBuilder
     {
-        private const string ObjPath = "Assets/Models/Pasteurizador_HTST/pasteurizador_htst.obj";
+        private const string SplitDir = "Assets/Models/Pasteurizador_HTST/Split";
         private const string MaterialsDir = "Assets/Models/Pasteurizador_HTST/Materials";
         private const string PrefabPath = "Assets/Prefabs/Pasteurizador_HTST/Pasteurizador_HTST.prefab";
         private const string PrefabDir = "Assets/Prefabs/Pasteurizador_HTST";
@@ -28,74 +35,92 @@ namespace ViroLab.Pasteurizador.EditorTools
         {
             try
             {
-                EditorUtility.DisplayProgressBar("Pasteurizador HTST", "Verificando OBJ", 0.05f);
-                if (!File.Exists(ObjPath))
+                EditorUtility.DisplayProgressBar("Pasteurizador HTST", "Verificando OBJs split", 0.05f);
+                if (!Directory.Exists(SplitDir))
                 {
                     EditorUtility.DisplayDialog("Pasteurizador HTST",
-                        $"No encuentro el OBJ en {ObjPath}\nVerifica que el archivo este copiado.", "OK");
+                        $"No encuentro la carpeta {SplitDir}\nVerifica que los OBJs esten copiados.", "OK");
+                    return;
+                }
+                var objPaths = Directory.GetFiles(SplitDir, "*.obj")
+                                         .OrderBy(p => p).ToArray();
+                if (objPaths.Length == 0)
+                {
+                    EditorUtility.DisplayDialog("Pasteurizador HTST",
+                        $"No hay archivos .obj en {SplitDir}", "OK");
                     return;
                 }
 
-                EditorUtility.DisplayProgressBar("Pasteurizador HTST", "Asegurando import settings del OBJ", 0.1f);
-                EnsureObjImportSettings();
+                EditorUtility.DisplayProgressBar("Pasteurizador HTST",
+                    $"Asegurando import settings de {objPaths.Length} OBJs", 0.10f);
+                foreach (var p in objPaths) EnsureObjImportSettings(p);
 
-                EditorUtility.DisplayProgressBar("Pasteurizador HTST", "Cargando OBJ importado", 0.2f);
-                var objAsset = AssetDatabase.LoadAssetAtPath<GameObject>(ObjPath);
-                if (objAsset == null)
-                {
-                    EditorUtility.DisplayDialog("Pasteurizador HTST",
-                        "Unity todavia no termino de importar el OBJ. Esperate a que termine y volve a correr.", "OK");
-                    return;
-                }
-
-                EditorUtility.DisplayProgressBar("Pasteurizador HTST", "Generando 15 materiales URP", 0.3f);
+                EditorUtility.DisplayProgressBar("Pasteurizador HTST", "Generando 15 materiales URP", 0.30f);
                 var palette = BuildAndSaveMaterials();
 
-                EditorUtility.DisplayProgressBar("Pasteurizador HTST", "Creando ScriptableObject database", 0.4f);
+                EditorUtility.DisplayProgressBar("Pasteurizador HTST", "Creando ScriptableObject database", 0.40f);
                 var db = CreateOrUpdateDatabase();
 
-                EditorUtility.DisplayProgressBar("Pasteurizador HTST", "Instanciando OBJ y configurando", 0.55f);
+                EditorUtility.DisplayProgressBar("Pasteurizador HTST",
+                    $"Instanciando {objPaths.Length} OBJs y configurando", 0.55f);
                 Directory.CreateDirectory(PrefabDir);
 
-                // Instancia el OBJ en escena temporal
-                var instance = (GameObject)PrefabUtility.InstantiatePrefab(objAsset);
-                instance.name = "Pasteurizador_HTST";
+                // Crea el GameObject raiz contenedor
+                var root = new GameObject("Pasteurizador_HTST");
 
-                // Asigna materiales por nombre
+                // Mapa de materiales por regla
                 var matMap = new Dictionary<PasteurizerMaterialAssigner.PaletteRule, Material>();
                 foreach (var e in palette) matMap[e.rule] = e.material;
-                foreach (var r in instance.GetComponentsInChildren<MeshRenderer>(true))
+
+                // Instanciar cada OBJ como hijo del root, sin transform offset
+                // (cada OBJ ya tiene sus vertices en coords FreeCAD).
+                int i = 0;
+                foreach (var objPath in objPaths)
                 {
-                    var rule = PasteurizerMaterialAssigner.ClassifyName(r.gameObject.name);
-                    if (matMap.TryGetValue(rule, out var m)) r.sharedMaterial = m;
+                    i++;
+                    EditorUtility.DisplayProgressBar("Pasteurizador HTST",
+                        $"Instanciando {Path.GetFileNameWithoutExtension(objPath)} ({i}/{objPaths.Length})",
+                        0.55f + (0.25f * i / objPaths.Length));
+
+                    var objAsset = AssetDatabase.LoadAssetAtPath<GameObject>(objPath);
+                    if (objAsset == null) continue;
+                    var inst = (GameObject)PrefabUtility.InstantiatePrefab(objAsset, root.transform);
+                    inst.name = Path.GetFileNameWithoutExtension(objPath);
+
+                    // Aplicar materiales URP por nombre a cada renderer
+                    foreach (var r in inst.GetComponentsInChildren<MeshRenderer>(true))
+                    {
+                        var rule = PasteurizerMaterialAssigner.ClassifyName(r.gameObject.name);
+                        if (matMap.TryGetValue(rule, out var m)) r.sharedMaterial = m;
+                    }
                 }
 
-                // Componentes
-                var registry = instance.AddComponent<PasteurizerPartsRegistry>();
+                // Componentes en el root
+                var registry = root.AddComponent<PasteurizerPartsRegistry>();
                 registry.SetDatabase(db);
                 registry.addCollidersOnAwake = true;
                 registry.convexColliders = true;
 
-                var assigner = instance.AddComponent<PasteurizerMaterialAssigner>();
+                var assigner = root.AddComponent<PasteurizerMaterialAssigner>();
                 assigner.palette = palette;
 
-                var hover = instance.AddComponent<PasteurizerHoverHandler>();
+                var hover = root.AddComponent<PasteurizerHoverHandler>();
                 hover.registry = registry;
                 hover.alsoUseMouse = true;
 
-                var exploded = instance.AddComponent<PasteurizerExplodedView>();
+                var exploded = root.AddComponent<PasteurizerExplodedView>();
                 exploded.registry = registry;
 
-                var controller = instance.AddComponent<UnityPasteurizerController>();
+                var controller = root.AddComponent<UnityPasteurizerController>();
 
                 // Guardar como prefab
-                EditorUtility.DisplayProgressBar("Pasteurizador HTST", "Guardando prefab", 0.85f);
-                var saved = PrefabUtility.SaveAsPrefabAsset(instance, PrefabPath);
-                Object.DestroyImmediate(instance);
+                EditorUtility.DisplayProgressBar("Pasteurizador HTST", "Guardando prefab", 0.95f);
+                var saved = PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+                Object.DestroyImmediate(root);
                 Selection.activeObject = saved;
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
-                Debug.Log($"<color=cyan>[Pasteurizador HTST]</color> Prefab generado: {PrefabPath}");
+                Debug.Log($"<color=cyan>[Pasteurizador HTST]</color> Prefab generado con {objPaths.Length} OBJs: {PrefabPath}");
             }
             finally
             {
@@ -119,9 +144,9 @@ namespace ViroLab.Pasteurizador.EditorTools
 
             // Buscar GameObject llamado "Pasteurizer" en cualquier nivel
             GameObject target = null;
-            foreach (var root in scene.GetRootGameObjects())
+            foreach (var rootGo in scene.GetRootGameObjects())
             {
-                target = FindInChildren(root.transform, "Pasteurizer");
+                target = FindInChildren(rootGo.transform, "Pasteurizer");
                 if (target != null) break;
             }
 
@@ -151,7 +176,6 @@ namespace ViroLab.Pasteurizador.EditorTools
             if (parent != null) instance.transform.SetParent(parent, false);
             instance.transform.position = pos;
             instance.transform.rotation = rot;
-            // Mantenemos scale 1 porque el OBJ ya viene con escala 0.001 desde import settings
             if (siblingIndex >= 0) instance.transform.SetSiblingIndex(siblingIndex);
 
             EditorSceneManager.MarkSceneDirty(scene);
@@ -182,15 +206,17 @@ namespace ViroLab.Pasteurizador.EditorTools
 
         // ----- Helpers -----
 
-        private static void EnsureObjImportSettings()
+        private static void EnsureObjImportSettings(string objPath)
         {
-            var imp = AssetImporter.GetAtPath(ObjPath) as ModelImporter;
+            var imp = AssetImporter.GetAtPath(objPath) as ModelImporter;
             if (imp == null) return;
             bool changed = false;
             if (Mathf.Abs(imp.globalScale - 0.001f) > 0.00001f) { imp.globalScale = 0.001f; changed = true; }
             if (imp.useFileScale) { imp.useFileScale = false; changed = true; }
             if (!imp.isReadable) { imp.isReadable = true; changed = true; }
-            if (!imp.generateSecondaryUV) { imp.generateSecondaryUV = true; changed = true; }
+            // generateSecondaryUV DESACTIVADO (con muchos sub-meshes el
+            // unwrapper de lightmap puede colgar Unity).
+            if (imp.generateSecondaryUV) { imp.generateSecondaryUV = false; changed = true; }
             if (imp.materialImportMode != ModelImporterMaterialImportMode.ImportStandard)
             { imp.materialImportMode = ModelImporterMaterialImportMode.ImportStandard; changed = true; }
             if (imp.materialLocation != ModelImporterMaterialLocation.External)
@@ -198,7 +224,6 @@ namespace ViroLab.Pasteurizador.EditorTools
             if (changed)
             {
                 imp.SaveAndReimport();
-                AssetDatabase.Refresh();
             }
         }
 
