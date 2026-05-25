@@ -76,3 +76,10 @@ crashlytics-build.properties
 
 # Sonarqube working area
 .sonarqube/
+
+# Claude Code worktrees and session artifacts (NO commitear)
+.claude/
+.claude/worktrees/
+
+# Backups locales del usuario (modelos corruptos movidos fuera)
+/VirooStudio_Backups/
