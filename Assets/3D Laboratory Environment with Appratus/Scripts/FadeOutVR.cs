@@ -10,6 +10,13 @@ public class FadeOutVR : MonoBehaviour
     [Tooltip("Arrastra aquí el objeto hacia donde quieres teletransportar al jugador")]
     public Transform puntoDeDestino;
 
+    [Tooltip("El Canvas de la Fase 1 que vamos a apagar")]
+    public GameObject canvasFase1;
+
+    [Tooltip("El Canvas de la Fase 2 que vamos a encender")]
+
+    public GameObject canvasFase2;
+
     public void IniciarFadeOut()
     {
         StartCoroutine(RutinaFadeYTeletransporte());
@@ -64,6 +71,10 @@ public class FadeOutVR : MonoBehaviour
 
             // C. TRASLACIÓN: Deslizamos el cuarto virtual esa distancia exacta
             rootJugador.position += diferenciaPosicion;
+
+            // D. CAMBIO DE INTERFAZ: Apagamos el viejo y encendemos el nuevo mientras todo está oscuro
+            if (canvasFase1 != null) canvasFase1.SetActive(false);
+            if (canvasFase2 != null) canvasFase2.SetActive(true);
         }
 
         yield return new WaitForSeconds(0.5f); // Un breve respiro en la oscuridad
