@@ -1,0 +1,309 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1a2b3c4d5e6f7081234567890abcde2, type: 3}
+  m_Name: SubsystemDatabase
+  m_EditorClassIdentifier: 
+  subsystems:
+  - key: 01_Skid_Bastidor
+    tag: SK-01
+    title: SKID
+    colorHex: a3b8d4
+    showLabel: 0
+    description: Bastidor estructural en acero inoxidable AISI 304 + drip pan con
+      borde levantado para contencion de derrames. Losa apoyada directo en el piso
+      (z=0).
+  - key: 02_Tablero_Control
+    tag: CTRL-01
+    title: TABLERO DE CONTROL
+    colorHex: ffd700
+    showLabel: 1
+    description: Gabinete con PLC + HMI tactil para operacion (start/stop, modos
+      produccion/CIP, setpoints). Incluye amperimetros, botonera, selector de modo
+      y rejilla de ventilacion lateral.
+  - key: 03_Tanque_Balance
+    tag: BAL-01
+    title: TANQUE DE BALANCE
+    colorHex: 7fdbff
+    showLabel: 1
+    description: Buffer entre la leche cruda y la bomba de alimentacion. Mantiene
+      columna hidrostatica constante y desacopla variaciones de presion. Tiene visor
+      de nivel, manway abisagrado, boquillas de retorno y CIP.
+  - key: 04_Bomba_Alimentacion
+    tag: P-01
+    title: BOMBA ALIMENTACION
+    colorHex: ff851b
+    showLabel: 1
+    description: Bomba centrifuga sanitaria que toma leche del tanque de balance
+      y la empuja a la seccion de regeneracion del intercambiador de placas.
+  - key: 05_Bomba_Booster
+    tag: P-02
+    title: BOMBA BOOSTER
+    colorHex: ff851b
+    showLabel: 1
+    description: 'Bomba booster: toma la leche pre-calentada de la seccion de regeneracion
+      y la empuja contra el delta-P del tubo de retencion. Asegura sobre-presion
+      para evitar contaminacion por descompresion.'
+  - key: 06_Intercambiador_Placas
+    tag: HE-01
+    title: INTERCAMBIADOR DE PLACAS
+    colorHex: 39cccc
+    showLabel: 1
+    description: 'Intercambiador de placas multi-seccion: regeneracion + calentamiento
+      (agua caliente del calderin) + enfriamiento (agua fria del chiller). 56 placas
+      pulidas con corrugacion herringbone. Eficiencia de regeneracion >90%.'
+  - key: 07_FDV_Diversion
+    tag: FCV-01
+    title: VALVULA DE DIVERSION
+    colorHex: ff4136
+    showLabel: 1
+    description: Valvula de diversion (FDV) - elemento de SEGURIDAD CRITICA HACCP.
+      Si la temperatura a la salida del tubo de retencion cae bajo el setpoint (<72
+      C tipico), desvia el flujo automaticamente de vuelta al tanque de balance.
+  - key: 07_Valvulas
+    tag: XV
+    title: VALVULAS SANITARIAS
+    colorHex: 01ff70
+    showLabel: 0
+    description: 'Valvulas sanitarias de diafragma con actuador neumatico (capucha
+      azul). Cumple 3-A Sanitary Standards: cuerpo en AISI 316L, juntas EPDM grado
+      alimentario, sin zonas muertas.'
+  - key: 07_Valvulas_Top_PHE
+    tag: XV-PHE
+    title: VALVULAS SUPERIORES PHE
+    colorHex: 01ff70
+    showLabel: 0
+    description: 'Banco de valvulas neumaticas sobre el intercambiador: aislan secciones
+      individuales para mantenimiento, ruteo CIP, y conexion/desconexion de servicios
+      (vapor, agua, glicol).'
+  - key: 08_Tubo_Retencion
+    tag: HT-01
+    title: TUBO DE RETENCION
+    colorHex: ff70a6
+    showLabel: 1
+    description: 'Tubo de retencion (holding tube): garantiza el tiempo minimo a
+      temperatura de pasteurizacion (>=15 s a >=72 C, Grade A milk, 21 CFR 1240.61).
+      Pendiente positiva hacia FDV para drenaje completo.'
+  - key: 09_Tuberias_Proceso
+    tag: PIPE
+    title: TUBERIAS DEL PROCESO
+    colorHex: dddddd
+    showLabel: 0
+    description: Red de tuberias sanitarias AISI 316L con tri-clamps. Codos largos
+      sin zonas muertas. Pendientes calculadas para autodrenaje.
+  - key: 10_Instrumentos
+    tag: PT/TT
+    title: INSTRUMENTOS
+    colorHex: b10dc9
+    showLabel: 0
+    description: Manometros, transmisores de presion (PT) y termometros (TT). Conectados
+      via gooseneck/snubber para amortiguar pulsaciones.
+  - key: 11_Cables_y_Conexiones
+    tag: EJB
+    title: CABLES Y CAJA DE CONEXIONES
+    colorHex: aaaaaa
+    showLabel: 0
+    description: Cables flexibles entre sensores de campo y la caja de conexiones
+      (Junction Box) del tablero. Conduit flex IP65 anti-vibracion.
+  - key: 11_Manifold_Aire
+    tag: AIR-01
+    title: MANIFOLD DE AIRE
+    colorHex: 88aaff
+    showLabel: 0
+    description: Manifold con banco de solenoides 5/2 que distribuye aire comprimido
+      (6 bar) a cada actuador neumatico de las valvulas. Tubos PU calibre 6 mm color
+      azul.
+  - key: 11_Filtro_Y_Strainer
+    tag: F-01
+    title: FILTRO Y SANITARIO
+    colorHex: aef9b9
+    showLabel: 0
+    description: Filtro Y sanitario antes de la bomba de alimentacion. Atrapa solidos
+      y particulas >100 microns. Tapa abisagrada con perilla para limpieza/extraccion
+      del tamiz sin desmontar tuberia.
+  - key: 11_Caudalimetro_FT
+    tag: FT-01
+    title: CAUDALIMETRO MAGNETICO
+    colorHex: aef9b9
+    showLabel: 0
+    description: Caudalimetro magnetico FT-01 en la linea de salida de producto pasteurizado.
+      Mide volumen total y caudal instantaneo. Display digital + salida 4-20 mA al
+      PLC para totalizacion HACCP.
+  - key: 11_Check_Valves
+    tag: CV
+    title: CHECK VALVES (anti-retorno)
+    colorHex: caffbf
+    showLabel: 0
+    description: Valvulas anti-retorno inline en la descarga de cada bomba. Evitan
+      flujo inverso al detener la bomba, protegiendo de golpe de ariete y contaminacion
+      cruzada.
+  - key: 11_Relief_Valve_PSV
+    tag: PSV-01
+    title: VALVULA DE ALIVIO (PSV)
+    colorHex: ff8c42
+    showLabel: 0
+    description: Valvula de alivio de presion - elemento de seguridad mecanica del
+      holding tube. Si la presion supera el setpoint (10 barg tipico), abre y descarga
+      a drenaje.
+  - key: 11_Reg_Presion_Vapor
+    tag: PRV-01
+    title: REGULADOR PRESION DE VAPOR
+    colorHex: ff8c42
+    showLabel: 0
+    description: Regulador de presion de vapor con diafragma. Reduce la presion del
+      vapor de red (8-10 barg) a la presion de trabajo del PHE (2-3 barg).
+  - key: 11_Acometidas_Externas
+    tag: IN/OUT
+    title: ACOMETIDAS EXTERNAS
+    colorHex: 9bf6ff
+    showLabel: 0
+    description: 'Puntos de conexion externos del skid: vapor, agua fria/caliente,
+      CIP, aire comprimido, electrica. Cada uno con valvula de corte manual (volante)
+      y bulkhead fitting en el frame.'
+  - key: 11_Salidas_y_Drenajes
+    tag: OUT/DR
+    title: SALIDAS Y DRENAJES
+    colorHex: bdb2ff
+    showLabel: 0
+    description: Salida final de producto pasteurizado al llenado, salida de muestreo
+      QA, y drenajes en los puntos bajos del PHE y el skid.
+  - key: 11_Placas_ID
+    tag: TAG
+    title: PLACAS DE IDENTIFICACION
+    colorHex: ffd6a5
+    showLabel: 0
+    description: Placas de identificacion de cada equipo principal. Incluyen tag,
+      modelo, presion/temperatura de diseno, materiales.
+  - key: 12_Silo_LecheCruda
+    tag: T-RAW-01
+    title: SILO LECHE CRUDA
+    colorHex: fff4d6
+    showLabel: 1
+    description: 'Silo de alimentacion: almacena la leche cruda recibida desde camion
+      cisterna. Tanque vertical AISI 304 con fondo conico, manway abisagrado, agitador
+      de paletas para evitar separacion de grasa. Modelo realista FBX Tripo.'
+  - key: 12_Tanque_Producto
+    tag: T-PROD-01
+    title: TANQUE PRODUCTO PASTEURIZADO
+    colorHex: a0e0ff
+    showLabel: 1
+    description: Tanque colector de producto pasteurizado a la salida del intercambiador.
+      AISI 304, fondo conico para drenaje completo, manway de inspeccion. Modelo
+      realista FBX Tripo. Alimenta la linea de llenado de envases.
+  - key: 12_Calderin_AguaCal
+    tag: T-HOT-01
+    title: CALDERIN DE AGUA CALIENTE
+    colorHex: ff9999
+    showLabel: 1
+    description: 'Calderin de agua caliente: recibe vapor de la caldera, lo condensa
+      indirectamente y mantiene el agua de servicio a ~85-90 C que se bombea en circuito
+      cerrado a la seccion de calentamiento del intercambiador. Termometro de control
+      integrado.'
+  - key: 12_Chiller_AguaFria
+    tag: T-COOL-01
+    title: CHILLER DE AGUA FRIA
+    colorHex: aaccff
+    showLabel: 1
+    description: Tanque buffer de agua helada con unidad de refrigeracion (compresor
+      + condensador) montada en la tapa. Suministra agua a ~2 C que circula en circuito
+      cerrado a la seccion de enfriamiento del intercambiador, llevando la leche
+      pasteurizada a 4-6 C.
+  - key: 12_TanqueAguaMakeup
+    tag: T-WATER-01
+    title: TANQUE AGUA MAKEUP
+    colorHex: 9ed4ff
+    showLabel: 0
+    description: Tanque de agua makeup a temperatura ambiente. Alimenta al tanque
+      pulmon (balance) cuando su nivel cae por debajo del optimo, y compensa perdidas
+      en el circuito de agua caliente del calderin. Observacion del Ing. Tulio Martinez.
+  - key: 12_BombaAguaCal_P03
+    tag: P-03
+    title: BOMBA AGUA CALIENTE
+    colorHex: ffaa88
+    showLabel: 0
+    description: Bomba centrifuga de servicios que circula agua caliente entre el
+      calderin y la seccion de calentamiento del intercambiador. Caudal calibrado
+      para el delta-T objetivo de pasteurizacion.
+  - key: 12_BombaAguaFria_P04
+    tag: P-04
+    title: BOMBA AGUA FRIA
+    colorHex: 88aaff
+    showLabel: 0
+    description: Bomba centrifuga de servicios que circula agua helada entre el chiller
+      y la seccion de enfriamiento del intercambiador.
+  - key: 12_TrampaVapor
+    tag: TRAP-01
+    title: TRAMPA DE VAPOR
+    colorHex: ff8c42
+    showLabel: 0
+    description: Trampa de vapor termodinamica tipo disco. Mantiene mayor energia
+      calorica en el intercambiador impidiendo el escape de vapor saturado, dejando
+      salir solo el condensado por gravedad. Observacion del Ing. Tulio Martinez.
+  - key: 12_Caldera_Vapor
+    tag: CB-01
+    title: CALDERA DE VAPOR
+    colorHex: ff5500
+    showLabel: 1
+    description: Caldera pirotubular horizontal - generador primario de vapor del
+      sistema. Quema gas natural en el quemador frontal, calienta agua dentro del
+      cuerpo y produce vapor saturado (~6-8 barg) que se distribuye al calderin de
+      agua caliente. Incluye 2 PSV de seguridad, manometro, visor de nivel, manway,
+      chimenea y quemador con mirilla.
+  - key: 99_Otros
+    tag: '?'
+    title: OTROS
+    colorHex: 888888
+    showLabel: 0
+    description: Componentes auxiliares.
+  specifics:
+  - namePrefix: HMI_Pantalla
+    description: Display tactil 7" del operador. Muestra temperaturas (TT-Holding,
+      TT-Salida), presiones (PT-Bomba, PT-PHE), estado de cada valvula/bomba, alarmas
+      activas, y permite ajustar setpoints.
+  - namePrefix: Boton_Emergencia
+    description: Pulsador de emergencia tipo hongo NC con enclavamiento mecanico.
+      Al accionarse corta TODA la energia al equipo y va a estado seguro (bombas
+      paradas, FDV en diversion).
+  - namePrefix: Boton_Start
+    description: Pulsador NA verde - arranque del ciclo de produccion. Solo permite
+      arrancar si todas las precondiciones se cumplen (interlocks).
+  - namePrefix: Boton_Reset
+    description: Reset de alarmas y reinicio del ciclo despues de una desviacion.
+  - namePrefix: Selector_Modo
+    description: 'Selector rotativo de 3 posiciones: MANUAL / PRODUCCION / CIP.'
+  - namePrefix: Tanque_Visor_Nivel
+    description: Visor de vidrio que permite ver el nivel de leche dentro del tanque
+      de balance sin abrirlo. Junta sanitaria EPDM.
+  - namePrefix: Tanque_Manway_Tapa
+    description: Tapa abisagrada del manway. Se abre solo para inspeccion/limpieza
+      manual. Junta EPDM. Knob de cierre rapido.
+  - namePrefix: Tanque_Termowell
+    description: Vaina termometrica que protege el termopar/RTD sin contacto directo
+      con el producto. Permite cambiar el sensor sin parar produccion.
+  - namePrefix: CB_01_Caldera_Vapor_Cuerpo
+    description: Cuerpo cilindrico horizontal de la caldera pirotubular. Contiene
+      el agua que se transforma en vapor por accion del quemador.
+  - namePrefix: CB_01_Caldera_Vapor_Quemador
+    description: Quemador frontal de la caldera. Combustion de gas natural genera
+      la energia calorica para producir vapor. La mirilla naranja permite verificar
+      visualmente la llama.
+  - namePrefix: CB_01_Caldera_Vapor_Chimenea
+    description: Chimenea de evacuacion de humos de combustion. Tiro natural + sombrerete
+      anti-lluvia en la cima.
+  - namePrefix: CB_01_Caldera_Vapor_PSV
+    description: Valvula de seguridad por sobrepresion (PSV). Codigo ASME requiere
+      2 PSV en cada caldera. Calibradas y precintadas.
+  - namePrefix: CB_01_Caldera_Vapor_Visor
+    description: 'Visor de nivel de agua de la caldera. Permite ver visualmente el
+      nivel sin abrir. CRITICO: si baja el nivel y se queda sin agua, riesgo de explosion.'
+  - namePrefix: TRAP_01_Trampa_Vapor
+    description: Trampa termodinamica tipo disco TLV. Elimina condensado del circuito
+      sin perder vapor vivo.
