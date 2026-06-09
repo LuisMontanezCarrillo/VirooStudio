@@ -37,6 +37,14 @@ namespace ViroLab.Pasteurizador
         [Tooltip("KeyCode adicional para pin (solo si el Input Legacy esta activo).")]
         public KeyCode pinKey = KeyCode.None;
 
+        [Header("Atajos de teclado")]
+        [Tooltip("Tecla para cerrar el pin activo (default: Escape).")]
+        public KeyCode clearPinKey = KeyCode.Escape;
+        [Tooltip("Tecla para hacer focus/zoom sobre la pieza pineada (default: F).")]
+        public KeyCode focusKey = KeyCode.F;
+        [Tooltip("Distancia (m) a la que se posiciona la camara cuando hace focus.")]
+        public float focusDistance = 1.5f;
+
         [Header("Visuals")]
         public Color hoverColor = new Color(1.0f, 0.55f, 0.0f);
         public Color pinColor = new Color(1.0f, 0.90f, 0.0f);
@@ -96,6 +104,44 @@ namespace ViroLab.Pasteurizador
                 if (hit != null) SetPinned(hit);
                 else SetPinned(null);
             }
+
+            // Atajos: ESC cierra el pin, F hace focus sobre el pineado
+            if (IsKeyPressed(clearPinKey))
+                SetPinned(null);
+            if (IsKeyPressed(focusKey) && _pinned != null)
+                FocusCameraOn(_pinned);
+        }
+
+        private bool IsKeyPressed(KeyCode kc)
+        {
+            if (kc == KeyCode.None) return false;
+#if ENABLE_INPUT_SYSTEM
+            if (Keyboard.current == null) return false;
+            var key = KeyCodeToKey(kc);
+            if (key == Key.None) return false;
+            return Keyboard.current[key].wasPressedThisFrame;
+#else
+            return Input.GetKeyDown(kc);
+#endif
+        }
+
+        /// Mueve la camara para centrarse sobre el GO a una distancia comoda.
+        /// Solo usable en modo desktop / debug (en VR no querras teleport asi).
+        private void FocusCameraOn(GameObject go)
+        {
+            if (_mainCam == null) RefreshCamera();
+            if (_mainCam == null) return;
+
+            var rends = go.GetComponentsInChildren<Renderer>();
+            if (rends.Length == 0) return;
+            var b = rends[0].bounds;
+            for (int i = 1; i < rends.Length; i++) b.Encapsulate(rends[i].bounds);
+
+            float radius = Mathf.Max(b.size.x, b.size.y, b.size.z) * 0.5f + 0.1f;
+            float dist = Mathf.Max(radius / Mathf.Tan(_mainCam.fieldOfView * 0.5f * Mathf.Deg2Rad),
+                                   focusDistance);
+            _mainCam.transform.position = b.center - _mainCam.transform.forward * dist;
+            _mainCam.transform.LookAt(b.center);
         }
 
         private bool IsClickPressed()

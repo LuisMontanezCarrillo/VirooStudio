@@ -66,6 +66,10 @@ namespace ViroLab.Pasteurizador
         [Tooltip("Si true, oculta el canvas hasta que se pinee una parte.")]
         public bool showOnlyWhenPinned = false;
 
+        [Header("Fade animado")]
+        [Tooltip("Velocidad del fade in/out del alpha (por segundo). 0 = sin animación.")]
+        [Range(0f, 20f)] public float fadeSpeed = 8f;
+
         [Header("Debug")]
         public bool logSetupOnAwake = true;
 
@@ -73,6 +77,7 @@ namespace ViroLab.Pasteurizador
         private CanvasGroup _canvasGroup;
         private Camera _cam;
         private bool _hasPinned;
+        private float _targetAlpha = 0f;
 
         private void Awake()
         {
@@ -141,17 +146,31 @@ namespace ViroLab.Pasteurizador
 
         /// Hace visible/invisible el canvas SIN desactivar GameObjects
         /// (para no romper la suscripción a eventos de hijos como la card).
+        /// Si fadeSpeed > 0, el alpha se anima en Update; si = 0, snap.
         private void SetVisible(bool on)
         {
             if (_canvasGroup == null) _canvasGroup = GetComponent<CanvasGroup>();
             if (_canvasGroup != null)
             {
-                _canvasGroup.alpha = on ? 1f : 0f;
+                _targetAlpha = on ? 1f : 0f;
                 _canvasGroup.blocksRaycasts = on;
                 _canvasGroup.interactable = on;
+                // Si no hay fade, snap inmediato (compat con código viejo)
+                if (fadeSpeed <= 0f) _canvasGroup.alpha = _targetAlpha;
             }
             // Asegurar que el Canvas mismo siga habilitado
             if (_canvas != null) _canvas.enabled = true;
+        }
+
+        private void Update()
+        {
+            // Lerp del alpha hacia el target (fade in/out animado)
+            if (_canvasGroup != null && fadeSpeed > 0f
+                && !Mathf.Approximately(_canvasGroup.alpha, _targetAlpha))
+            {
+                _canvasGroup.alpha = Mathf.MoveTowards(
+                    _canvasGroup.alpha, _targetAlpha, Time.unscaledDeltaTime * fadeSpeed);
+            }
         }
 
         private void ApplyCanvasMode()

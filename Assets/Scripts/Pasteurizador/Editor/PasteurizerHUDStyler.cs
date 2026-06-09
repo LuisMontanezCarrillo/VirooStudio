@@ -233,6 +233,89 @@ namespace ViroLab.Pasteurizador.EditorTools
                 new Vector2(0, 0), new Vector2(1, 1), HUDCyan);
             EnsureCornerBracket(go.transform, "Corner_BR", new Vector2(1, 0), new Vector2(1, 0),
                 new Vector2(0, 0), new Vector2(-1, 1), HUDCyan);
+
+            // Restilizar el botón X de cerrar (más grande, visible, color cyan)
+            if (card.closeButton != null)
+            {
+                var btnRT = card.closeButton.GetComponent<RectTransform>();
+                if (btnRT != null)
+                {
+                    btnRT.anchorMin = new Vector2(1, 1);
+                    btnRT.anchorMax = new Vector2(1, 1);
+                    btnRT.pivot = new Vector2(1, 1);
+                    btnRT.anchoredPosition = new Vector2(-44f, -16f);  // adentro del corner bracket
+                    btnRT.sizeDelta = new Vector2(44f, 44f);
+                }
+                var btnImg = card.closeButton.GetComponent<Image>();
+                if (btnImg != null) btnImg.color = new Color(0.1f, 0.18f, 0.22f, 0.95f);
+                // Borde sutil
+                EnsureCloseBorder(card.closeButton.transform, HUDCyan);
+                // Label X grande cyan
+                var btnLabel = card.closeButton.GetComponentInChildren<TMP_Text>(true);
+                if (btnLabel != null)
+                {
+                    btnLabel.text = "X";
+                    btnLabel.fontSize = 26f;
+                    btnLabel.fontStyle = FontStyles.Bold;
+                    btnLabel.color = HUDCyan;
+                }
+            }
+
+            // Línea de hint con atajos al pie de la card
+            EnsureHintFooter(go.transform, HUDLine, HUDTextDim);
+        }
+
+        /// Borde fino cyan alrededor del botón X
+        private static void EnsureCloseBorder(Transform btn, Color color)
+        {
+            const string n = "_CloseBorder";
+            Transform existing = null;
+            for (int i = 0; i < btn.childCount; i++)
+                if (btn.GetChild(i).name == n) { existing = btn.GetChild(i); break; }
+            GameObject border;
+            if (existing == null)
+            {
+                border = new GameObject(n, typeof(RectTransform), typeof(Image));
+                border.transform.SetParent(btn, false);
+                border.transform.SetAsFirstSibling();
+            }
+            else border = existing.gameObject;
+            var rt = (RectTransform)border.transform;
+            rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+            rt.offsetMin = new Vector2(-2, -2); rt.offsetMax = new Vector2(2, 2);
+            var img = border.GetComponent<Image>();
+            img.color = color;
+            img.raycastTarget = false;
+        }
+
+        /// Pie con hints "ESC cerrar · F focus"
+        private static void EnsureHintFooter(Transform parent, Color lineColor, Color textColor)
+        {
+            const string n = "_HintFooter";
+            Transform existing = null;
+            for (int i = 0; i < parent.childCount; i++)
+                if (parent.GetChild(i).name == n) { existing = parent.GetChild(i); break; }
+            GameObject footer;
+            if (existing == null)
+            {
+                footer = new GameObject(n, typeof(RectTransform), typeof(TextMeshProUGUI));
+                footer.transform.SetParent(parent, false);
+            }
+            else footer = existing.gameObject;
+            var rt = (RectTransform)footer.transform;
+            rt.anchorMin = new Vector2(0, 0);
+            rt.anchorMax = new Vector2(1, 0);
+            rt.pivot = new Vector2(0.5f, 0);
+            rt.anchoredPosition = new Vector2(0, 6f);
+            rt.sizeDelta = new Vector2(-24f, 18f);
+            var tmp = footer.GetComponent<TextMeshProUGUI>();
+            if (tmp == null) tmp = footer.AddComponent<TextMeshProUGUI>();
+            tmp.text = "<color=#00E0FF>ESC</color> cerrar  ·  <color=#00E0FF>F</color> focus  ·  <color=#00E0FF>click</color> en vacío para cerrar";
+            tmp.fontSize = 12f;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.color = textColor;
+            tmp.raycastTarget = false;
+            tmp.richText = true;
         }
 
         // ---- helpers ----
