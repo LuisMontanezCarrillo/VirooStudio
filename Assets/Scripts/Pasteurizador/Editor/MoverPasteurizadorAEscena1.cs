@@ -5,14 +5,19 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Mueve el Pasteurizador HTST completo y la pantalla de simulacion (Pasteurizador_UI_Canvas)
-/// desde la Escena 2 hacia la Escena 1, dejandolos bajo el "Root" de la Escena 1.
-/// Conserva la transformada en el mundo, el vinculo al prefab y la configuracion de cada instancia.
+/// Utilidades para consolidar el Pasteurizador HTST en la Escena 1.
 ///
-/// Uso: menu  Viroo > Consolidar > Mover Pasteurizador + Pantalla a Escena 1
+/// Menus (Viroo > Consolidar > ...):
+///  - "Traer UI de partes (Canvas) a Escena 1": copia el Pasteurizador_UI_Canvas
+///    (las ventanas emergentes que salen al seleccionar partes) desde la Escena 2
+///    a la Escena 1. NO modifica la Escena 2. No duplica si ya existe.
+///  - "Mover Pasteurizador + Pantalla a Escena 1": version original (mueve modelo + pantalla).
 ///
-/// Es reversible: ambas escenas estan versionadas en git. Si algo sale mal,
-/// descarta los cambios de las escenas y vuelve a intentar.
+/// La UI del pasteurizador se auto-conecta en runtime (FindFirstObjectByType /
+/// GetComponentInParent), asi que con que el Canvas y el modelo esten en la misma
+/// escena, las ventanas emergentes vuelven a funcionar sin cablear nada a mano.
+///
+/// Todo es reversible: las escenas estan versionadas en git.
 /// </summary>
 public static class MoverPasteurizadorAEscena1
 {
@@ -20,15 +25,25 @@ public static class MoverPasteurizadorAEscena1
     const string EscenaOrigen = "Assets/Scenes/Escena 2.unity";
     const string NombreRoot = "Root";
 
-    // Se identifica cada objeto por el prefab del que proviene (robusto frente a renombres como "E").
-    static readonly string[] PrefabsObjetivo =
+    const string PrefabCanvas = "/Pasteurizador_UI_Canvas.prefab";
+    const string PrefabModelo = "/Pasteurizador_HTST.prefab";
+
+    // ---------------------------------------------------------------------
+    [MenuItem("Viroo/Consolidar/Traer UI de partes (Canvas) a Escena 1")]
+    public static void TraerCanvas()
     {
-        "/Pasteurizador_HTST.prefab",        // el pasteurizador completo (modelo 654 partes)
-        "/Pasteurizador_UI_Canvas.prefab",   // la pantalla de simulacion (SCADA)
-    };
+        TraerCopia(new[] { PrefabCanvas });
+    }
 
     [MenuItem("Viroo/Consolidar/Mover Pasteurizador + Pantalla a Escena 1")]
-    public static void Mover()
+    public static void MoverModeloYPantalla()
+    {
+        MoverDesdeOrigen(new[] { PrefabModelo, PrefabCanvas });
+    }
+
+    // ---------------------------------------------------------------------
+    /// <summary>Copia (no destructivo) las instancias de los prefabs dados desde Escena 2 a Escena 1.</summary>
+    static void TraerCopia(string[] prefabsObjetivo)
     {
         if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
             return;
@@ -36,35 +51,76 @@ public static class MoverPasteurizadorAEscena1
         var destino = EditorSceneManager.OpenScene(EscenaDestino, OpenSceneMode.Single);
         var origen = EditorSceneManager.OpenScene(EscenaOrigen, OpenSceneMode.Additive);
 
-        // Buscar el "Root" de la Escena 1 para colgar ahi los objetos.
-        Transform rootDestino = null;
-        foreach (var go in destino.GetRootGameObjects())
-        {
-            if (go.name == NombreRoot) { rootDestino = go.transform; break; }
-        }
-        if (rootDestino == null)
-            Debug.LogWarning($"[Mover] No se encontro un objeto '{NombreRoot}' en la Escena 1. Los objetos quedaran en la raiz.");
+        Transform rootDestino = BuscarRoot(destino);
 
-        // Localizar los objetos objetivo entre las raices de la Escena 2.
+        // Evitar duplicados: si el prefab ya esta en la Escena 1, no lo traemos.
+        var yaPresentes = new HashSet<string>();
+        foreach (var go in destino.GetRootGameObjects())
+            RecolectarPrefabs(go.transform, yaPresentes);
+
+        var copiados = new List<string>();
+        foreach (var go in origen.GetRootGameObjects())
+        {
+            string ruta = RutaPrefab(go);
+            if (ruta == null) continue;
+            foreach (var objetivo in prefabsObjetivo)
+            {
+                if (!ruta.EndsWith(objetivo)) continue;
+                if (yaPresentes.Contains(ruta))
+                {
+                    Debug.Log($"[Consolidar] Ya existe en Escena 1, se omite: {go.name}");
+                    break;
+                }
+                var copia = Object.Instantiate(go);
+                copia.name = go.name; // quitar el sufijo "(Clone)"
+                SceneManager.MoveGameObjectToScene(copia, destino);
+                if (rootDestino != null) copia.transform.SetParent(rootDestino, true);
+                copiados.Add(go.name);
+                Debug.Log($"[Consolidar] Copiado a Escena 1: '{go.name}'  <-  {ruta}");
+                break;
+            }
+        }
+
+        EditorSceneManager.CloseScene(origen, true); // la Escena 2 NO se modifico
+
+        if (copiados.Count == 0)
+        {
+            EditorUtility.DisplayDialog("Consolidacion",
+                "No se copio nada: o no se encontro el objeto en la Escena 2, o ya estaba en la Escena 1.",
+                "OK");
+            return;
+        }
+
+        EditorSceneManager.MarkSceneDirty(destino);
+        EditorSceneManager.SaveScene(destino);
+        Debug.Log($"[Consolidar] LISTO. Copiados a Escena 1: {string.Join(", ", copiados)}");
+        EditorUtility.DisplayDialog("Consolidacion",
+            $"Se copio a la Escena 1:\n - {string.Join("\n - ", copiados)}\n\nEntra a Play y selecciona una parte del pasteurizador para verificar las ventanas emergentes. Luego avisa para subir al repositorio.",
+            "OK");
+    }
+
+    /// <summary>Mueve (destructivo en Escena 2) las instancias de los prefabs dados a la Escena 1.</summary>
+    static void MoverDesdeOrigen(string[] prefabsObjetivo)
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+            return;
+
+        var destino = EditorSceneManager.OpenScene(EscenaDestino, OpenSceneMode.Single);
+        var origen = EditorSceneManager.OpenScene(EscenaOrigen, OpenSceneMode.Additive);
+        Transform rootDestino = BuscarRoot(destino);
+
         var encontrados = new List<GameObject>();
         foreach (var go in origen.GetRootGameObjects())
         {
             string ruta = RutaPrefab(go);
             if (ruta == null) continue;
-            foreach (var objetivo in PrefabsObjetivo)
-            {
-                if (ruta.EndsWith(objetivo))
-                {
-                    encontrados.Add(go);
-                    Debug.Log($"[Mover] Encontrado en Escena 2: '{go.name}'  <-  {ruta}");
-                    break;
-                }
-            }
+            foreach (var objetivo in prefabsObjetivo)
+                if (ruta.EndsWith(objetivo)) { encontrados.Add(go); break; }
         }
 
         if (encontrados.Count == 0)
         {
-            Debug.LogError("[Mover] No se encontro ningun objeto objetivo en la Escena 2. No se guardo nada.");
+            Debug.LogError("[Consolidar] No se encontro ningun objeto objetivo en la Escena 2. No se guardo nada.");
             EditorSceneManager.CloseScene(origen, true);
             return;
         }
@@ -72,9 +128,8 @@ public static class MoverPasteurizadorAEscena1
         foreach (var go in encontrados)
         {
             SceneManager.MoveGameObjectToScene(go, destino);
-            if (rootDestino != null)
-                go.transform.SetParent(rootDestino, true); // true = conserva la posicion en el mundo
-            Debug.Log($"[Mover] Movido a Escena 1: '{go.name}'");
+            if (rootDestino != null) go.transform.SetParent(rootDestino, true);
+            Debug.Log($"[Consolidar] Movido a Escena 1: '{go.name}'");
         }
 
         EditorSceneManager.MarkSceneDirty(destino);
@@ -82,11 +137,25 @@ public static class MoverPasteurizadorAEscena1
         EditorSceneManager.SaveScene(destino);
         EditorSceneManager.SaveScene(origen);
         EditorSceneManager.CloseScene(origen, true);
-
-        Debug.Log($"[Mover] LISTO. Se movieron {encontrados.Count} objeto(s) a la Escena 1. Revisa la escena y guarda el proyecto.");
         EditorUtility.DisplayDialog("Consolidacion",
-            $"Se movieron {encontrados.Count} objeto(s) a la Escena 1.\n\nRevisa visualmente la Escena 1 y avisa para subir al repositorio.",
-            "OK");
+            $"Se movieron {encontrados.Count} objeto(s) a la Escena 1.", "OK");
+    }
+
+    // ---------------------------------------------------------------------
+    static Transform BuscarRoot(Scene escena)
+    {
+        foreach (var go in escena.GetRootGameObjects())
+            if (go.name == NombreRoot) return go.transform;
+        Debug.LogWarning($"[Consolidar] No se encontro '{NombreRoot}' en la Escena 1; los objetos quedaran en la raiz.");
+        return null;
+    }
+
+    static void RecolectarPrefabs(Transform t, HashSet<string> set)
+    {
+        string ruta = RutaPrefab(t.gameObject);
+        if (ruta != null) set.Add(ruta);
+        for (int i = 0; i < t.childCount; i++)
+            RecolectarPrefabs(t.GetChild(i), set);
     }
 
     /// <summary>Ruta del asset de prefab del que proviene la instancia (o null si no es instancia de prefab).</summary>
