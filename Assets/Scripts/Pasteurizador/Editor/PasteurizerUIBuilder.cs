@@ -107,10 +107,10 @@ namespace ViroLab.Pasteurizador.EditorTools
             tagBG.rectTransform.anchoredPosition = new Vector2(10, -10);
             tagBG.rectTransform.sizeDelta = new Vector2(80, 26);
 
-            var tagLabel = AddText(tagBG.transform, "TagLabel", "TAG", 14, Color.black, TextAlignmentOptions.Center);
+            var tagLabel = AddText(tagBG.transform, "TagLabel", "TAG", 18, Color.black, TextAlignmentOptions.Center);
             FillParent(tagLabel.rectTransform);
 
-            var titleLabel = AddText(root.transform, "TitleLabel", "Subsistema", 18, new Color(1f, 0.92f, 0.48f), TextAlignmentOptions.Left);
+            var titleLabel = AddText(root.transform, "TitleLabel", "Subsistema", 23, new Color(1f, 0.92f, 0.48f), TextAlignmentOptions.Left);
             titleLabel.fontStyle = FontStyles.Bold;
             titleLabel.rectTransform.anchorMin = new Vector2(0, 1);
             titleLabel.rectTransform.anchorMax = new Vector2(1, 1);
@@ -118,7 +118,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             titleLabel.rectTransform.anchoredPosition = new Vector2(100, -10);
             titleLabel.rectTransform.sizeDelta = new Vector2(-110, 26);
 
-            var partNameLabel = AddText(root.transform, "PartNameLabel", "part_name", 11, new Color(0.7f, 0.7f, 0.7f), TextAlignmentOptions.Left);
+            var partNameLabel = AddText(root.transform, "PartNameLabel", "part_name", 14, new Color(0.7f, 0.7f, 0.7f), TextAlignmentOptions.Left);
             partNameLabel.fontStyle = FontStyles.Italic;
             partNameLabel.rectTransform.anchorMin = new Vector2(0, 1);
             partNameLabel.rectTransform.anchorMax = new Vector2(1, 1);
@@ -126,7 +126,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             partNameLabel.rectTransform.anchoredPosition = new Vector2(12, -42);
             partNameLabel.rectTransform.sizeDelta = new Vector2(-20, 18);
 
-            var descLabel = AddText(root.transform, "DescriptionLabel", "Descripcion...", 13, new Color(0.81f, 0.82f, 0.84f), TextAlignmentOptions.TopLeft);
+            var descLabel = AddText(root.transform, "DescriptionLabel", "Descripcion...", 17, new Color(0.81f, 0.82f, 0.84f), TextAlignmentOptions.TopLeft);
             descLabel.rectTransform.anchorMin = new Vector2(0, 0);
             descLabel.rectTransform.anchorMax = new Vector2(1, 1);
             descLabel.rectTransform.offsetMin = new Vector2(12, 12);

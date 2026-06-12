@@ -202,8 +202,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   pinKey: 0
-  hoverColor: {r: 1, g: 0.55, b: 0, a: 1}
-  pinColor: {r: 1, g: 0.9, b: 0, a: 1}
+  hoverColor: {r: 0.16, g: 0.6, b: 0.05, a: 1}
+  pinColor: {r: 0.26666668, g: 0.972549, b: 0.078431375, a: 1}
   emissiveIntensity: 0.6
   OnHoverEnter:
     m_PersistentCalls:

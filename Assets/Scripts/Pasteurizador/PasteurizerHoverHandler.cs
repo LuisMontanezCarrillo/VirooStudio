@@ -46,8 +46,8 @@ namespace ViroLab.Pasteurizador
         public float focusDistance = 1.5f;
 
         [Header("Visuals")]
-        public Color hoverColor = new Color(1.0f, 0.55f, 0.0f);
-        public Color pinColor = new Color(1.0f, 0.90f, 0.0f);
+        public Color hoverColor = new Color(0.16f, 0.60f, 0.05f);          // verde tenue (igual que Mat_BrilloInteractivo, atenuado)
+        public Color pinColor = new Color(0.26666668f, 0.972549f, 0.078431375f); // verde casillero (Mat_BrilloInteractivo)
         [Range(0f, 1f)] public float emissiveIntensity = 0.6f;
 
         [Header("Events")]
