@@ -14,8 +14,10 @@ public class FadeOutVR : MonoBehaviour
     public GameObject canvasFase1;
 
     [Tooltip("El Canvas de la Fase 2 que vamos a encender")]
-
     public GameObject canvasFase2;
+
+    [Tooltip("Arrastra aquí el objeto Bisagra_Puerta para cerrarla al teletransportar")]
+    public ControladorPuerta puertaPlanta;
 
     public void IniciarFadeOut()
     {
@@ -24,10 +26,10 @@ public class FadeOutVR : MonoBehaviour
 
     IEnumerator RutinaFadeYTeletransporte()
     {
-        // 1. Espera inicial
+        // 1. Espera inicial (mientras la puerta física se abre lentamente)
         yield return new WaitForSeconds(tiempoDeEspera);
 
-        // 2. Crear panel negro
+        // 2. Crear panel negro dinámico frente a los ojos del jugador
         GameObject canvasObj = new GameObject("Canvas_FadeMagico");
         Canvas canvas = canvasObj.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.WorldSpace;
@@ -55,31 +57,33 @@ public class FadeOutVR : MonoBehaviour
             yield return null;
         }
 
-        // 4. ¡EL TELETRANSPORTE! (Movemos el root/cuerpo entero del jugador)
+        // 4. ¡EL TELETRANSPORTE INTELIGENTE! (En total oscuridad)
         if (puntoDeDestino != null)
         {
             Transform rootJugador = camaraVR.root;
 
-            // A. ROTACIÓN: Giramos todo el cuarto virtual para que tus ojos miren hacia donde pide el destino
+            // A. ROTACIÓN: Orientamos al jugador hacia la dirección del destino
             float diferenciaRotacion = puntoDeDestino.eulerAngles.y - camaraVR.eulerAngles.y;
             rootJugador.Rotate(0, diferenciaRotacion, 0);
 
-            // B. CÁLCULO: Después de girar, ¿dónde quedó exactamente tu cabeza? 
-            // Calculamos cuánto nos falta para llegar a la baldosa exacta del destino
+            // B. CÁLCULO DE POSICIÓN: Medimos la distancia exacta a labaldosa de destino
             Vector3 diferenciaPosicion = puntoDeDestino.position - camaraVR.position;
-            diferenciaPosicion.y = 0; // Respetamos tu altura física
+            diferenciaPosicion.y = 0; // Respetamos la altura física del usuario
 
-            // C. TRASLACIÓN: Deslizamos el cuarto virtual esa distancia exacta
+            // C. TRASLACIÓN: Movemos el cuerpo completo del jugador
             rootJugador.position += diferenciaPosicion;
 
-            // D. CAMBIO DE INTERFAZ: Apagamos el viejo y encendemos el nuevo mientras todo está oscuro
+            // D. CAMBIO DE INTERFAZ: Apagamos el Canvas viejo y encendemos el nuevo de la Escena 2
             if (canvasFase1 != null) canvasFase1.SetActive(false);
             if (canvasFase2 != null) canvasFase2.SetActive(true);
+
+            // E. CERRAR PUERTA NORMATIVA: La regresamos a su posición cerrada original
+            if (puertaPlanta != null) puertaPlanta.CerrarInstante();
         }
 
-        yield return new WaitForSeconds(0.5f); // Un breve respiro en la oscuridad
+        yield return new WaitForSeconds(0.5f); // Un breve respiro de calma en la oscuridad
 
-        // 5. ACLARAR (Fade In)
+        // 5. ACLARAR (Fade In - El estudiante abre los ojos en la planta piloto)
         tiempo = 0;
         while (tiempo < duracionFade)
         {
@@ -88,7 +92,7 @@ public class FadeOutVR : MonoBehaviour
             yield return null;
         }
 
-        // 6. Limpieza
+        // 6. Limpieza automática del objeto temporal
         Destroy(canvasObj);
     }
 }
