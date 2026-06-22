@@ -16,6 +16,11 @@ public class GestorCuestionario : MonoBehaviour
     [Header("Configuración de Feedback")]
     public Color colorCorrecto = Color.green;
     public Color colorIncorrecto = Color.red;
+
+    [Header("Efectos de Sonido")]
+    public AudioSource reproductorAudio;
+    public AudioClip sonidoCorrecto;
+    public AudioClip sonidoIncorrecto;
     
     private Color colorOriginalBotones;
     private int preguntaActual = 0;
@@ -108,27 +113,13 @@ public class GestorCuestionario : MonoBehaviour
         {
             textoPregunta.text = "<b>¡Bienvenido al Reto 2!</b>\n\nEste reto consiste en un cuestionario interactivo sobre los fundamentos y beneficios de la pasteurización, así como los componentes del equipo pasteurizador HTST.\n\n<i>Recomendación:</i> Antes de iniciar el cuestionario, se recomienda explorar detalladamente el pasteurizador y el carrusel interactivo de la sala.";
             
-            if (botonA != null) 
-            {
-                botonA.image.enabled = false; 
-                botonA.interactable = false; 
-                botonA.GetComponentInChildren<TextMeshProUGUI>().text = ""; 
-            }
-            if (botonB != null) 
-            {
-                botonB.image.enabled = false; 
-                botonB.interactable = false; 
-                botonB.GetComponentInChildren<TextMeshProUGUI>().text = ""; 
-            }
-            if (botonC != null) 
-            {
-                botonC.image.enabled = true; 
-                botonC.interactable = true;
-                botonC.GetComponentInChildren<TextMeshProUGUI>().text = "Comenzar Cuestionario";
-            }
+            if (botonA != null) { botonA.image.enabled = false; botonA.interactable = false; botonA.GetComponentInChildren<TextMeshProUGUI>().text = ""; }
+            if (botonB != null) { botonB.image.enabled = false; botonB.interactable = false; botonB.GetComponentInChildren<TextMeshProUGUI>().text = ""; }
+            if (botonC != null) { botonC.image.enabled = true; botonC.interactable = true; botonC.GetComponentInChildren<TextMeshProUGUI>().text = "Comenzar Cuestionario"; }
+            
             esperandoSiguiente = false;
         }
-        // ESTADO 2: Flujo normal de preguntas
+        // ESTADO 2: Flujo de preguntas
         else if (preguntaActual < bancoPreguntas.Length)
         {
             if (botonA != null) { botonA.image.enabled = true; botonA.interactable = true; }
@@ -140,6 +131,7 @@ public class GestorCuestionario : MonoBehaviour
             botonA.GetComponentInChildren<TextMeshProUGUI>().text = p.opcionA;
             botonB.GetComponentInChildren<TextMeshProUGUI>().text = p.opcionB;
             botonC.GetComponentInChildren<TextMeshProUGUI>().text = p.opcionC;
+            
             esperandoSiguiente = false;
         }
         // ESTADO 3: Fin del cuestionario
@@ -157,6 +149,7 @@ public class GestorCuestionario : MonoBehaviour
         {
             if (opcionSeleccionada == 2) 
             {
+                // AJUSTE: Se eliminó el disparo de sonido aquí al dar clic en Comenzar
                 enIntroduccion = false;
                 ActualizarPantalla();
             }
@@ -167,6 +160,9 @@ public class GestorCuestionario : MonoBehaviour
         {
             botonPresionado.image.color = colorCorrecto;
             textoFeedback.text = "<color=green>¡Excelente! Respuesta correcta.</color>";
+            
+            if (reproductorAudio != null && sonidoCorrecto != null) reproductorAudio.PlayOneShot(sonidoCorrecto);
+
             esperandoSiguiente = true;
             StartCoroutine(SiguientePreguntaCo());
         }
@@ -174,6 +170,8 @@ public class GestorCuestionario : MonoBehaviour
         {
             botonPresionado.image.color = colorIncorrecto;
             textoFeedback.text = "<color=red>Respuesta incorrecta. Analiza el equipo e intenta de nuevo.</color>";
+            
+            if (reproductorAudio != null && sonidoIncorrecto != null) reproductorAudio.PlayOneShot(sonidoIncorrecto);
         }
     }
 
@@ -186,16 +184,18 @@ public class GestorCuestionario : MonoBehaviour
 
     IEnumerator FinalizarCuestionario()
     {
-        // 1. Mensaje de victoria limpio
-        textoPregunta.text = "¡Cuestionario Superado con Éxito!";
+        // 1. Mensaje de cierre detallado
+        textoPregunta.text = "<b>¡Cuestionario Superado con Éxito!</b>\n\nHas completado la Escena 2: Reconocimiento del proceso de pasteurización.\n\nEstás preparado para iniciar la Escena 3: Simulación del proceso de pasteurización.";
         textoFeedback.text = ""; 
         
         if(botonA != null) botonA.gameObject.SetActive(false);
         if(botonB != null) botonB.gameObject.SetActive(false);
         if(botonC != null) botonC.gameObject.SetActive(false);
 
-        // 2. Esperar 3 segundos
-        yield return new WaitForSeconds(3.0f);
+        // AJUSTE: Se eliminó el disparo de sonido aquí al mostrar el cartel final
+
+        // 2. AJUSTE: Aumentamos el tiempo de espera a 8.0 segundos para leer con total calma
+        yield return new WaitForSeconds(8.0f);
         
         // 3. Desaparecer el Canvas visualmente
         Canvas miCanvas = GetComponent<Canvas>();
@@ -204,14 +204,13 @@ public class GestorCuestionario : MonoBehaviour
             miCanvas.enabled = false;
         }
 
-        // 4. Respiro en el entorno
+        // 4. Breve segundo de respiro con la escena limpia
         yield return new WaitForSeconds(1.0f);
         
-        // 5. Salto de escena
+        // 5. Salto oficial a la escena de simulación
         SceneManager.LoadScene("Escena_03_Simulacion");
     }
 
-    // Aquí está la función que se había borrado por accidente
     void ResetearColorBotones()
     {
         if (botonA != null)
