@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
-using UnityEngine.SceneManagement;
 
 public class GestorCuestionario : MonoBehaviour
 {
@@ -21,12 +20,15 @@ public class GestorCuestionario : MonoBehaviour
     public AudioSource reproductorAudio;
     public AudioClip sonidoCorrecto;
     public AudioClip sonidoIncorrecto;
+
+    [Header("Transición a Escena 3")]
+    [Tooltip("Arrastra aquí el objeto vacío hacia donde se teletransportará el jugador para operar la máquina")]
+    public Transform puntoDestinoEscena3;
     
     private Color colorOriginalBotones;
     private int preguntaActual = 0;
     private bool esperandoSiguiente = false;
     
-    // Variable para controlar la pantalla de bienvenida
     private bool enIntroduccion = true;
 
     private class DatosPregunta
@@ -35,7 +37,7 @@ public class GestorCuestionario : MonoBehaviour
         public string opcionA;
         public string opcionB;
         public string opcionC;
-        public int respuestaCorrecta; // 0 = A, 1 = B, 2 = C
+        public int respuestaCorrecta; 
 
         public DatosPregunta(string e, string a, string b, string c, int correcto)
         {
@@ -49,7 +51,6 @@ public class GestorCuestionario : MonoBehaviour
     {
         if (botonA != null) colorOriginalBotones = botonA.image.color;
         
-        // --- AUTOCONFIGURACIÓN A PRUEBA DE FALLOS ---
         if (botonA != null) { botonA.onClick.RemoveAllListeners(); botonA.onClick.AddListener(() => ValidarRespuesta(0, botonA)); }
         if (botonB != null) { botonB.onClick.RemoveAllListeners(); botonB.onClick.AddListener(() => ValidarRespuesta(1, botonB)); }
         if (botonC != null) { botonC.onClick.RemoveAllListeners(); botonC.onClick.AddListener(() => ValidarRespuesta(2, botonC)); }
@@ -108,7 +109,6 @@ public class GestorCuestionario : MonoBehaviour
         textoFeedback.text = "";
         ResetearColorBotones();
 
-        // ESTADO 1: Pantalla de Contexto e Introducción
         if (enIntroduccion)
         {
             textoPregunta.text = "<b>¡Bienvenido al Reto 2!</b>\n\nEste reto consiste en un cuestionario interactivo sobre los fundamentos y beneficios de la pasteurización, así como los componentes del equipo pasteurizador HTST.\n\n<i>Recomendación:</i> Antes de iniciar el cuestionario, se recomienda explorar detalladamente el pasteurizador y el carrusel interactivo de la sala.";
@@ -119,7 +119,6 @@ public class GestorCuestionario : MonoBehaviour
             
             esperandoSiguiente = false;
         }
-        // ESTADO 2: Flujo de preguntas
         else if (preguntaActual < bancoPreguntas.Length)
         {
             if (botonA != null) { botonA.image.enabled = true; botonA.interactable = true; }
@@ -134,7 +133,6 @@ public class GestorCuestionario : MonoBehaviour
             
             esperandoSiguiente = false;
         }
-        // ESTADO 3: Fin del cuestionario
         else
         {
             StartCoroutine(FinalizarCuestionario());
@@ -149,7 +147,6 @@ public class GestorCuestionario : MonoBehaviour
         {
             if (opcionSeleccionada == 2) 
             {
-                // AJUSTE: Se eliminó el disparo de sonido aquí al dar clic en Comenzar
                 enIntroduccion = false;
                 ActualizarPantalla();
             }
@@ -184,7 +181,7 @@ public class GestorCuestionario : MonoBehaviour
 
     IEnumerator FinalizarCuestionario()
     {
-        // 1. Mensaje de cierre detallado
+        // 1. Mensaje de cierre
         textoPregunta.text = "<b>¡Cuestionario Superado con Éxito!</b>\n\nHas completado la Escena 2: Reconocimiento del proceso de pasteurización.\n\nEstás preparado para iniciar la Escena 3: Simulación del proceso de pasteurización.";
         textoFeedback.text = ""; 
         
@@ -192,23 +189,74 @@ public class GestorCuestionario : MonoBehaviour
         if(botonB != null) botonB.gameObject.SetActive(false);
         if(botonC != null) botonC.gameObject.SetActive(false);
 
-        // AJUSTE: Se eliminó el disparo de sonido aquí al mostrar el cartel final
-
-        // 2. AJUSTE: Aumentamos el tiempo de espera a 8.0 segundos para leer con total calma
+        // 2. Tiempo de lectura
         yield return new WaitForSeconds(8.0f);
         
-        // 3. Desaparecer el Canvas visualmente
+        // 3. Desaparecer el menú visualmente
         Canvas miCanvas = GetComponent<Canvas>();
-        if (miCanvas != null)
+        if (miCanvas != null) miCanvas.enabled = false;
+
+        // --- INICIA LA MAGIA DE LA TRANSICIÓN (FADE OUT + TELEPORT + FADE IN) ---
+        
+        // A. Crear el panel negro frente a la cámara
+        GameObject canvasFadeObj = new GameObject("Canvas_FadeVirtual");
+        Canvas canvasFade = canvasFadeObj.AddComponent<Canvas>();
+        canvasFade.renderMode = RenderMode.WorldSpace;
+        canvasFade.sortingOrder = 999; 
+
+        Transform camaraVR = Camera.main.transform;
+        canvasFadeObj.transform.SetParent(camaraVR, false);
+        canvasFadeObj.transform.localPosition = new Vector3(0, 0, 0.5f); 
+        canvasFadeObj.transform.localRotation = Quaternion.identity;
+        canvasFadeObj.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
+
+        GameObject imgObj = new GameObject("Cuadro_Negro");
+        imgObj.transform.SetParent(canvasFadeObj.transform, false);
+        Image imagenNegra = imgObj.AddComponent<Image>();
+        imagenNegra.color = new Color(0, 0, 0, 0); 
+        imagenNegra.rectTransform.sizeDelta = new Vector2(5000, 5000); 
+        imagenNegra.raycastTarget = false; 
+
+        float duracionFade = 2f;
+        float tiempo = 0;
+
+        // B. FADE OUT (Fundido a negro progresivo)
+        while (tiempo < duracionFade)
         {
-            miCanvas.enabled = false;
+            tiempo += Time.deltaTime;
+            imagenNegra.color = new Color(0, 0, 0, Mathf.Lerp(0, 1, tiempo / duracionFade));
+            yield return null;
         }
 
-        // 4. Breve segundo de respiro con la escena limpia
-        yield return new WaitForSeconds(1.0f);
-        
-        // 5. Salto oficial a la escena de simulación
-        SceneManager.LoadScene("Escena_03_Simulacion");
+        // C. ¡EL TELETRANSPORTE! (En la oscuridad total)
+        if (puntoDestinoEscena3 != null)
+        {
+            Transform rootJugador = camaraVR.root;
+
+            // Ajustamos la rotación para que mire al frente del panel
+            float diferenciaRotacion = puntoDestinoEscena3.eulerAngles.y - camaraVR.eulerAngles.y;
+            rootJugador.Rotate(0, diferenciaRotacion, 0);
+
+            // Ajustamos la posición respetando la altura del usuario
+            Vector3 diferenciaPosicion = puntoDestinoEscena3.position - camaraVR.position;
+            diferenciaPosicion.y = 0; 
+            rootJugador.position += diferenciaPosicion;
+        }
+
+        // Un breve respiro
+        yield return new WaitForSeconds(0.5f);
+
+        // D. FADE IN (Aclarar progresivamente la vista en la nueva zona)
+        tiempo = 0;
+        while (tiempo < duracionFade)
+        {
+            tiempo += Time.deltaTime;
+            imagenNegra.color = new Color(0, 0, 0, Mathf.Lerp(1, 0, tiempo / duracionFade));
+            yield return null;
+        }
+
+        // E. Limpieza
+        Destroy(canvasFadeObj);
     }
 
     void ResetearColorBotones()

@@ -2564,6 +2564,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &141025962
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 141025963}
+  m_Layer: 0
+  m_Name: Punto_Inicio_Escena3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &141025963
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 141025962}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.527, y: 0, z: 13.67}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3571493831561879702}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &142545943
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18724,6 +18755,7 @@ MonoBehaviour:
   reproductorAudio: {fileID: 857495569}
   sonidoCorrecto: {fileID: 8300000, guid: 7f290dbd13a49ea4686a822a94a5e853, type: 3}
   sonidoIncorrecto: {fileID: 8300000, guid: 0f1de9a42c6c27b4c9004db022cfcc61, type: 3}
+  puntoDestinoEscena3: {fileID: 141025963}
 --- !u!82 &857495569
 AudioSource:
   m_ObjectHideFlags: 0
@@ -68622,6 +68654,7 @@ Transform:
   - {fileID: 1328574936}
   - {fileID: 428076122}
   - {fileID: 1546685619}
+  - {fileID: 141025963}
   - {fileID: 895087037}
   - {fileID: 97840083}
   - {fileID: 7379854910183997225}
