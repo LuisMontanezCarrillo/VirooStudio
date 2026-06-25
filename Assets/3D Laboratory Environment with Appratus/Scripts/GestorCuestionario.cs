@@ -18,18 +18,23 @@ public class GestorCuestionario : MonoBehaviour
 
     [Header("Efectos de Sonido")]
     public AudioSource reproductorAudio;
+    public AudioClip audioIntroReto2; 
+    public AudioClip audioCierreReto2; 
     public AudioClip sonidoCorrecto;
     public AudioClip sonidoIncorrecto;
 
     [Header("Transición a Escena 3")]
     [Tooltip("Arrastra aquí el objeto vacío hacia donde se teletransportará el jugador para operar la máquina")]
     public Transform puntoDestinoEscena3;
+    [Tooltip("Arrastra aquí el Canvas de la Escena 3 para que se encienda automáticamente tras el viaje")]
+    public GameObject canvasEscena3; 
     
     private Color colorOriginalBotones;
     private int preguntaActual = 0;
     private bool esperandoSiguiente = false;
     
     private bool enIntroduccion = true;
+    private bool introReproducida = false; 
 
     private class DatosPregunta
     {
@@ -51,7 +56,6 @@ public class GestorCuestionario : MonoBehaviour
     {
         if (botonA != null) colorOriginalBotones = botonA.image.color;
         
-        // --- AUTOCONFIGURACIÓN A PRUEBA DE FALLOS ---
         if (botonA != null) { botonA.onClick.RemoveAllListeners(); botonA.onClick.AddListener(() => ValidarRespuesta(0, botonA)); }
         if (botonB != null) { botonB.onClick.RemoveAllListeners(); botonB.onClick.AddListener(() => ValidarRespuesta(1, botonB)); }
         if (botonC != null) { botonC.onClick.RemoveAllListeners(); botonC.onClick.AddListener(() => ValidarRespuesta(2, botonC)); }
@@ -110,24 +114,28 @@ public class GestorCuestionario : MonoBehaviour
         textoFeedback.text = "";
         ResetearColorBotones();
 
-        // ESTADO 1: Pantalla de Contexto e Introducción
         if (enIntroduccion)
         {
-            // AJUSTE: Mensaje actualizado con tu solicitud exacta
             textoPregunta.text = "<b>¡Bienvenido al Reto 2!</b>\n\nEste reto consiste en responder un cuestionario interactivo sobre los fundamentos y beneficios de la pasteurización, así como los componentes del equipo pasteurizador HTST.\n\n<i>Recomendación:</i> Antes de iniciar el cuestionario, se recomienda explorar detalladamente el pasteurizador y el carrusel interactivo ubicado en la planta piloto.";
             
             if (botonA != null) { botonA.image.enabled = false; botonA.interactable = false; botonA.GetComponentInChildren<TextMeshProUGUI>().text = ""; }
             if (botonB != null) { botonB.image.enabled = false; botonB.interactable = false; botonB.GetComponentInChildren<TextMeshProUGUI>().text = ""; }
             if (botonC != null) { botonC.image.enabled = true; botonC.interactable = true; botonC.GetComponentInChildren<TextMeshProUGUI>().text = "Comenzar Cuestionario"; }
             
+            if (!introReproducida && reproductorAudio != null && audioIntroReto2 != null)
+            {
+                reproductorAudio.clip = audioIntroReto2;
+                reproductorAudio.Play();
+                introReproducida = true;
+            }
+
             esperandoSiguiente = false;
         }
-        // ESTADO 2: Flujo de preguntas
         else if (preguntaActual < bancoPreguntas.Length)
         {
             if (botonA != null) { botonA.image.enabled = true; botonA.interactable = true; }
             if (botonB != null) { botonB.image.enabled = true; botonB.interactable = true; }
-            if (botonC != null) { imagenC: botonC.image.enabled = true; botonC.interactable = true; }
+            if (botonC != null) { botonC.image.enabled = true; botonC.interactable = true; }
 
             DatosPregunta p = bancoPreguntas[preguntaActual];
             textoPregunta.text = p.enunciado;
@@ -137,7 +145,6 @@ public class GestorCuestionario : MonoBehaviour
             
             esperandoSiguiente = false;
         }
-        // ESTADO 3: Fin del cuestionario
         else
         {
             StartCoroutine(FinalizarCuestionario());
@@ -152,6 +159,8 @@ public class GestorCuestionario : MonoBehaviour
         {
             if (opcionSeleccionada == 2) 
             {
+                if (reproductorAudio != null) reproductorAudio.Stop();
+                
                 enIntroduccion = false;
                 ActualizarPantalla();
             }
@@ -193,7 +202,13 @@ public class GestorCuestionario : MonoBehaviour
         if(botonB != null) botonB.gameObject.SetActive(false);
         if(botonC != null) botonC.gameObject.SetActive(false);
 
-        yield return new WaitForSeconds(8.0f);
+        if (reproductorAudio != null && audioCierreReto2 != null)
+        {
+            reproductorAudio.clip = audioCierreReto2;
+            reproductorAudio.Play();
+        }
+
+        yield return new WaitForSeconds(21.0f);
         
         Canvas miCanvas = GetComponent<Canvas>();
         if (miCanvas != null) miCanvas.enabled = false;
@@ -239,6 +254,22 @@ public class GestorCuestionario : MonoBehaviour
             Vector3 diferenciaPosicion = puntoDestinoEscena3.position - camaraVR.position;
             diferenciaPosicion.y = 0; 
             rootJugador.position += diferenciaPosicion;
+        }
+
+        // --- SISTEMA DE DIAGNÓSTICO Y APERTURA DE CANVAS ESCENA 3 ---
+        if (canvasEscena3 != null)
+        {
+            canvasEscena3.SetActive(true);
+            
+            // Fuerza la activación del componente Canvas por si acaso estuviera apagado internamente
+            Canvas compCanvas3 = canvasEscena3.GetComponent<Canvas>();
+            if (compCanvas3 != null) compCanvas3.enabled = true;
+
+            Debug.Log("<color=cyan><b>[DIAGNÓSTICO]</b> El Canvas de la Escena 3 ha sido encendido exitosamente por código en la jerarquía.</color>");
+        }
+        else
+        {
+            Debug.LogError("<color=red><b>[ERROR CRÍTICO]</b> No aparece el Canvas de la Escena 3 porque te olvidaste de arrastrarlo a la casilla 'Canvas Escena 3' en el Inspector.</color>");
         }
 
         yield return new WaitForSeconds(0.5f);
