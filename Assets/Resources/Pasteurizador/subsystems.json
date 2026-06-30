@@ -51,10 +51,10 @@
     {
       "key": "07_FDV_Diversion",
       "tag": "FCV-01",
-      "title": "VALVULA DE DIVERSION",
+      "title": "VALVULA DE DESVIACION",
       "colorHex": "ff4136",
       "showLabel": true,
-      "description": "Valvula de diversion (FDV) - elemento de SEGURIDAD CRITICA HACCP. Si la temperatura a la salida del tubo de retencion cae bajo el setpoint (<72 C tipico), desvia el flujo automaticamente de vuelta al tanque de balance."
+      "description": "Valvula de desviacion (FDV) - elemento de SEGURIDAD CRITICA HACCP. Si la temperatura a la salida del tubo de retencion cae bajo el setpoint (<72 C tipico), desvia el flujo automaticamente de vuelta al tanque de balance."
     },
     {
       "key": "07_Valvulas",
@@ -259,7 +259,7 @@
   ],
   "specific": [
     { "namePrefix": "HMI_Pantalla",       "description": "Display tactil 7\" del operador. Muestra temperaturas (TT-Holding, TT-Salida), presiones (PT-Bomba, PT-PHE), estado de cada valvula/bomba, alarmas activas, y permite ajustar setpoints." },
-    { "namePrefix": "Boton_Emergencia",   "description": "Pulsador de emergencia tipo hongo NC con enclavamiento mecanico. Al accionarse corta TODA la energia al equipo y va a estado seguro (bombas paradas, FDV en diversion)." },
+    { "namePrefix": "Boton_Emergencia",   "description": "Pulsador de emergencia tipo hongo NC con enclavamiento mecanico. Al accionarse corta TODA la energia al equipo y va a estado seguro (bombas paradas, FDV en desviacion)." },
     { "namePrefix": "Boton_Start",        "description": "Pulsador NA verde - arranque del ciclo de produccion. Solo permite arrancar si todas las precondiciones se cumplen (interlocks)." },
     { "namePrefix": "Boton_Reset",        "description": "Reset de alarmas y reinicio del ciclo despues de una desviacion." },
     { "namePrefix": "Selector_Modo",      "description": "Selector rotativo de 3 posiciones: MANUAL / PRODUCCION / CIP." },

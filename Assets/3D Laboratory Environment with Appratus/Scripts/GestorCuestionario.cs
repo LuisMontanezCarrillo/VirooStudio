@@ -101,7 +101,7 @@ public class GestorCuestionario : MonoBehaviour
         );
 
         bancoPreguntas[4] = new DatosPregunta(
-            "La Válvula de Diversión es clave para el HACCP. ¿Qué ocurre si la temperatura a la salida del tubo de retención cae bajo el setpoint?",
+            "La Válvula de Desviación es clave para el HACCP. ¿Qué ocurre si la temperatura a la salida del tubo de retención cae bajo el setpoint?",
             "A) Empuja la leche contra el delta-P para evitar contaminación por descompresión.",
             "B) Desvía el flujo automáticamente de vuelta al tanque de balance.",
             "C) Activa las válvulas neumáticas superiores para aislar las secciones.",
