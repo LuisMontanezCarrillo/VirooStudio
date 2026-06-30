@@ -70,16 +70,8 @@ namespace ViroLab.Pasteurizador
             if (tagBackground != null) tagBackground.color = color;
             if (tagLabel != null) tagLabel.text = string.IsNullOrEmpty(info.subsystem.tag) ? "?" : info.subsystem.tag;
             if (titleLabel != null) titleLabel.text = info.subsystem.title ?? info.partName;
-            if (partNameLabel != null)
-            {
-                if (!string.IsNullOrEmpty(info.partName)
-                    && info.partName != info.subsystem.title)
-                {
-                    partNameLabel.gameObject.SetActive(true);
-                    partNameLabel.text = info.partName;
-                }
-                else partNameLabel.gameObject.SetActive(false);
-            }
+            // El nombre de malla (p. ej. T_RAW_FBX_..., Gabinete_Manilla) no aporta al estudiante: ocultar siempre.
+            if (partNameLabel != null) partNameLabel.gameObject.SetActive(false);
             if (descriptionLabel != null) descriptionLabel.text = info.description ?? info.subsystem.description ?? "";
             Show();
         }

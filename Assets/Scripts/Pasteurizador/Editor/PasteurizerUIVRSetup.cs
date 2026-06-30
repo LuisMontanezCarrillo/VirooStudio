@@ -66,10 +66,10 @@ namespace ViroLab.Pasteurizador.EditorTools
                 worldCanvas = Undo.AddComponent<PasteurizerWorldCanvas>(canvasGO);
             }
             worldCanvas.followMode = PasteurizerWorldCanvas.FollowMode.FaceCameraSmoothed;
-            worldCanvas.distance = 1.2f;
+            worldCanvas.distance = 0.85f;
             worldCanvas.verticalOffset = -0.20f;
             worldCanvas.horizontalOffset = 0f;
-            worldCanvas.worldScale = 0.001f;
+            worldCanvas.worldScale = 0.0016f;
             worldCanvas.positionLerp = 6f;
             worldCanvas.rotationLerp = 6f;
             worldCanvas.showOnlyWhenPinned = true;  // solo aparece al hacer click
@@ -103,7 +103,7 @@ namespace ViroLab.Pasteurizador.EditorTools
                     cardRT.pivot = new Vector2(0.5f, 0.5f);
                     cardRT.anchoredPosition = Vector2.zero;
                     // Card más grande en VR para que se lea
-                    cardRT.sizeDelta = new Vector2(600f, 340f);
+                    cardRT.sizeDelta = new Vector2(720f, 440f);
                 }
                 // Conectar hover si quedó vacío
                 if (card.hover == null) card.hover = hover;
