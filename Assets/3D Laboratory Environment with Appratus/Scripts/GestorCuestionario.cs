@@ -85,7 +85,7 @@ public class GestorCuestionario : MonoBehaviour
         );
 
         bancoPreguntas[2] = new DatosPregunta(
-            "De acuerdo con la descripción del equipo, ¿qué funciones integran las múltiples secciones del Intercambiador de Placas (HE-01)?",
+            "De acuerdo con la descripción del equipo, ¿qué funciones integran las múltiples secciones del Intercambiador de Placas?",
             "A) Almacenar la leche cruda, mantener la columna hidrostática y desacoplar presiones.",
             "B) Regeneración, calentamiento con agua caliente y enfriamiento con agua fría.",
             "C) Garantizar el tiempo mínimo a temperatura de pasteurización (≥15 s a ≥72 °C).",
@@ -94,9 +94,9 @@ public class GestorCuestionario : MonoBehaviour
 
         bancoPreguntas[3] = new DatosPregunta(
             "¿Qué componente tiene la función específica de garantizar el tiempo mínimo a temperatura de pasteurización (≥15 s a ≥72 °C)?",
-            "A) El Tubo de Retención (HT-01).",
-            "B) La Bomba Booster (P-02).",
-            "C) El Filtro Y Sanitario (F-01).",
+            "A) El Tubo de Retención.",
+            "B) La Bomba Booster.",
+            "C) El Filtro Y Sanitario.",
             0 
         );
 
@@ -116,7 +116,7 @@ public class GestorCuestionario : MonoBehaviour
 
         if (enIntroduccion)
         {
-            textoPregunta.text = "<b>¡Bienvenido al Reto 2!</b>\n\nEste reto consiste en responder un cuestionario interactivo sobre los fundamentos y beneficios de la pasteurización, así como los componentes del equipo pasteurizador HTST.\n\n<i>Recomendación:</i> Antes de iniciar el cuestionario, se recomienda explorar detalladamente el pasteurizador y el carrusel interactivo ubicado en la planta piloto.";
+            textoPregunta.text = "<b>¡Bienvenido al Reto 2!</b>\n\nEste reto consiste en responder un cuestionario interactivo sobre los fundamentos y beneficios de la pasteurización, así como los componentes del equipo pasteurizador HTST.\n\n</i> Antes de iniciar el cuestionario, se recomienda explorar detalladamente el pasteurizador y el carrusel interactivo ubicado en la planta piloto.";
             
             if (botonA != null) { botonA.image.enabled = false; botonA.interactable = false; botonA.GetComponentInChildren<TextMeshProUGUI>().text = ""; }
             if (botonB != null) { botonB.image.enabled = false; botonB.interactable = false; botonB.GetComponentInChildren<TextMeshProUGUI>().text = ""; }
