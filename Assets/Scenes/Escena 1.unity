@@ -30003,6 +30003,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1328574938}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b2659a795d8e0d8439c8aa648ee8b27c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1328574941}
   m_SourcePrefab: {fileID: 100100000, guid: b2659a795d8e0d8439c8aa648ee8b27c, type: 3}
 --- !u!4 &1328574936 stripped
 Transform:
@@ -30075,7 +30079,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.8
   m_Pitch: 1
   Loop: 0
@@ -30196,6 +30200,40 @@ VideoPlayer:
   m_WaitForFirstFrame: 1
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
+--- !u!114 &1328574941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328574937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc1a3e0232d911c42a5ec7c95549f00b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  engine: {fileID: 1328574938}
+  source: {fileID: 1328574939}
+  tablero: {fileID: 1328574936}
+  proximityDistance: 4
+  greetOnStart: 0
+  bienvenida: {fileID: 8300000, guid: a7ad24778f8a24e40837ab77c0f48e04, type: 3}
+  energia: {fileID: 8300000, guid: c2126eb2ba3fc6c4cae6a87c8d3ffcc1, type: 3}
+  iniciar: {fileID: 8300000, guid: 617ff2a4624143040be5f6557b400f78, type: 3}
+  llenado: {fileID: 8300000, guid: 9d63df9534f84e04fa1e45019b89c0e4, type: 3}
+  calefactor: {fileID: 8300000, guid: 02bc9252a7332ad48a27dd1f52c13943, type: 3}
+  tempLista: {fileID: 8300000, guid: a5f764c0852eb1840a4fef7c88bf8e51, type: 3}
+  refrigerador: {fileID: 8300000, guid: b12b9103ece3dfe4fa3faabece852e0b, type: 3}
+  bombaProducto: {fileID: 8300000, guid: 037f862935b6c1d4e92a39b42f1a2817, type: 3}
+  acumulando: {fileID: 8300000, guid: c9f2d495e5345b34c9c26c24f2952354, type: 3}
+  valido: {fileID: 8300000, guid: 55bfe61fa448627468c8e7b18ff78dd7, type: 3}
+  alarma: {fileID: 8300000, guid: 4c38412c0f51c8e4aa42501b00afe914, type: 3}
+  tanqueLleno: {fileID: 8300000, guid: 41ea9ad387a93d644a65ac9017fb41cc, type: 3}
+  finLote: {fileID: 8300000, guid: 4547dd47a8fca9243bc38c5227b46522, type: 3}
+  faltaEnergia: {fileID: 8300000, guid: f165255155a555d46b234a30cc5f9414, type: 3}
+  faltaIniciar: {fileID: 8300000, guid: 2d3b8f17bfaea454fb4ef4d7d47f26f4, type: 3}
+  faltaTemp: {fileID: 8300000, guid: 85a011ebcd6a2924198be84d1b870739, type: 3}
+  faltaNivel: {fileID: 8300000, guid: a84af83a579bed447a30dec4fcb67dff, type: 3}
 --- !u!1 &1336093606
 GameObject:
   m_ObjectHideFlags: 0
