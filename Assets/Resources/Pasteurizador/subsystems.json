@@ -6,7 +6,7 @@
       "title": "SKID",
       "colorHex": "a3b8d4",
       "showLabel": false,
-      "description": "Bastidor estructural en acero inoxidable AISI 304 + drip pan con borde levantado para contencion de derrames. Losa apoyada directo en el piso (z=0)."
+      "description": "Es la estructura metálica que sostiene toda la máquina, como el chasis donde se montan los equipos. También recoge cualquier goteo para mantener el área limpia."
     },
     {
       "key": "02_Tablero_Control",
@@ -14,7 +14,7 @@
       "title": "TABLERO DE CONTROL",
       "colorHex": "ffd700",
       "showLabel": true,
-      "description": "Gabinete con PLC + HMI tactil para operacion (start/stop, modos produccion/CIP, setpoints). Incluye amperimetros, botonera, selector de modo y rejilla de ventilacion lateral."
+      "description": "Es el panel de mando de la máquina. Desde su pantalla táctil el operador la enciende, la apaga y controla el proceso, y vigila las temperaturas y las alertas."
     },
     {
       "key": "03_Tanque_Balance",
@@ -22,7 +22,7 @@
       "title": "TANQUE DE BALANCE",
       "colorHex": "7fdbff",
       "showLabel": true,
-      "description": "Buffer entre la leche cruda y la bomba de alimentacion. Mantiene columna hidrostatica constante y desacopla variaciones de presion. Tiene visor de nivel, manway abisagrado, boquillas de retorno y CIP."
+      "description": "Un tanque que guarda la leche antes de procesarla y mantiene un flujo parejo, para que la máquina siempre reciba leche de forma estable y sin baches."
     },
     {
       "key": "04_Bomba_Alimentacion",
@@ -30,7 +30,7 @@
       "title": "BOMBA ALIMENTACION",
       "colorHex": "ff851b",
       "showLabel": true,
-      "description": "Bomba centrifuga sanitaria que toma leche del tanque de balance y la empuja a la seccion de regeneracion del intercambiador de placas."
+      "description": "La bomba que toma la leche del tanque y la empuja hacia el resto del equipo. Es la que pone la leche en movimiento por el proceso."
     },
     {
       "key": "05_Bomba_Booster",
@@ -38,7 +38,7 @@
       "title": "BOMBA BOOSTER",
       "colorHex": "ff851b",
       "showLabel": true,
-      "description": "Bomba booster: toma la leche pre-calentada de la seccion de regeneracion y la empuja contra el delta-P del tubo de retencion. Asegura sobre-presion para evitar contaminacion por descompresion."
+      "description": "Una segunda bomba que da un empujón extra de presión, para que la leche avance con fuerza y se mantenga segura sin riesgo de contaminarse."
     },
     {
       "key": "06_Intercambiador_Placas",
@@ -46,7 +46,7 @@
       "title": "INTERCAMBIADOR DE PLACAS",
       "colorHex": "39cccc",
       "showLabel": true,
-      "description": "Intercambiador de placas multi-seccion: regeneracion + calentamiento (agua caliente del calderin) + enfriamiento (agua fria del chiller). 56 placas pulidas con corrugacion herringbone. Eficiencia de regeneracion >90%."
+      "description": "El corazón del proceso. Son placas metálicas donde la leche primero se calienta y luego se enfría, sin mezclarse con el agua. Reaprovecha el calor para gastar menos energía."
     },
     {
       "key": "07_FDV_Diversion",
@@ -54,7 +54,7 @@
       "title": "VALVULA DE DESVIACION",
       "colorHex": "ff4136",
       "showLabel": true,
-      "description": "Valvula de desviacion (FDV) - elemento de SEGURIDAD CRITICA HACCP. Si la temperatura a la salida del tubo de retencion cae bajo el setpoint (<72 C tipico), desvia el flujo automaticamente de vuelta al tanque de balance."
+      "description": "La válvula de seguridad más importante. Si la leche no alcanzó la temperatura necesaria, la devuelve automáticamente para procesarla de nuevo y evita que salga leche mal pasteurizada."
     },
     {
       "key": "07_Valvulas",
@@ -62,7 +62,7 @@
       "title": "VALVULAS SANITARIAS",
       "colorHex": "01ff70",
       "showLabel": false,
-      "description": "Valvulas sanitarias de diafragma con actuador neumatico (capucha azul). Cumple 3-A Sanitary Standards: cuerpo en AISI 316L, juntas EPDM grado alimentario, sin zonas muertas."
+      "description": "Llaves de paso higiénicas que abren y cierran para dirigir por dónde va la leche. Son de grado alimenticio."
     },
     {
       "key": "07_Valvulas_Top_PHE",
@@ -70,7 +70,7 @@
       "title": "VALVULAS SUPERIORES PHE",
       "colorHex": "01ff70",
       "showLabel": false,
-      "description": "Banco de valvulas neumaticas sobre el intercambiador: aislan secciones individuales para mantenimiento, ruteo CIP, y conexion/desconexion de servicios (vapor, agua, glicol)."
+      "description": "Un grupo de válvulas sobre el intercambiador que permiten aislar zonas para limpiar o dar mantenimiento sin detener todo el equipo."
     },
     {
       "key": "08_Tubo_Retencion",
@@ -78,7 +78,7 @@
       "title": "TUBO DE RETENCION",
       "colorHex": "ff70a6",
       "showLabel": true,
-      "description": "Tubo de retencion (holding tube): garantiza el tiempo minimo a temperatura de pasteurizacion (>=15 s a >=72 C, Grade A milk, 21 CFR 1240.61). Pendiente positiva hacia FDV para drenaje completo."
+      "description": "Un tramo de tubería donde la leche caliente permanece los segundos justos para asegurar que quede bien pasteurizada. Es clave para eliminar los microbios."
     },
     {
       "key": "09_Tuberias_Proceso",
@@ -86,7 +86,7 @@
       "title": "TUBERIAS DEL PROCESO",
       "colorHex": "dddddd",
       "showLabel": false,
-      "description": "Red de tuberias sanitarias AISI 316L con tri-clamps. Codos largos sin zonas muertas. Pendientes calculadas para autodrenaje."
+      "description": "Los tubos por donde viaja la leche de un equipo a otro. Están inclinados para vaciarse y limpiarse solos."
     },
     {
       "key": "10_Instrumentos",
@@ -94,7 +94,7 @@
       "title": "INSTRUMENTOS",
       "colorHex": "b10dc9",
       "showLabel": false,
-      "description": "Manometros, transmisores de presion (PT) y termometros (TT). Conectados via gooseneck/snubber para amortiguar pulsaciones."
+      "description": "Los medidores del equipo: sensores que miden temperatura y presión para saber en todo momento cómo va el proceso."
     },
     {
       "key": "11_Cables_y_Conexiones",
@@ -102,7 +102,7 @@
       "title": "CABLES Y CAJA DE CONEXIONES",
       "colorHex": "aaaaaa",
       "showLabel": false,
-      "description": "Cables flexibles entre sensores de campo y la caja de conexiones (Junction Box) del tablero. Conduit flex IP65 anti-vibracion."
+      "description": "Los cables que conectan los sensores con el tablero y la caja donde se unen. Son como el sistema nervioso de la máquina."
     },
     {
       "key": "11_Manifold_Aire",
@@ -110,7 +110,7 @@
       "title": "MANIFOLD DE AIRE",
       "colorHex": "88aaff",
       "showLabel": false,
-      "description": "Manifold con banco de solenoides 5/2 que distribuye aire comprimido (6 bar) a cada actuador neumatico de las valvulas. Tubos PU calibre 6 mm color azul."
+      "description": "El sistema que reparte aire comprimido para que las válvulas se abran y cierren solas, de forma automática."
     },
     {
       "key": "11_Filtro_Y_Strainer",
@@ -118,7 +118,7 @@
       "title": "FILTRO Y SANITARIO",
       "colorHex": "aef9b9",
       "showLabel": false,
-      "description": "Filtro Y sanitario antes de la bomba de alimentacion. Atrapa solidos y particulas >100 microns. Tapa abisagrada con perilla para limpieza/extraccion del tamiz sin desmontar tuberia."
+      "description": "Un filtro que atrapa suciedad o partículas antes de que la leche entre a la bomba, para proteger el equipo."
     },
     {
       "key": "11_Caudalimetro_FT",
@@ -126,7 +126,7 @@
       "title": "CAUDALIMETRO MAGNETICO",
       "colorHex": "aef9b9",
       "showLabel": false,
-      "description": "Caudalimetro magnetico FT-01 en la linea de salida de producto pasteurizado. Mide volumen total y caudal instantaneo. Display digital + salida 4-20 mA al PLC para totalizacion HACCP."
+      "description": "Un medidor que cuenta cuántos litros de leche pasan, para llevar el control de cuánto producto se procesa."
     },
     {
       "key": "11_Check_Valves",
@@ -134,7 +134,7 @@
       "title": "CHECK VALVES (anti-retorno)",
       "colorHex": "caffbf",
       "showLabel": false,
-      "description": "Valvulas anti-retorno inline en la descarga de cada bomba. Evitan flujo inverso al detener la bomba, protegiendo de golpe de ariete y contaminacion cruzada."
+      "description": "Válvulas que solo dejan pasar la leche en un sentido, para que nunca se devuelva hacia atrás."
     },
     {
       "key": "11_Relief_Valve_PSV",
@@ -142,7 +142,7 @@
       "title": "VALVULA DE ALIVIO (PSV)",
       "colorHex": "ff8c42",
       "showLabel": false,
-      "description": "Valvula de alivio de presion - elemento de seguridad mecanica del holding tube. Si la presion supera el setpoint (10 barg tipico), abre y descarga a drenaje."
+      "description": "Una válvula de seguridad que libera presión si sube demasiado, para proteger el equipo y evitar accidentes."
     },
     {
       "key": "11_Reg_Presion_Vapor",
@@ -150,7 +150,7 @@
       "title": "REGULADOR PRESION DE VAPOR",
       "colorHex": "ff8c42",
       "showLabel": false,
-      "description": "Regulador de presion de vapor con diafragma. Reduce la presion del vapor de red (8-10 barg) a la presion de trabajo del PHE (2-3 barg)."
+      "description": "Controla que el vapor llegue con la presión adecuada, ni mucha ni poca, para calentar de forma segura."
     },
     {
       "key": "11_Acometidas_Externas",
@@ -158,7 +158,7 @@
       "title": "ACOMETIDAS EXTERNAS",
       "colorHex": "9bf6ff",
       "showLabel": false,
-      "description": "Puntos de conexion externos del skid: vapor, agua fria/caliente, CIP, aire comprimido, electrica. Cada uno con valvula de corte manual (volante) y bulkhead fitting en el frame."
+      "description": "Los puntos por donde entran los servicios a la máquina: vapor, agua, aire y electricidad."
     },
     {
       "key": "11_Salidas_y_Drenajes",
@@ -166,7 +166,7 @@
       "title": "SALIDAS Y DRENAJES",
       "colorHex": "bdb2ff",
       "showLabel": false,
-      "description": "Salida final de producto pasteurizado al llenado, salida de muestreo QA, y drenajes en los puntos bajos del PHE y el skid."
+      "description": "Las salidas del producto ya terminado y los puntos de desagüe para vaciar y limpiar el equipo."
     },
     {
       "key": "11_Placas_ID",
@@ -174,7 +174,7 @@
       "title": "PLACAS DE IDENTIFICACION",
       "colorHex": "ffd6a5",
       "showLabel": false,
-      "description": "Placas de identificacion de cada equipo principal. Incluyen tag, modelo, presion/temperatura de diseno, materiales."
+      "description": "Las etiquetas de cada equipo, con su nombre y datos, para identificarlo fácilmente."
     },
     {
       "key": "12_Silo_LecheCruda",
@@ -182,7 +182,7 @@
       "title": "SILO LECHE CRUDA",
       "colorHex": "fff4d6",
       "showLabel": true,
-      "description": "Silo de alimentacion: almacena la leche cruda recibida desde camion cisterna. Tanque vertical AISI 304 con fondo conico, manway abisagrado, agitador de paletas para evitar separacion de grasa. Modelo realista FBX Tripo."
+      "description": "El gran tanque donde se guarda la leche cruda que llega del camión, antes de empezar a procesarla."
     },
     {
       "key": "12_Tanque_Producto",
@@ -190,7 +190,7 @@
       "title": "TANQUE PRODUCTO PASTEURIZADO",
       "colorHex": "a0e0ff",
       "showLabel": true,
-      "description": "Tanque colector de producto pasteurizado a la salida del intercambiador. AISI 304, fondo conico para drenaje completo, manway de inspeccion. Modelo realista FBX Tripo. Alimenta la linea de llenado de envases."
+      "description": "El tanque donde se recoge la leche ya pasteurizada y lista, al final del proceso."
     },
     {
       "key": "12_Calderin_AguaCal",
@@ -198,7 +198,7 @@
       "title": "CALDERIN DE AGUA CALIENTE",
       "colorHex": "ff9999",
       "showLabel": true,
-      "description": "Calderin de agua caliente: recibe vapor de la caldera, lo condensa indirectamente y mantiene el agua de servicio a ~85-90 C que se bombea en circuito cerrado a la seccion de calentamiento del intercambiador. Termometro de control integrado."
+      "description": "Un tanque que mantiene agua muy caliente, que se usa para calentar la leche en el intercambiador."
     },
     {
       "key": "12_Chiller_AguaFria",
@@ -206,7 +206,7 @@
       "title": "CHILLER DE AGUA FRIA",
       "colorHex": "aaccff",
       "showLabel": true,
-      "description": "Tanque buffer de agua helada con unidad de refrigeracion (compresor + condensador) montada en la tapa. Suministra agua a ~2 C que circula en circuito cerrado a la seccion de enfriamiento del intercambiador, llevando la leche pasteurizada a 4-6 C."
+      "description": "Un equipo que enfría agua casi a punto de congelación, para enfriar rápido la leche al final del proceso."
     },
     {
       "key": "12_TanqueAguaMakeup",
@@ -214,7 +214,7 @@
       "title": "TANQUE AGUA MAKEUP",
       "colorHex": "9ed4ff",
       "showLabel": false,
-      "description": "Tanque de agua makeup a temperatura ambiente. Alimenta al tanque pulmon (balance) cuando su nivel cae por debajo del optimo, y compensa perdidas en el circuito de agua caliente del calderin. Observacion del Ing. Tulio Martinez."
+      "description": "Un tanque de agua de repuesto que rellena el sistema cuando el nivel baja, para que nunca falte agua."
     },
     {
       "key": "12_BombaAguaCal_P03",
@@ -222,7 +222,7 @@
       "title": "BOMBA AGUA CALIENTE",
       "colorHex": "ffaa88",
       "showLabel": false,
-      "description": "Bomba centrifuga de servicios que circula agua caliente entre el calderin y la seccion de calentamiento del intercambiador. Caudal calibrado para el delta-T objetivo de pasteurizacion."
+      "description": "La bomba que hace circular el agua caliente entre su tanque y el intercambiador."
     },
     {
       "key": "12_BombaAguaFria_P04",
@@ -230,7 +230,7 @@
       "title": "BOMBA AGUA FRIA",
       "colorHex": "88aaff",
       "showLabel": false,
-      "description": "Bomba centrifuga de servicios que circula agua helada entre el chiller y la seccion de enfriamiento del intercambiador."
+      "description": "La bomba que hace circular el agua fría entre el enfriador y el intercambiador."
     },
     {
       "key": "12_TrampaVapor",
@@ -238,7 +238,7 @@
       "title": "TRAMPA DE VAPOR",
       "colorHex": "ff8c42",
       "showLabel": false,
-      "description": "Trampa de vapor termodinamica tipo disco. Mantiene mayor energia calorica en el intercambiador impidiendo el escape de vapor saturado, dejando salir solo el condensado por gravedad. Observacion del Ing. Tulio Martinez."
+      "description": "Un dispositivo que deja salir el agua condensada pero retiene el vapor, para no desperdiciar calor."
     },
     {
       "key": "12_Caldera_Vapor",
@@ -246,7 +246,7 @@
       "title": "CALDERA DE VAPOR",
       "colorHex": "ff5500",
       "showLabel": true,
-      "description": "Caldera pirotubular horizontal - generador primario de vapor del sistema. Quema gas natural en el quemador frontal, calienta agua dentro del cuerpo y produce vapor saturado (~6-8 barg) que se distribuye al calderin de agua caliente. Incluye 2 PSV de seguridad, manometro, visor de nivel, manway, chimenea y quemador con mirilla."
+      "description": "La máquina que produce el vapor con el que se calienta todo el proceso. Es la fuente principal de calor."
     },
     {
       "key": "99_Otros",
@@ -254,23 +254,65 @@
       "title": "OTROS",
       "colorHex": "888888",
       "showLabel": false,
-      "description": "Componentes auxiliares."
+      "description": "Piezas y accesorios de apoyo del equipo."
     }
   ],
   "specific": [
-    { "namePrefix": "HMI_Pantalla",       "description": "Display tactil 7\" del operador. Muestra temperaturas (TT-Holding, TT-Salida), presiones (PT-Bomba, PT-PHE), estado de cada valvula/bomba, alarmas activas, y permite ajustar setpoints." },
-    { "namePrefix": "Boton_Emergencia",   "description": "Pulsador de emergencia tipo hongo NC con enclavamiento mecanico. Al accionarse corta TODA la energia al equipo y va a estado seguro (bombas paradas, FDV en desviacion)." },
-    { "namePrefix": "Boton_Start",        "description": "Pulsador NA verde - arranque del ciclo de produccion. Solo permite arrancar si todas las precondiciones se cumplen (interlocks)." },
-    { "namePrefix": "Boton_Reset",        "description": "Reset de alarmas y reinicio del ciclo despues de una desviacion." },
-    { "namePrefix": "Selector_Modo",      "description": "Selector rotativo de 3 posiciones: MANUAL / PRODUCCION / CIP." },
-    { "namePrefix": "Tanque_Visor_Nivel", "description": "Visor de vidrio que permite ver el nivel de leche dentro del tanque de balance sin abrirlo. Junta sanitaria EPDM." },
-    { "namePrefix": "Tanque_Manway_Tapa", "description": "Tapa abisagrada del manway. Se abre solo para inspeccion/limpieza manual. Junta EPDM. Knob de cierre rapido." },
-    { "namePrefix": "Tanque_Termowell",   "description": "Vaina termometrica que protege el termopar/RTD sin contacto directo con el producto. Permite cambiar el sensor sin parar produccion." },
-    { "namePrefix": "CB_01_Caldera_Vapor_Cuerpo",   "description": "Cuerpo cilindrico horizontal de la caldera pirotubular. Contiene el agua que se transforma en vapor por accion del quemador." },
-    { "namePrefix": "CB_01_Caldera_Vapor_Quemador", "description": "Quemador frontal de la caldera. Combustion de gas natural genera la energia calorica para producir vapor. La mirilla naranja permite verificar visualmente la llama." },
-    { "namePrefix": "CB_01_Caldera_Vapor_Chimenea", "description": "Chimenea de evacuacion de humos de combustion. Tiro natural + sombrerete anti-lluvia en la cima." },
-    { "namePrefix": "CB_01_Caldera_Vapor_PSV",      "description": "Valvula de seguridad por sobrepresion (PSV). Codigo ASME requiere 2 PSV en cada caldera. Calibradas y precintadas." },
-    { "namePrefix": "CB_01_Caldera_Vapor_Visor",    "description": "Visor de nivel de agua de la caldera. Permite ver visualmente el nivel sin abrir. CRITICO: si baja el nivel y se queda sin agua, riesgo de explosion." },
-    { "namePrefix": "TRAP_01_Trampa_Vapor",         "description": "Trampa termodinamica tipo disco TLV. Elimina condensado del circuito sin perder vapor vivo." }
+    {
+      "namePrefix": "HMI_Pantalla",
+      "description": "La pantalla táctil desde donde se controla todo. Muestra las temperaturas, las presiones, si las válvulas y bombas están activas, y las alarmas."
+    },
+    {
+      "namePrefix": "Boton_Emergencia",
+      "description": "El botón rojo de emergencia. Al presionarlo corta toda la energía de la máquina y la deja en estado seguro: para las bombas y desvía el producto."
+    },
+    {
+      "namePrefix": "Boton_Start",
+      "description": "El botón verde de arranque. Inicia el proceso, pero solo funciona si todo está en condiciones seguras para empezar."
+    },
+    {
+      "namePrefix": "Boton_Reset",
+      "description": "Botón para borrar las alarmas y reiniciar el proceso después de una falla o desviación."
+    },
+    {
+      "namePrefix": "Selector_Modo",
+      "description": "Una perilla para elegir el modo de trabajo: Manual, Producción o Limpieza (CIP)."
+    },
+    {
+      "namePrefix": "Tanque_Visor_Nivel",
+      "description": "Una ventanilla de vidrio para ver cuánta leche hay dentro del tanque sin tener que abrirlo."
+    },
+    {
+      "namePrefix": "Tanque_Manway_Tapa",
+      "description": "La tapa del tanque, con bisagra, que se abre solo para inspeccionar o limpiar por dentro."
+    },
+    {
+      "namePrefix": "Tanque_Termowell",
+      "description": "Una funda que protege el sensor de temperatura y permite cambiarlo sin detener la producción, sin que toque directamente la leche."
+    },
+    {
+      "namePrefix": "CB_01_Caldera_Vapor_Cuerpo",
+      "description": "El cuerpo de la caldera. Adentro está el agua que se convierte en vapor gracias al quemador."
+    },
+    {
+      "namePrefix": "CB_01_Caldera_Vapor_Quemador",
+      "description": "El quemador de la caldera. Quema gas para generar el calor que produce el vapor. La mirilla naranja permite ver la llama."
+    },
+    {
+      "namePrefix": "CB_01_Caldera_Vapor_Chimenea",
+      "description": "La chimenea por donde salen los humos de la combustión de la caldera."
+    },
+    {
+      "namePrefix": "CB_01_Caldera_Vapor_PSV",
+      "description": "Válvulas de seguridad de la caldera. Si la presión sube demasiado, liberan el exceso para evitar accidentes."
+    },
+    {
+      "namePrefix": "CB_01_Caldera_Vapor_Visor",
+      "description": "Una ventanilla para ver el nivel de agua de la caldera. Es muy importante: si se queda sin agua, hay riesgo de accidente."
+    },
+    {
+      "namePrefix": "TRAP_01_Trampa_Vapor",
+      "description": "Un dispositivo que deja salir el agua condensada de las tuberías sin dejar escapar el vapor, para no desperdiciar calor."
+    }
   ]
 }
