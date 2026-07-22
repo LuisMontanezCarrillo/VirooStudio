@@ -30007,6 +30007,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1328574941}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b2659a795d8e0d8439c8aa648ee8b27c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1328574942}
   m_SourcePrefab: {fileID: 100100000, guid: b2659a795d8e0d8439c8aa648ee8b27c, type: 3}
 --- !u!4 &1328574936 stripped
 Transform:
@@ -30217,6 +30221,7 @@ MonoBehaviour:
   tablero: {fileID: 1328574936}
   proximityDistance: 4
   greetOnStart: 0
+  startupDelay: 0.75
   bienvenida: {fileID: 8300000, guid: a7ad24778f8a24e40837ab77c0f48e04, type: 3}
   energia: {fileID: 8300000, guid: c2126eb2ba3fc6c4cae6a87c8d3ffcc1, type: 3}
   iniciar: {fileID: 8300000, guid: 617ff2a4624143040be5f6557b400f78, type: 3}
@@ -30234,6 +30239,45 @@ MonoBehaviour:
   faltaIniciar: {fileID: 8300000, guid: 2d3b8f17bfaea454fb4ef4d7d47f26f4, type: 3}
   faltaTemp: {fileID: 8300000, guid: 85a011ebcd6a2924198be84d1b870739, type: 3}
   faltaNivel: {fileID: 8300000, guid: a84af83a579bed447a30dec4fcb67dff, type: 3}
+--- !u!114 &1328574942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328574937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd0fca95ea8cd4c49b7b9d3ac8e7d90a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  engine: {fileID: 1328574938}
+  hover: {fileID: 428076123}
+  loopVolume: 0.6
+  sfxVolume: 0.9
+  touchVolume: 0.9
+  inicioClip: {fileID: 8300000, guid: cff9006a3529552458df136a40dce8a6, type: 3}
+  finalClip: {fileID: 8300000, guid: aeb410de781315d47aabb03d9f449265, type: 3}
+  pumpStart: {fileID: 8300000, guid: c439eeec530da244cab595d91825c424, type: 3}
+  pumpStop: {fileID: 8300000, guid: b27cdef8833d46f4e93048e3792d36ec, type: 3}
+  waterStart: {fileID: 8300000, guid: 01c91dc78cbb8dc4cb00b2878699d0a9, type: 3}
+  waterStop: {fileID: 8300000, guid: 195410a0cb7efda4cbbac74b2dc15647, type: 3}
+  boilerStart: {fileID: 8300000, guid: 918869fda507f0f47b48e1f9f2874d80, type: 3}
+  boilerStop: {fileID: 8300000, guid: b8d822685cf361248a9a79a75e3e00bc, type: 3}
+  procLoopClip: {fileID: 8300000, guid: 2308f4d7d872eb8408e2fc655fef4bf1, type: 3}
+  pumpLoopClip: {fileID: 8300000, guid: 2a6dd974699bf6e45bc65779ae0a44a5, type: 3}
+  waterLoopClip: {fileID: 8300000, guid: b23e1e1702ed9c046b003ed89d6b9aa4, type: 3}
+  boilerLoopClip: {fileID: 8300000, guid: c4dc2cbf124341049a97ef9fa5b5b62b, type: 3}
+  vaporLoopClip: {fileID: 8300000, guid: 1e1f246e4f544d24297e5a961b0ab821, type: 3}
+  touchMap:
+  - subsystemKey: 02_Tablero_Control
+    clip: {fileID: 8300000, guid: a9d949ddccc473941b5e7eec47d9066e, type: 3}
+  - subsystemKey: 12_Caldera_Vapor
+    clip: {fileID: 8300000, guid: f4279586486061540a38088772f008ec, type: 3}
+  - subsystemKey: 07_Valvulas
+    clip: {fileID: 8300000, guid: 26dbc99d9f98ffc4d9441dabce9da10e, type: 3}
+  - subsystemKey: 07_FDV_Diversion
+    clip: {fileID: 8300000, guid: 26dbc99d9f98ffc4d9441dabce9da10e, type: 3}
 --- !u!1 &1336093606
 GameObject:
   m_ObjectHideFlags: 0

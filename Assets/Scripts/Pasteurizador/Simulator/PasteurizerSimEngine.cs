@@ -80,7 +80,7 @@ namespace ViroLab.Pasteurizador.Simulator
         public float tankInVol = 0f;
         public float tankOutVol = 0f;
         public float targetFillVol = 50f;
-        public float flowRate = 0.5f;
+        public float flowRate = 2.5f; // L/s procesados: más rápido = drenaje/llenado de tanques visible
 
         [Header("Lote (L)")]
         public float vFilled = 0f;
@@ -289,7 +289,9 @@ namespace ViroLab.Pasteurizador.Simulator
             // ---------- intercambiador
             float heatTarget = 20f;
             if (pumpHotOn) heatTarget = tempBoiler - 8f;
-            if (pumpMilkOn && pumpHotOn) heatTarget = Mathf.Min(heatTarget, SP_HEAT + 2f);
+            // Con enfriamiento (Refrigerador) o con bomba de producto, el intercambiador
+            // se estabiliza en la T de trabajo (~77 C) en vez de seguir a la caldera (~87 C).
+            if (pumpHotOn && (pumpColdOn || pumpMilkOn)) heatTarget = Mathf.Min(heatTarget, SP_HEAT + 2f);
             tempHeat += (heatTarget - tempHeat) * Mathf.Min(1f, 0.5f * dt);
             tempHold = tempHeat - 0.3f;
 
