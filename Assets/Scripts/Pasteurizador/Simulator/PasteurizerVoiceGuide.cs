@@ -27,6 +27,8 @@ namespace ViroLab.Pasteurizador.Simulator
         public float proximityDistance = 4f;
         [Tooltip("Si está activo, saluda al iniciar la escena sin esperar la cercanía.")]
         public bool greetOnStart = false;
+        [Tooltip("Segundos a ignorar al iniciar (deja que el rig/cámara se posicione antes de medir cercanía).")]
+        public float startupDelay = 0.75f;
 
         [Header("Audios · secuencia")]
         public AudioClip bienvenida;
@@ -51,6 +53,7 @@ namespace ViroLab.Pasteurizador.Simulator
 
         // --- estado previo para detectar transiciones ---
         bool _greeted;
+        bool _armed; // true cuando el jugador ha estado lejos (para saludar solo al acercarse)
         bool pEnergy, pRunning, pFilled, pHot, pTempReady, pCold, pMilk, pAccum, pValid, pAlarm, pTankFull, pClosed;
         string _lastHint = "";
 
@@ -78,13 +81,12 @@ namespace ViroLab.Pasteurizador.Simulator
         {
             if (_greeted) return;
             if (greetOnStart) { Play(bienvenida); _greeted = true; return; }
+            if (Time.timeSinceLevelLoad < startupDelay) return; // ignora los primeros frames (cámara posicionándose)
             var cam = GetPlayerCamera();
             if (cam == null) return;
-            if (Vector3.Distance(cam.position, tablero.position) <= proximityDistance)
-            {
-                Play(bienvenida);
-                _greeted = true;
-            }
+            float d = Vector3.Distance(cam.position, tablero.position);
+            if (d > proximityDistance) { _armed = true; return; } // el jugador está lejos: se arma
+            if (_armed) { Play(bienvenida); _greeted = true; } // solo saluda si venía de lejos (se acercó al tablero)
         }
 
         void HandleSequence()
@@ -160,6 +162,7 @@ namespace ViroLab.Pasteurizador.Simulator
         public void ResetGuide()
         {
             _greeted = false;
+            _armed = false;
             pEnergy = pRunning = pFilled = pHot = pTempReady = pCold = pMilk = pAccum = pValid = pAlarm = pTankFull = pClosed = false;
             _lastHint = "";
         }
