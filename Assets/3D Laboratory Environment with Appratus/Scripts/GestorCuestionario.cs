@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using TMPro;
 using System.Collections;
 
@@ -26,8 +27,12 @@ public class GestorCuestionario : MonoBehaviour
     [Header("Transición a Escena 3")]
     [Tooltip("Arrastra aquí el objeto vacío hacia donde se teletransportará el jugador para operar la máquina")]
     public Transform puntoDestinoEscena3;
-    [Tooltip("Arrastra aquí el Canvas de la Escena 3 para que se encienda automáticamente tras el viaje")]
+    [Tooltip("Arrastra aquí el Canvas de la Escena 3 (Instrucciones)")]
     public GameObject canvasEscena3; 
+
+    [Header("Eventos de Secuencia")]
+    [Tooltip("Aquí conectaremos automáticamente el inicio del video tutorial")]
+    public UnityEvent OnTransitionComplete; 
     
     private Color colorOriginalBotones;
     private int preguntaActual = 0;
@@ -56,6 +61,7 @@ public class GestorCuestionario : MonoBehaviour
     {
         if (botonA != null) colorOriginalBotones = botonA.image.color;
         
+        // --- AUTOCONFIGURACIÓN A PRUEBA DE FALLOS ---
         if (botonA != null) { botonA.onClick.RemoveAllListeners(); botonA.onClick.AddListener(() => ValidarRespuesta(0, botonA)); }
         if (botonB != null) { botonB.onClick.RemoveAllListeners(); botonB.onClick.AddListener(() => ValidarRespuesta(1, botonB)); }
         if (botonC != null) { botonC.onClick.RemoveAllListeners(); botonC.onClick.AddListener(() => ValidarRespuesta(2, botonC)); }
@@ -85,7 +91,7 @@ public class GestorCuestionario : MonoBehaviour
         );
 
         bancoPreguntas[2] = new DatosPregunta(
-            "De acuerdo con la descripción del equipo, ¿qué funciones integran las múltiples secciones del Intercambiador de Placas?",
+            "De acuerdo con la descripción del equipo, ¿qué funciones integran las múltiples secciones del Intercambiador de Placas (HE-01)?",
             "A) Almacenar la leche cruda, mantener la columna hidrostática y desacoplar presiones.",
             "B) Regeneración, calentamiento con agua caliente y enfriamiento con agua fría.",
             "C) Garantizar el tiempo mínimo a temperatura de pasteurización (≥15 s a ≥72 °C).",
@@ -94,14 +100,14 @@ public class GestorCuestionario : MonoBehaviour
 
         bancoPreguntas[3] = new DatosPregunta(
             "¿Qué componente tiene la función específica de garantizar el tiempo mínimo a temperatura de pasteurización (≥15 s a ≥72 °C)?",
-            "A) El Tubo de Retención.",
-            "B) La Bomba Booster.",
-            "C) El Filtro Y Sanitario.",
+            "A) El Tubo de Retención (HT-01).",
+            "B) La Bomba Booster (P-02).",
+            "C) El Filtro Y Sanitario (F-01).",
             0 
         );
 
         bancoPreguntas[4] = new DatosPregunta(
-            "La Válvula de Desviación es clave para el HACCP. ¿Qué ocurre si la temperatura a la salida del tubo de retención cae bajo el setpoint?",
+            "La Válvula de Diversión es clave para el HACCP. ¿Qué ocurre si la temperatura a la salida del tubo de retención cae bajo el setpoint?",
             "A) Empuja la leche contra el delta-P para evitar contaminación por descompresión.",
             "B) Desvía el flujo automáticamente de vuelta al tanque de balance.",
             "C) Activa las válvulas neumáticas superiores para aislar las secciones.",
@@ -114,9 +120,11 @@ public class GestorCuestionario : MonoBehaviour
         textoFeedback.text = "";
         ResetearColorBotones();
 
+        // ESTADO 1: Pantalla de Contexto e Introducción
         if (enIntroduccion)
         {
-            textoPregunta.text = "<b>¡Bienvenido al Reto 2!</b>\n\nEste reto consiste en responder un cuestionario interactivo sobre los fundamentos y beneficios de la pasteurización, así como los componentes del equipo pasteurizador HTST.\n\n</i> Antes de iniciar el cuestionario, se recomienda explorar detalladamente el pasteurizador y el carrusel interactivo ubicado en la planta piloto.";
+            // CORRECCIÓN: Se eliminó la palabra "Recomendación:" para evitar la redundancia
+            textoPregunta.text = "<b>¡Bienvenido al Reto 2!</b>\n\nEste reto consiste en responder un cuestionario interactivo sobre los fundamentos y beneficios de la pasteurización, así como los componentes del equipo pasteurizador HTST.\n\n<i>Antes de iniciar el cuestionario, se recomienda explorar detalladamente el pasteurizador y el carrusel interactivo ubicado en la planta piloto.</i>";
             
             if (botonA != null) { botonA.image.enabled = false; botonA.interactable = false; botonA.GetComponentInChildren<TextMeshProUGUI>().text = ""; }
             if (botonB != null) { botonB.image.enabled = false; botonB.interactable = false; botonB.GetComponentInChildren<TextMeshProUGUI>().text = ""; }
@@ -131,6 +139,7 @@ public class GestorCuestionario : MonoBehaviour
 
             esperandoSiguiente = false;
         }
+        // ESTADO 2: Flujo de preguntas
         else if (preguntaActual < bancoPreguntas.Length)
         {
             if (botonA != null) { botonA.image.enabled = true; botonA.interactable = true; }
@@ -145,6 +154,7 @@ public class GestorCuestionario : MonoBehaviour
             
             esperandoSiguiente = false;
         }
+        // ESTADO 3: Fin del cuestionario
         else
         {
             StartCoroutine(FinalizarCuestionario());
@@ -256,20 +266,9 @@ public class GestorCuestionario : MonoBehaviour
             rootJugador.position += diferenciaPosicion;
         }
 
-        // --- SISTEMA DE DIAGNÓSTICO Y APERTURA DE CANVAS ESCENA 3 ---
         if (canvasEscena3 != null)
         {
             canvasEscena3.SetActive(true);
-            
-            // Fuerza la activación del componente Canvas por si acaso estuviera apagado internamente
-            Canvas compCanvas3 = canvasEscena3.GetComponent<Canvas>();
-            if (compCanvas3 != null) compCanvas3.enabled = true;
-
-            Debug.Log("<color=cyan><b>[DIAGNÓSTICO]</b> El Canvas de la Escena 3 ha sido encendido exitosamente por código en la jerarquía.</color>");
-        }
-        else
-        {
-            Debug.LogError("<color=red><b>[ERROR CRÍTICO]</b> No aparece el Canvas de la Escena 3 porque te olvidaste de arrastrarlo a la casilla 'Canvas Escena 3' en el Inspector.</color>");
         }
 
         yield return new WaitForSeconds(0.5f);
@@ -281,6 +280,14 @@ public class GestorCuestionario : MonoBehaviour
             tiempo += Time.deltaTime;
             imagenNegra.color = new Color(0, 0, 0, Mathf.Lerp(1, 0, tiempo / duracionFade));
             yield return null;
+        }
+
+        // --- SECUENCIA AUTOMÁTICA DE VIDEO ---
+        if (canvasEscena3 != null) canvasEscena3.SetActive(false);
+        
+        if (OnTransitionComplete != null)
+        {
+            OnTransitionComplete.Invoke(); 
         }
 
         Destroy(canvasFadeObj);
