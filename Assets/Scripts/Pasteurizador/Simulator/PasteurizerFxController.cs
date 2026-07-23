@@ -20,6 +20,11 @@ namespace ViroLab.Pasteurizador.Simulator
         public PasteurizerSimEngine engine;
         public ViroLab.Pasteurizador.PasteurizerHoverHandler hover; // para el FX al tocar
 
+        [Header("Volumen — se puede mover EN VIVO durante Play")]
+        [Range(0f, 1f)] public float loopVolume  = 0.35f; // sonidos continuos (proceso, bombas, caldera)
+        [Range(0f, 1f)] public float sfxVolume   = 0.6f;  // golpes puntuales (arranque, paro)
+        [Range(0f, 1f)] public float touchVolume = 0.7f;  // al tocar una pieza
+
         [Header("FX de proceso · one-shots")]
         public AudioClip inicioClip;      // FX_Inicio Pasteurizador
         public AudioClip finalClip;       // FX_Pasteurizador final
@@ -37,11 +42,6 @@ namespace ViroLab.Pasteurizador.Simulator
         [Serializable] public struct TouchFx { public string subsystemKey; public AudioClip clip; }
         [Header("FX al tocar una pieza (por subsistema)")]
         public TouchFx[] touchMap = new TouchFx[0];
-
-        // Volúmenes (antes eran campos del Inspector; se conservan como constantes)
-        const float loopVolume  = 0.6f;
-        const float sfxVolume   = 0.9f;
-        const float touchVolume = 0.9f;
 
         // AudioSources (creados en runtime)
         AudioSource _sfx, _touch, _procLoop, _pumpLoop, _waterLoop, _boilerLoop, _vaporLoop;
@@ -86,6 +86,8 @@ namespace ViroLab.Pasteurizador.Simulator
 
         void Update()
         {
+            ApplyVolumes(); // permite mover las barritas del Inspector durante Play y oír el cambio al instante
+
             if (engine == null) { engine = FindObjectOfType<PasteurizerSimEngine>(); if (engine == null) return; }
 
             // --- Planta en marcha ---
@@ -132,6 +134,18 @@ namespace ViroLab.Pasteurizador.Simulator
                     _touch.Stop(); _touch.clip = m.clip; _touch.Play();
                     return;
                 }
+        }
+
+        /// <summary>Aplica los volúmenes del Inspector a los AudioSource (funciona en vivo durante Play).</summary>
+        void ApplyVolumes()
+        {
+            if (_sfx   != null) _sfx.volume   = sfxVolume;
+            if (_touch != null) _touch.volume = touchVolume;
+            if (_procLoop   != null) _procLoop.volume   = loopVolume;
+            if (_pumpLoop   != null) _pumpLoop.volume   = loopVolume;
+            if (_waterLoop  != null) _waterLoop.volume  = loopVolume;
+            if (_boilerLoop != null) _boilerLoop.volume = loopVolume;
+            if (_vaporLoop  != null) _vaporLoop.volume  = loopVolume;
         }
 
         // helpers
