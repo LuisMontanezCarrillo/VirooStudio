@@ -20,11 +20,6 @@ namespace ViroLab.Pasteurizador.Simulator
         public PasteurizerSimEngine engine;
         public ViroLab.Pasteurizador.PasteurizerHoverHandler hover; // para el FX al tocar
 
-        [Header("Volumen")]
-        [Range(0f, 1f)] public float loopVolume = 0.6f;
-        [Range(0f, 1f)] public float sfxVolume = 0.9f;
-        [Range(0f, 1f)] public float touchVolume = 0.9f;
-
         [Header("FX de proceso · one-shots")]
         public AudioClip inicioClip;      // FX_Inicio Pasteurizador
         public AudioClip finalClip;       // FX_Pasteurizador final
