@@ -136,7 +136,7 @@ namespace ViroLab.Pasteurizador.EditorTools
                 dot.rectTransform.sizeDelta = new Vector2(16, 16);
                 var le = dot.gameObject.AddComponent<LayoutElement>();
                 le.preferredWidth = 16; le.preferredHeight = 16;
-                var lbl = AddText(col, "Lbl", stepNames[i], 12, CTextHi, TextAlignmentOptions.Center);
+                var lbl = AddText(col, "Lbl", stepNames[i], 16, CTextHi, TextAlignmentOptions.Center);
                 var le2 = lbl.gameObject.AddComponent<LayoutElement>();
                 le2.preferredHeight = 14;
                 dots[i] = dot;
@@ -168,7 +168,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             alarmT.rectTransform.anchorMax = new Vector2(1, 1);
             alarmT.rectTransform.offsetMin = new Vector2(4, -36);
             alarmT.rectTransform.offsetMax = new Vector2(-4, -4);
-            var cipT = AddText(tile5, "CipTxt", "N/A", 12, CTextLo, TextAlignmentOptions.Center);
+            var cipT = AddText(tile5, "CipTxt", "N/A", 16, CTextLo, TextAlignmentOptions.Center);
             cipT.rectTransform.anchorMin = new Vector2(0, 0);
             cipT.rectTransform.anchorMax = new Vector2(1, 0.5f);
             cipT.rectTransform.offsetMin = new Vector2(4, 4);
@@ -191,7 +191,7 @@ namespace ViroLab.Pasteurizador.EditorTools
 
             var panelBg = AddImage(panel, "Bg", CTile);
             Stretch(panelBg.rectTransform);
-            var panelTitle = AddText(panel, "Title", "CONTROL", 18, CCyan, TextAlignmentOptions.Center);
+            var panelTitle = AddText(panel, "Title", "CONTROL", 23, CCyan, TextAlignmentOptions.Center);
             panelTitle.fontStyle = FontStyles.Bold;
             panelTitle.rectTransform.anchorMin = new Vector2(0, 1);
             panelTitle.rectTransform.anchorMax = new Vector2(1, 1);
@@ -259,10 +259,13 @@ namespace ViroLab.Pasteurizador.EditorTools
             sliderArea.sizeDelta = new Vector2(-16, 110);
             var vlgS = sliderArea.gameObject.AddComponent<VerticalLayoutGroup>();
             vlgS.spacing = 8; vlgS.childForceExpandHeight = false; vlgS.childForceExpandWidth = true;
+            // IMPORTANTE: sin childControlWidth el grupo no asigna ancho a las filas y el
+            // texto se parte letra por letra en vertical (Setpoint / Caudal).
+            vlgS.childControlWidth = true; vlgS.childControlHeight = true;
             vlgS.padding = new RectOffset(8, 8, 4, 4);
 
-            var (targetSlider, targetVal) = BuildSlider(sliderArea, "Target", "Setpoint llenado (L)", 10f, 100f, 50f);
-            var (flowSlider, flowVal)     = BuildSlider(sliderArea, "Flow",   "Caudal bomba (L/s)",   0.1f, 2f, 0.5f);
+            var (targetSlider, targetVal) = BuildSlider(sliderArea, "Target", "Setpoint (L)", 10f, 100f, 50f);
+            var (flowSlider, flowVal)     = BuildSlider(sliderArea, "Flow",   "Caudal (L/s)",   0.1f, 2f, 0.5f);
 
             // ----------------------------------------------------------------
             // PANEL MÉTRICAS DE LOTE (derecha, 280px, sólo números)
@@ -279,7 +282,7 @@ namespace ViroLab.Pasteurizador.EditorTools
 
             var metricsBg = AddImage(metrics, "Bg", CTile);
             Stretch(metricsBg.rectTransform);
-            var metricsTitle = AddText(metrics, "Title", "MÉTRICAS DE LOTE", 14, CCyan, TextAlignmentOptions.Center);
+            var metricsTitle = AddText(metrics, "Title", "MÉTRICAS DE LOTE", 18, CCyan, TextAlignmentOptions.Center);
             metricsTitle.fontStyle = FontStyles.Bold;
             metricsTitle.rectTransform.anchorMin = new Vector2(0, 1);
             metricsTitle.rectTransform.anchorMax = new Vector2(1, 1);
@@ -332,7 +335,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             hintBg.rectTransform.offsetMin = new Vector2(380, 10);
             hintBg.rectTransform.offsetMax = new Vector2(-380, 50);
             var hintTxt = AddText(hintBg.transform, "HintTxt", "Encender Energía y luego Start.",
-                16, CTextHi, TextAlignmentOptions.Center);
+                21, CTextHi, TextAlignmentOptions.Center);
             Stretch(hintTxt.rectTransform, new Vector4(12, 4, -12, -4));
 
             // ----------------------------------------------------------------
@@ -510,7 +513,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             bgRT.anchorMin = Vector2.zero; bgRT.anchorMax = Vector2.one;
             bgRT.offsetMin = new Vector2(2, 2); bgRT.offsetMax = new Vector2(-2, -2);
 
-            var titleTxt = AddText(tile, "Title", title, 12, CTextLo, TextAlignmentOptions.Center);
+            var titleTxt = AddText(tile, "Title", title, 16, CTextLo, TextAlignmentOptions.Center);
             titleTxt.fontStyle = FontStyles.Bold;
             titleTxt.rectTransform.anchorMin = new Vector2(0, 1);
             titleTxt.rectTransform.anchorMax = new Vector2(1, 1);
@@ -542,10 +545,10 @@ namespace ViroLab.Pasteurizador.EditorTools
                 var cell = NewContainer(grid, $"Cell_{i}",
                     Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f),
                     Vector2.zero, Vector2.zero);
-                var k = AddText(cell, "K", key, 11, CTextDim, TextAlignmentOptions.Left);
+                var k = AddText(cell, "K", key, 14, CTextDim, TextAlignmentOptions.Left);
                 k.rectTransform.anchorMin = new Vector2(0, 0); k.rectTransform.anchorMax = new Vector2(1, 0.5f);
                 k.rectTransform.offsetMin = new Vector2(2, 2); k.rectTransform.offsetMax = new Vector2(-2, -2);
-                var v = AddText(cell, "V", val, 18, CTextHi, TextAlignmentOptions.Right);
+                var v = AddText(cell, "V", val, 23, CTextHi, TextAlignmentOptions.Right);
                 v.fontStyle = FontStyles.Bold;
                 v.rectTransform.anchorMin = new Vector2(0, 0.5f); v.rectTransform.anchorMax = new Vector2(1, 1);
                 v.rectTransform.offsetMin = new Vector2(2, 2); v.rectTransform.offsetMax = new Vector2(-4, -2);
@@ -574,10 +577,10 @@ namespace ViroLab.Pasteurizador.EditorTools
                 var cell = NewContainer(grid, $"Cell_{i}",
                     Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f),
                     Vector2.zero, Vector2.zero);
-                var k = AddText(cell, "K", key, 10, CTextDim, TextAlignmentOptions.Left);
+                var k = AddText(cell, "K", key, 13, CTextDim, TextAlignmentOptions.Left);
                 k.rectTransform.anchorMin = new Vector2(0, 0); k.rectTransform.anchorMax = new Vector2(1, 0.5f);
                 k.rectTransform.offsetMin = new Vector2(2, 2); k.rectTransform.offsetMax = new Vector2(-2, -2);
-                var v = AddText(cell, "V", val, 14, CTextHi, TextAlignmentOptions.Right);
+                var v = AddText(cell, "V", val, 18, CTextHi, TextAlignmentOptions.Right);
                 v.fontStyle = FontStyles.Bold;
                 v.rectTransform.anchorMin = new Vector2(0, 0.5f); v.rectTransform.anchorMax = new Vector2(1, 1);
                 v.rectTransform.offsetMin = new Vector2(2, 2); v.rectTransform.offsetMax = new Vector2(-4, -2);
@@ -615,12 +618,12 @@ namespace ViroLab.Pasteurizador.EditorTools
             leC.preferredHeight = 38;
 
             // Title
-            var t = AddText(container, "T", title, 11, CTextDim, TextAlignmentOptions.Left);
+            var t = AddText(container, "T", title, 14, CTextDim, TextAlignmentOptions.Left);
             t.rectTransform.anchorMin = new Vector2(0, 1); t.rectTransform.anchorMax = new Vector2(0.7f, 1);
             t.rectTransform.pivot = new Vector2(0, 1);
             t.rectTransform.offsetMin = new Vector2(0, -14); t.rectTransform.offsetMax = new Vector2(0, 0);
             // Value display
-            var v = AddText(container, "V", defVal.ToString("F1"), 13, CCyan, TextAlignmentOptions.Right);
+            var v = AddText(container, "V", defVal.ToString("F1"), 17, CCyan, TextAlignmentOptions.Right);
             v.fontStyle = FontStyles.Bold;
             v.rectTransform.anchorMin = new Vector2(0.7f, 1); v.rectTransform.anchorMax = new Vector2(1, 1);
             v.rectTransform.pivot = new Vector2(1, 1);
@@ -672,10 +675,10 @@ namespace ViroLab.Pasteurizador.EditorTools
                 new Vector2(0, 1), new Vector2(0.65f, 1), new Vector2(0, 1),
                 new Vector2(8, topY), new Vector2(-8, 20));
             row.sizeDelta = new Vector2(-16, 20);
-            var k = AddText(row, "K", key, 12, CTextDim, TextAlignmentOptions.Left);
+            var k = AddText(row, "K", key, 16, CTextDim, TextAlignmentOptions.Left);
             k.rectTransform.anchorMin = Vector2.zero; k.rectTransform.anchorMax = new Vector2(0.55f, 1);
             k.rectTransform.offsetMin = Vector2.zero; k.rectTransform.offsetMax = Vector2.zero;
-            var v = AddText(row, "V", val, 13, CTextHi, TextAlignmentOptions.Right);
+            var v = AddText(row, "V", val, 17, CTextHi, TextAlignmentOptions.Right);
             v.fontStyle = FontStyles.Bold;
             v.rectTransform.anchorMin = new Vector2(0.55f, 0); v.rectTransform.anchorMax = Vector2.one;
             v.rectTransform.offsetMin = Vector2.zero; v.rectTransform.offsetMax = Vector2.zero;
@@ -695,11 +698,11 @@ namespace ViroLab.Pasteurizador.EditorTools
             var sub = AddImage(row, "Sub", new Color(0.10f, 0.13f, 0.17f, 0.4f));
             Stretch(sub.rectTransform);
 
-            var k = AddText(row, "K", key, 13, CTextDim, TextAlignmentOptions.Left);
+            var k = AddText(row, "K", key, 17, CTextDim, TextAlignmentOptions.Left);
             k.rectTransform.anchorMin = Vector2.zero; k.rectTransform.anchorMax = new Vector2(0.55f, 1);
             k.rectTransform.offsetMin = new Vector2(10, 0); k.rectTransform.offsetMax = new Vector2(-4, 0);
 
-            var v = AddText(row, "V", val, 16, CCyan, TextAlignmentOptions.Right);
+            var v = AddText(row, "V", val, 21, CCyan, TextAlignmentOptions.Right);
             v.fontStyle = FontStyles.Bold;
             v.rectTransform.anchorMin = new Vector2(0.45f, 0); v.rectTransform.anchorMax = Vector2.one;
             v.rectTransform.offsetMin = new Vector2(0, 0); v.rectTransform.offsetMax = new Vector2(-10, 0);
@@ -719,11 +722,11 @@ namespace ViroLab.Pasteurizador.EditorTools
 
             var bg = AddImage(container, "Bg", new Color(0.08f, 0.10f, 0.13f, 1f));
             Stretch(bg.rectTransform);
-            var t = AddText(container, "T", title, 10, CTextDim, TextAlignmentOptions.Center);
+            var t = AddText(container, "T", title, 13, CTextDim, TextAlignmentOptions.Center);
             t.rectTransform.anchorMin = new Vector2(0, 0); t.rectTransform.anchorMax = new Vector2(1, 0);
             t.rectTransform.offsetMin = new Vector2(0, -16); t.rectTransform.offsetMax = new Vector2(0, 0);
 
-            var v = AddText(container, "V", "0 L", 11, CTextHi, TextAlignmentOptions.Center);
+            var v = AddText(container, "V", "0 L", 14, CTextHi, TextAlignmentOptions.Center);
             v.rectTransform.anchorMin = new Vector2(0, 1); v.rectTransform.anchorMax = new Vector2(1, 1);
             v.rectTransform.offsetMin = new Vector2(0, -16); v.rectTransform.offsetMax = new Vector2(0, 0);
 
