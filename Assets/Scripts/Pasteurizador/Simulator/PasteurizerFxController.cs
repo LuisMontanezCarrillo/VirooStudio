@@ -38,6 +38,11 @@ namespace ViroLab.Pasteurizador.Simulator
         [Header("FX al tocar una pieza (por subsistema)")]
         public TouchFx[] touchMap = new TouchFx[0];
 
+        // Volúmenes (antes eran campos del Inspector; se conservan como constantes)
+        const float loopVolume  = 0.6f;
+        const float sfxVolume   = 0.9f;
+        const float touchVolume = 0.9f;
+
         // AudioSources (creados en runtime)
         AudioSource _sfx, _touch, _procLoop, _pumpLoop, _waterLoop, _boilerLoop, _vaporLoop;
 
