@@ -173,12 +173,22 @@ namespace ViroLab.Pasteurizador.Simulator
 
         public void ResetBatch()
         {
+            // Antes solo borraba volúmenes y métricas: las bombas seguían encendidas,
+            // las temperaturas altas y las válvulas igual, así que "no pasaba nada".
+            // Ahora deja el equipo listo para volver a operar desde el principio
+            // (la planta sigue con energía; hay que pulsar Iniciar de nuevo).
+            running = false;
+            fillOn = pumpMilkOn = pumpHotOn = pumpColdOn = false;
+            tempHeat = 20f; tempHold = 20f; tempOut = 13.6f; tempBoiler = 20f;
             tankInVol = 0f;
             tankOutVol = 0f;
             vFilled = vFinal = vRecirc = vEvap = vLoss = 0f;
             batchActive = batchClosed = false;
             holdTimer = 0f;
-            hint = "Lote reiniciado.";
+            vProd = vRet = vDes = false;
+            alarm = false; lowTempAcc = 0f;
+            cipStep = 0; cipTime = 0f;
+            hint = "Lote reiniciado. Pulsa Iniciar para comenzar de nuevo.";
         }
 
         // (resto de hints traducidos al español puro)

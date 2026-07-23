@@ -39,8 +39,9 @@ namespace ViroLab.Pasteurizador.EditorTools
 
         // Paleta
         private static readonly Color CPipeOff   = new Color(0.30f, 0.34f, 0.38f, 1f);
-        private static readonly Color CLabel     = new Color(0.65f, 0.78f, 0.88f, 1f);
-        private static readonly Color CLabelDim  = new Color(0.50f, 0.60f, 0.70f, 1f);
+        // Etiquetas en NEGRO: el fondo del diagrama es claro y antes (azul-gris) casi no se leían.
+        private static readonly Color CLabel     = new Color(0.06f, 0.08f, 0.10f, 1f);
+        private static readonly Color CLabelDim  = new Color(0.22f, 0.25f, 0.29f, 1f);
         private static readonly Color CTankShell = new Color(0.78f, 0.83f, 0.88f, 1f);
         private static readonly Color CTankBack  = new Color(0.05f, 0.07f, 0.10f, 1f);
         private static readonly Color CMilkFill  = new Color(1.00f, 0.96f, 0.85f, 1f);
@@ -218,8 +219,8 @@ namespace ViroLab.Pasteurizador.EditorTools
             refs.tankInFill = fill;
 
             // label
-            AddLabelAt(parent, "ENTRADA DEL PRODUCTO", V(160, 280), 11, CLabel);
-            AddLabelAt(parent, "Cap. 100 L", V(90, 540), 10, CLabelDim);
+            AddLabelAt(parent, "ENTRADA DEL PRODUCTO", V(160, 280), 16, CLabel);
+            AddLabelAt(parent, "Cap. 100 L", V(90, 540), 15, CLabelDim);
 
             // display volumen
             var disp = AddDisplayPanel(parent, V(90, 548), Px(110), Py(22));
@@ -248,8 +249,8 @@ namespace ViroLab.Pasteurizador.EditorTools
             frt.sizeDelta = new Vector2(Px(18), Py(90));
             refs.tankOutFill = fill;
 
-            AddLabelAt(parent, "PRODUCTO FINAL", V(540, 40), 11, CLabel);
-            AddLabelAt(parent, "Cap. 150 L", V(700, 80), 10, CLabelDim);
+            AddLabelAt(parent, "PRODUCTO FINAL", V(540, 40), 16, CLabel);
+            AddLabelAt(parent, "Cap. 150 L", V(700, 80), 15, CLabelDim);
             var disp = AddDisplayPanel(parent, V(690, 86), Px(80), Py(20));
             refs.tankOutVolTxt = AddDisplayText(disp, "0.0 L");
         }
@@ -270,10 +271,10 @@ namespace ViroLab.Pasteurizador.EditorTools
                     new Vector2(1.5f, Py(370)),
                     new Color(0.30f, 0.34f, 0.40f, 0.7f));
             }
-            AddLabelAt(parent, "INTERCAMBIADOR DE PLACAS", V(635, 190), 11, CLabel, TextAlignmentOptions.Center);
-            AddLabelAt(parent, "CALENTAMIENTO", V(800, 250), 9, CLabelDim);
-            AddLabelAt(parent, "REGENERACION",  V(800, 380), 9, CLabelDim);
-            AddLabelAt(parent, "ENFRIAMIENTO",  V(800, 520), 9, CLabelDim);
+            AddLabelAt(parent, "INTERCAMBIADOR DE PLACAS", V(635, 190), 16, CLabel, TextAlignmentOptions.Center);
+            AddLabelAt(parent, "CALENTAMIENTO", V(800, 250), 14, CLabelDim);
+            AddLabelAt(parent, "REGENERACION",  V(800, 380), 14, CLabelDim);
+            AddLabelAt(parent, "ENFRIAMIENTO",  V(800, 520), 14, CLabelDim);
         }
 
         private static void BuildHoldingTube(Transform parent, PlantRefs refs)
@@ -295,7 +296,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             var c = flowOverlay.color; c.a = 0f; flowOverlay.color = c;
             refs.retFlow = flowOverlay;
 
-            AddLabelAt(parent, "RETENCION", V(820, 80), 11, CLabel);
+            AddLabelAt(parent, "RETENCION", V(820, 80), 16, CLabel);
 
             // Display tiempo retención
             var disp = AddDisplayPanel(parent, V(900, 180), Px(70), Py(30));
@@ -324,7 +325,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             flame.rectTransform.sizeDelta = new Vector2(Px(90), Py(40));
             refs.flameIcon = flame;
 
-            AddLabelAt(parent, "CALDERA", V(1085, 270), 11, CLabel);
+            AddLabelAt(parent, "CALDERA", V(1085, 270), 16, CLabel);
         }
 
         private static RectTransform BuildPump(Transform parent, string name, Vector2 svgCenter, string label)
@@ -372,7 +373,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             led.rectTransform.anchoredPosition = new Vector2(Px(95), -Py(10));
             led.rectTransform.sizeDelta = new Vector2(8, 8);
             refs.refriLed = led;
-            AddLabelAt(parent, "REFRIGERADOR", V(245, 697), 9, CLabelDim);
+            AddLabelAt(parent, "REFRIGERADOR", V(245, 697), 14, CLabelDim);
         }
 
         private static void BuildTrap(Transform parent, PlantRefs refs)
@@ -391,7 +392,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             var drip = dripGO.GetComponent<Image>();
             drip.color = new Color(0.12f, 0.36f, 0.82f, 0f);
             refs.trapDrip = drip;
-            AddLabelAt(parent, "TRAMPA VAPOR", V(850, 504), 9, CLabelDim);
+            AddLabelAt(parent, "TRAMPA VAPOR", V(850, 504), 14, CLabelDim);
         }
 
         private static void BuildPulmon(Transform parent, PlantRefs refs)
@@ -413,8 +414,8 @@ namespace ViroLab.Pasteurizador.EditorTools
             // marca 70%
             AddRect(g, "OptLine", new Vector2(Px(6), -Py(48)), new Vector2(Px(56), 1.5f),
                 new Color(0.89f, 0.63f, 0.23f, 1f));
-            AddLabelAt(parent, "TANQUE PULMON", V(1190, 425), 9, CLabel);
-            AddLabelAt(parent, "Nivel Optimo",   V(1196, 475), 8, new Color(0.66f, 0.43f, 0.06f, 1f));
+            AddLabelAt(parent, "TANQUE PULMON", V(1190, 425), 14, CLabel);
+            AddLabelAt(parent, "Nivel Optimo",   V(1196, 475), 13, new Color(0.66f, 0.43f, 0.06f, 1f));
         }
 
         private static void BuildPSIGauge(Transform parent, PlantRefs refs)
@@ -451,7 +452,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             var tmp = txtGO.GetComponent<TextMeshProUGUI>();
             tmp.text = "0"; tmp.fontSize = 10; tmp.color = CLabelDim; tmp.alignment = TextAlignmentOptions.Center;
             refs.psiText = tmp;
-            AddLabelAt(parent, "PSI", V(1110 - 8, 263), 9, CLabelDim);
+            AddLabelAt(parent, "PSI", V(1110 - 8, 263), 14, CLabelDim);
         }
 
         private static void BuildValve(Transform parent, string name, Vector2 svgCenter, string label,
@@ -543,19 +544,38 @@ namespace ViroLab.Pasteurizador.EditorTools
             int size, Color color,
             TextAlignmentOptions align = TextAlignmentOptions.Left)
         {
-            var go = new GameObject("Lbl_" + text, typeof(RectTransform), typeof(TextMeshProUGUI));
+            // Contenedor con FONDO CLARO que se ajusta al texto: así la etiqueta se lee
+            // aunque quede encima de una tubería.
+            var go = new GameObject("Lbl_" + text, typeof(RectTransform), typeof(Image),
+                                    typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
             go.transform.SetParent(parent, false);
             var rt = (RectTransform)go.transform;
             rt.anchorMin = rt.anchorMax = Vector2.zero;
             rt.pivot = new Vector2(0, 0.5f);
             rt.anchoredPosition = new Vector2(Px(svgPos.x), Py(SVG_H - svgPos.y));
-            rt.sizeDelta = new Vector2(200, 14);
-            var tmp = go.GetComponent<TextMeshProUGUI>();
+
+            var chip = go.GetComponent<Image>();
+            chip.color = new Color(1f, 1f, 1f, 0.85f);
+            chip.raycastTarget = false;
+
+            var hlg = go.GetComponent<HorizontalLayoutGroup>();
+            hlg.padding = new RectOffset(6, 6, 2, 2);
+            hlg.childForceExpandWidth = false; hlg.childForceExpandHeight = false;
+            hlg.childControlWidth = true; hlg.childControlHeight = true;
+
+            var fit = go.GetComponent<ContentSizeFitter>();
+            fit.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            fit.verticalFit   = ContentSizeFitter.FitMode.PreferredSize;
+
+            var tgo = new GameObject("Txt", typeof(RectTransform), typeof(TextMeshProUGUI));
+            tgo.transform.SetParent(go.transform, false);
+            var tmp = tgo.GetComponent<TextMeshProUGUI>();
             tmp.text = text;
             tmp.fontSize = size;
             tmp.color = color;
             tmp.alignment = align;
             tmp.raycastTarget = false;
+            tmp.enableWordWrapping = false;
             return tmp;
         }
 
