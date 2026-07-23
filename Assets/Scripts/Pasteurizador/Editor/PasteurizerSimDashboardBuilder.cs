@@ -417,6 +417,11 @@ namespace ViroLab.Pasteurizador.EditorTools
             dash.valveDesBody  = plantRefs.valveDesBody;
             dash.valveFillBody = plantRefs.valveFillBody;
 
+            // ----------------------------------------------------------------
+            // VENTANA EMERGENTE INICIAL (botón EMPEZAR) — arranca la guía por voz
+            // ----------------------------------------------------------------
+            BuildStartOverlay(canvasGO.transform);
+
             EditorSceneManager.MarkSceneDirty(tv.scene);
             Selection.activeObject = canvasGO;
 
@@ -587,6 +592,56 @@ namespace ViroLab.Pasteurizador.EditorTools
                 results[i] = v;
             }
             return (results[0], results[1], results[2], results[3]);
+        }
+
+        /// Ventana emergente inicial con el botón EMPEZAR (arranca la narración por voz).
+        private static void BuildStartOverlay(Transform canvas)
+        {
+            var overlay = NewContainer(canvas, "_StartOverlay",
+                Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+
+            // velo que cubre el tablero
+            var veil = AddImage(overlay, "Veil", new Color(0.02f, 0.04f, 0.07f, 0.94f));
+            Stretch(veil.rectTransform);
+
+            // caja central
+            var box = NewContainer(overlay, "Box",
+                new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                Vector2.zero, new Vector2(1000, 420));
+            var bg = AddImage(box, "Bg", CTile);
+            Stretch(bg.rectTransform);
+
+            var title = AddText(box, "Title", "SIMULADOR DE PASTEURIZACIÓN HTST", 46, CCyan, TextAlignmentOptions.Center);
+            title.fontStyle = FontStyles.Bold;
+            title.rectTransform.anchorMin = new Vector2(0, 1);
+            title.rectTransform.anchorMax = new Vector2(1, 1);
+            title.rectTransform.pivot = new Vector2(0.5f, 1);
+            title.rectTransform.anchoredPosition = new Vector2(0, -40);
+            title.rectTransform.sizeDelta = new Vector2(-60, 80);
+
+            var sub = AddText(box, "Sub",
+                "Pulsa EMPEZAR y sigue las indicaciones de voz para operar la planta.",
+                26, CTextLo, TextAlignmentOptions.Center);
+            sub.rectTransform.anchorMin = new Vector2(0, 1);
+            sub.rectTransform.anchorMax = new Vector2(1, 1);
+            sub.rectTransform.pivot = new Vector2(0.5f, 1);
+            sub.rectTransform.anchoredPosition = new Vector2(0, -140);
+            sub.rectTransform.sizeDelta = new Vector2(-120, 90);
+
+            var btn = BuildButton(box, "BtnEmpezar", "EMPEZAR", 34, out _);
+            var brt = (RectTransform)btn.transform;
+            brt.anchorMin = new Vector2(0.5f, 0);
+            brt.anchorMax = new Vector2(0.5f, 0);
+            brt.pivot = new Vector2(0.5f, 0);
+            brt.anchoredPosition = new Vector2(0, 55);
+            brt.sizeDelta = new Vector2(400, 95);
+            var bimg = btn.GetComponent<Image>();
+            if (bimg != null) bimg.color = new Color(0.16f, 0.55f, 0.30f); // verde
+
+            var so = overlay.gameObject.AddComponent<PasteurizerStartOverlay>();
+            so.panel = overlay.gameObject;
+            so.startButton = btn;
+            so.guide = Object.FindObjectOfType<PasteurizerVoiceGuide>();
         }
 
         private static Button BuildButton(Transform parent, string name, string text, int fontSize, out TMP_Text labelOut)

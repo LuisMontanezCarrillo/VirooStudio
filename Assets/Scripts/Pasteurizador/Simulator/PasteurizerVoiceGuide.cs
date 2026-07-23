@@ -22,7 +22,12 @@ namespace ViroLab.Pasteurizador.Simulator
         [Tooltip("Punto de referencia para medir la cercanía del estudiante. Por defecto, este objeto.")]
         public Transform tablero;
 
-        [Header("Proximidad")]
+        public enum StartMode { BotonEmpezar, Proximidad }
+        [Header("¿Cómo arranca la guía?")]
+        [Tooltip("BotonEmpezar: espera a que el estudiante pulse EMPEZAR en el tablero.\nProximidad: suena al acercarse.")]
+        public StartMode startMode = StartMode.BotonEmpezar;
+
+        [Header("Proximidad (solo si startMode = Proximidad)")]
         [Tooltip("Distancia (m) a la que se dispara la Bienvenida al acercarse.")]
         public float proximityDistance = 4f;
         [Tooltip("Si está activo, saluda al iniciar la escena sin esperar la cercanía.")]
@@ -77,9 +82,18 @@ namespace ViroLab.Pasteurizador.Simulator
             HandleCorrections();
         }
 
+        /// <summary>Arranca la guía: reproduce la bienvenida. La llama el botón EMPEZAR del tablero.</summary>
+        public void StartGuide()
+        {
+            if (_greeted) return;
+            Play(bienvenida);
+            _greeted = true;
+        }
+
         void HandleProximity()
         {
             if (_greeted) return;
+            if (startMode == StartMode.BotonEmpezar) return; // arranca con el botón EMPEZAR, no por cercanía
             if (greetOnStart) { Play(bienvenida); _greeted = true; return; }
             if (Time.timeSinceLevelLoad < startupDelay) return; // ignora los primeros frames (cámara posicionándose)
             var cam = GetPlayerCamera();
