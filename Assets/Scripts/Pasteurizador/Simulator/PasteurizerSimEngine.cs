@@ -13,7 +13,7 @@ namespace ViroLab.Pasteurizador.Simulator
         // ====================================================================
         //  Constantes de proceso (idénticas a app.js)
         // ====================================================================
-        public const float SP_HEAT      = 75f;
+        public const float SP_HEAT      = 72f; // consigna de pasteurización HTST (Decreto 616/2006: 72–76 °C; teoria del cuestionario: 72 °C)
         public const float SP_HOLD_MIN  = 72f;
         public const float SP_HOLD_S    = 15f;
         public const float SP_OUT       = 4.5f;
@@ -297,11 +297,12 @@ namespace ViroLab.Pasteurizador.Simulator
             trapOpen = boilerActive && tempHeat > 60f;
 
             // ---------- intercambiador
+            // Coherencia con la teoria (72 C / 15 s) y la norma colombiana (banda 72-76 C):
+            // - Sobreimpulso LIMITADO a SP_HEAT+3 (~75 C) en vez de seguir a la caldera (~87 C).
+            // - Operacion estabilizada en SP_HEAT+1 (~73 C): T_ret = 72.7 C, cumple >=72 y queda en banda.
             float heatTarget = 20f;
-            if (pumpHotOn) heatTarget = tempBoiler - 8f;
-            // Con enfriamiento (Refrigerador) o con bomba de producto, el intercambiador
-            // se estabiliza en la T de trabajo (~77 C) en vez de seguir a la caldera (~87 C).
-            if (pumpHotOn && (pumpColdOn || pumpMilkOn)) heatTarget = Mathf.Min(heatTarget, SP_HEAT + 2f);
+            if (pumpHotOn) heatTarget = Mathf.Min(tempBoiler - 8f, SP_HEAT + 3f);
+            if (pumpHotOn && (pumpColdOn || pumpMilkOn)) heatTarget = Mathf.Min(heatTarget, SP_HEAT + 1f);
             tempHeat += (heatTarget - tempHeat) * Mathf.Min(1f, 0.5f * dt);
             tempHold = tempHeat - 0.3f;
 
