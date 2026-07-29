@@ -17,7 +17,7 @@ public class GestorCuestionario : MonoBehaviour
     public Color colorCorrecto = Color.green;
     public Color colorIncorrecto = Color.red;
 
-    [Header("Efectos de Sonido")]
+    [Header("Efectos de Sonido (Interfaz)")]
     public AudioSource reproductorAudio;
     public AudioClip audioIntroReto2; 
     public AudioClip audioCierreReto2; 
@@ -77,41 +77,41 @@ public class GestorCuestionario : MonoBehaviour
         bancoPreguntas[0] = new DatosPregunta(
             "¿Cuál es el objetivo principal de la pasteurización de la leche según la normatividad sanitaria?",
             "A) Eliminar todos los microorganismos presentes para que la leche sea estéril.",
-            "B) Eliminar patógenos para garantizar inocuidad, sin alterar significativamente sus propiedades.",
+            "B) Eliminar los microorganismos patógenos para garantizar la inocuidad, sin alterar significativamente sus propiedades.",
             "C) Aumentar el contenido de grasa de la leche para mejorar su sabor.",
-            1 
+            1 // Respuesta Correcta: B
         );
 
         bancoPreguntas[1] = new DatosPregunta(
             "A nivel general, ¿cuáles son las tres etapas fundamentales que conforman el ciclo térmico en un sistema de pasteurización continuo?",
             "A) Mezclado, Ebullición y Filtrado.",
-            "B) Calentamiento, Retención (mantener temperatura) y Enfriamiento rápido.",
+            "B) Calentamiento, Retención (mantenimiento de la temperatura) y Enfriamiento rápido.",
             "C) Fermentación, Evaporación y Condensación.",
-            1 
+            1 // Respuesta Correcta: B
         );
 
         bancoPreguntas[2] = new DatosPregunta(
-            "De acuerdo con la descripción del equipo, ¿qué funciones integran las múltiples secciones del Intercambiador de Placas (HE-01)?",
-            "A) Almacenar la leche cruda, mantener la columna hidrostática y desacoplar presiones.",
-            "B) Regeneración, calentamiento con agua caliente y enfriamiento con agua fría.",
+            "De acuerdo con la descripción del equipo, ¿qué funciones integran las múltiples secciones del Intercambiador de Placas?",
+            "A) Almacenar la leche cruda, mantener la columna hidrostática y desacoplar variaciones de presión.",
+            "B) Regeneración, calentamiento con agua caliente de la caldera y enfriamiento con agua fría del chiller.",
             "C) Garantizar el tiempo mínimo a temperatura de pasteurización (≥15 s a ≥72 °C).",
-            1 
+            1 // Respuesta Correcta: B
         );
 
         bancoPreguntas[3] = new DatosPregunta(
             "¿Qué componente tiene la función específica de garantizar el tiempo mínimo a temperatura de pasteurización (≥15 s a ≥72 °C)?",
-            "A) El Tubo de Retención (HT-01).",
-            "B) La Bomba Booster (P-02).",
-            "C) El Filtro Y Sanitario (F-01).",
-            0 
+            "A) El Tubo de Retención.",
+            "B) La Bomba Booster, para asegurar sobre-presión.",
+            "C) El Filtro y Sanitario, antes de la bomba de alimentación.",
+            0 // Respuesta Correcta: A
         );
 
         bancoPreguntas[4] = new DatosPregunta(
-            "La Válvula de Diversión es clave para el HACCP. ¿Qué ocurre si la temperatura a la salida del tubo de retención cae bajo el setpoint?",
+            "La válvula de desviación es un elemento de seguridad crítico. ¿Qué ocurre si la temperatura a la salida del tubo de retención baja de 72 °C?",
             "A) Empuja la leche contra el delta-P para evitar contaminación por descompresión.",
             "B) Desvía el flujo automáticamente de vuelta al tanque de balance.",
-            "C) Activa las válvulas neumáticas superiores para aislar las secciones.",
-            1 
+            "C) Activa el banco de válvulas neumáticas superiores para aislar las secciones.",
+            1 // Respuesta Correcta: B
         );
     }
 
@@ -123,7 +123,6 @@ public class GestorCuestionario : MonoBehaviour
         // ESTADO 1: Pantalla de Contexto e Introducción
         if (enIntroduccion)
         {
-            // CORRECCIÓN: Se eliminó la palabra "Recomendación:" para evitar la redundancia
             textoPregunta.text = "<b>¡Bienvenido al Reto 2!</b>\n\nEste reto consiste en responder un cuestionario interactivo sobre los fundamentos y beneficios de la pasteurización, así como los componentes del equipo pasteurizador HTST.\n\n<i>Antes de iniciar el cuestionario, se recomienda explorar detalladamente el pasteurizador y el carrusel interactivo ubicado en la planta piloto.</i>";
             
             if (botonA != null) { botonA.image.enabled = false; botonA.interactable = false; botonA.GetComponentInChildren<TextMeshProUGUI>().text = ""; }

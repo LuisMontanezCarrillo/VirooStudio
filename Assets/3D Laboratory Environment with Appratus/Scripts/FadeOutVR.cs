@@ -19,6 +19,10 @@ public class FadeOutVR : MonoBehaviour
     [Tooltip("Arrastra aquí el objeto Bisagra_Puerta para cerrarla al teletransportar")]
     public ControladorPuerta puertaPlanta;
 
+    [Header("Ambiente Sonoro")]
+    [Tooltip("Arrastra aquí el objeto RoomTone_PlantaPiloto para iniciar el sonido ambiental al ingresar a la planta")]
+    public AudioSource audioAmbientePlanta;
+
     public void IniciarFadeOut()
     {
         StartCoroutine(RutinaFadeYTeletransporte());
@@ -66,7 +70,7 @@ public class FadeOutVR : MonoBehaviour
             float diferenciaRotacion = puntoDeDestino.eulerAngles.y - camaraVR.eulerAngles.y;
             rootJugador.Rotate(0, diferenciaRotacion, 0);
 
-            // B. CÁLCULO DE POSICIÓN: Medimos la distancia exacta a labaldosa de destino
+            // B. CÁLCULO DE POSICIÓN: Medimos la distancia exacta a la baldosa de destino
             Vector3 diferenciaPosicion = puntoDeDestino.position - camaraVR.position;
             diferenciaPosicion.y = 0; // Respetamos la altura física del usuario
 
@@ -79,6 +83,12 @@ public class FadeOutVR : MonoBehaviour
 
             // E. CERRAR PUERTA NORMATIVA: La regresamos a su posición cerrada original
             if (puertaPlanta != null) puertaPlanta.CerrarInstante();
+        }
+
+        // F. AMBIENTE SONORO: Reproducimos el Room Tone en la oscuridad, justo antes de aclarar la vista
+        if (audioAmbientePlanta != null && !audioAmbientePlanta.isPlaying)
+        {
+            audioAmbientePlanta.Play();
         }
 
         yield return new WaitForSeconds(0.5f); // Un breve respiro de calma en la oscuridad

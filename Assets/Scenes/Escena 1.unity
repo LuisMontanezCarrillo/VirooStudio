@@ -21449,7 +21449,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 57b178571cdf0344fa1defd330e98f44, type: 3}
   m_Resource: {fileID: 8300000, guid: 57b178571cdf0344fa1defd330e98f44, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.02
   m_Pitch: 1
   Loop: 1
@@ -31934,9 +31934,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   engine: {fileID: 1328574938}
   hover: {fileID: 428076123}
-  loopVolume: 0.35
-  sfxVolume: 0.6
-  touchVolume: 0.7
+  loopVolume: 0.1
+  sfxVolume: 0.1
+  touchVolume: 0.1
   inicioClip: {fileID: 8300000, guid: cff9006a3529552458df136a40dce8a6, type: 3}
   finalClip: {fileID: 8300000, guid: aeb410de781315d47aabb03d9f449265, type: 3}
   pumpStart: {fileID: 8300000, guid: c439eeec530da244cab595d91825c424, type: 3}
@@ -45273,6 +45273,7 @@ MonoBehaviour:
   canvasFase1: {fileID: 895087036}
   canvasFase2: {fileID: 97840082}
   puertaPlanta: {fileID: 2006931754}
+  audioAmbientePlanta: {fileID: 856857946}
 --- !u!1 &1908360778
 GameObject:
   m_ObjectHideFlags: 0
