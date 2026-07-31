@@ -24,14 +24,15 @@ public class GestorCuestionario : MonoBehaviour
     public AudioClip sonidoCorrecto;
     public AudioClip sonidoIncorrecto;
 
-    [Header("Transición a Escena 3")]
+    [Header("Transición Local a Escena 3")]
     [Tooltip("Arrastra aquí el objeto vacío hacia donde se teletransportará el jugador para operar la máquina")]
     public Transform puntoDestinoEscena3;
-    [Tooltip("Arrastra aquí el Canvas de la Escena 3 (Instrucciones)")]
-    public GameObject canvasEscena3; 
+    
+    // NOTA SENIOR: Hemos eliminado la variable 'canvasEscena3' del script.
+    // Manejar interfaces globales por código local rompe la red en VIROO.
 
-    [Header("Eventos de Secuencia")]
-    [Tooltip("Aquí conectaremos automáticamente el inicio del video tutorial")]
+    [Header("Eventos de Red (VIROO)")]
+    [Tooltip("Conecta aquí el Viroo Action/Network Event que encenderá el Canvas 3 e iniciará el video tutorial para TODOS los usuarios")]
     public UnityEvent OnTransitionComplete; 
     
     private Color colorOriginalBotones;
@@ -61,7 +62,6 @@ public class GestorCuestionario : MonoBehaviour
     {
         if (botonA != null) colorOriginalBotones = botonA.image.color;
         
-        // --- AUTOCONFIGURACIÓN A PRUEBA DE FALLOS ---
         if (botonA != null) { botonA.onClick.RemoveAllListeners(); botonA.onClick.AddListener(() => ValidarRespuesta(0, botonA)); }
         if (botonB != null) { botonB.onClick.RemoveAllListeners(); botonB.onClick.AddListener(() => ValidarRespuesta(1, botonB)); }
         if (botonC != null) { botonC.onClick.RemoveAllListeners(); botonC.onClick.AddListener(() => ValidarRespuesta(2, botonC)); }
@@ -72,47 +72,13 @@ public class GestorCuestionario : MonoBehaviour
 
     void LlenarBancoPreguntas()
     {
+        // Lógica de llenado de preguntas conservada intacta...
         bancoPreguntas = new DatosPregunta[5];
-
-        bancoPreguntas[0] = new DatosPregunta(
-            "¿Cuál es el objetivo principal de la pasteurización de la leche según la normatividad sanitaria?",
-            "A) Eliminar todos los microorganismos presentes para que la leche sea estéril.",
-            "B) Eliminar los microorganismos patógenos para garantizar la inocuidad, sin alterar significativamente sus propiedades.",
-            "C) Aumentar el contenido de grasa de la leche para mejorar su sabor.",
-            1 // Respuesta Correcta: B
-        );
-
-        bancoPreguntas[1] = new DatosPregunta(
-            "A nivel general, ¿cuáles son las tres etapas fundamentales que conforman el ciclo térmico en un sistema de pasteurización continuo?",
-            "A) Mezclado, Ebullición y Filtrado.",
-            "B) Calentamiento, Retención (mantenimiento de la temperatura) y Enfriamiento rápido.",
-            "C) Fermentación, Evaporación y Condensación.",
-            1 // Respuesta Correcta: B
-        );
-
-        bancoPreguntas[2] = new DatosPregunta(
-            "De acuerdo con la descripción del equipo, ¿qué funciones integran las múltiples secciones del Intercambiador de Placas?",
-            "A) Almacenar la leche cruda, mantener la columna hidrostática y desacoplar variaciones de presión.",
-            "B) Regeneración, calentamiento con agua caliente de la caldera y enfriamiento con agua fría del chiller.",
-            "C) Garantizar el tiempo mínimo a temperatura de pasteurización (≥15 s a ≥72 °C).",
-            1 // Respuesta Correcta: B
-        );
-
-        bancoPreguntas[3] = new DatosPregunta(
-            "¿Qué componente tiene la función específica de garantizar el tiempo mínimo a temperatura de pasteurización (≥15 s a ≥72 °C)?",
-            "A) El Tubo de Retención.",
-            "B) La Bomba Booster, para asegurar sobre-presión.",
-            "C) El Filtro y Sanitario, antes de la bomba de alimentación.",
-            0 // Respuesta Correcta: A
-        );
-
-        bancoPreguntas[4] = new DatosPregunta(
-            "La válvula de desviación es un elemento de seguridad crítico. ¿Qué ocurre si la temperatura a la salida del tubo de retención baja de 72 °C?",
-            "A) Empuja la leche contra el delta-P para evitar contaminación por descompresión.",
-            "B) Desvía el flujo automáticamente de vuelta al tanque de balance.",
-            "C) Activa el banco de válvulas neumáticas superiores para aislar las secciones.",
-            1 // Respuesta Correcta: B
-        );
+        bancoPreguntas[0] = new DatosPregunta("¿Cuál es el objetivo principal de la pasteurización de la leche según la normatividad sanitaria?", "A) Eliminar todos los microorganismos presentes para que la leche sea estéril.", "B) Eliminar los microorganismos patógenos para garantizar la inocuidad, sin alterar significativamente sus propiedades.", "C) Aumentar el contenido de grasa de la leche para mejorar su sabor.", 1);
+        bancoPreguntas[1] = new DatosPregunta("A nivel general, ¿cuáles son las tres etapas fundamentales que conforman el ciclo térmico en un sistema de pasteurización continuo?", "A) Mezclado, Ebullición y Filtrado.", "B) Calentamiento, Retención (mantenimiento de la temperatura) y Enfriamiento rápido.", "C) Fermentación, Evaporación y Condensación.", 1);
+        bancoPreguntas[2] = new DatosPregunta("De acuerdo con la descripción del equipo, ¿qué funciones integran las múltiples secciones del Intercambiador de Placas?", "A) Almacenar la leche cruda, mantener la columna hidrostática y desacoplar variaciones de presión.", "B) Regeneración, calentamiento con agua caliente de la caldera y enfriamiento con agua fría del chiller.", "C) Garantizar el tiempo mínimo a temperatura de pasteurización (≥15 s a ≥72 °C).", 1);
+        bancoPreguntas[3] = new DatosPregunta("¿Qué componente tiene la función específica de garantizar el tiempo mínimo a temperatura de pasteurización (≥15 s a ≥72 °C)?", "A) El Tubo de Retención.", "B) La Bomba Booster, para asegurar sobre-presión.", "C) El Filtro y Sanitario, antes de la bomba de alimentación.", 0);
+        bancoPreguntas[4] = new DatosPregunta("La válvula de desviación es un elemento de seguridad crítico. ¿Qué ocurre si la temperatura a la salida del tubo de retención baja de 72 °C?", "A) Empuja la leche contra el delta-P para evitar contaminación por descompresión.", "B) Desvía el flujo automáticamente de vuelta al tanque de balance.", "C) Activa el banco de válvulas neumáticas superiores para aislar las secciones.", 1);
     }
 
     void ActualizarPantalla()
@@ -120,7 +86,6 @@ public class GestorCuestionario : MonoBehaviour
         textoFeedback.text = "";
         ResetearColorBotones();
 
-        // ESTADO 1: Pantalla de Contexto e Introducción
         if (enIntroduccion)
         {
             textoPregunta.text = "<b>¡Bienvenido al Reto 2!</b>\n\nEste reto consiste en responder un cuestionario interactivo sobre los fundamentos y beneficios de la pasteurización, así como los componentes del equipo pasteurizador HTST.\n\n<i>Antes de iniciar el cuestionario, se recomienda explorar detalladamente el pasteurizador y el carrusel interactivo ubicado en la planta piloto.</i>";
@@ -138,7 +103,6 @@ public class GestorCuestionario : MonoBehaviour
 
             esperandoSiguiente = false;
         }
-        // ESTADO 2: Flujo de preguntas
         else if (preguntaActual < bancoPreguntas.Length)
         {
             if (botonA != null) { botonA.image.enabled = true; botonA.interactable = true; }
@@ -153,7 +117,6 @@ public class GestorCuestionario : MonoBehaviour
             
             esperandoSiguiente = false;
         }
-        // ESTADO 3: Fin del cuestionario
         else
         {
             StartCoroutine(FinalizarCuestionario());
@@ -169,7 +132,6 @@ public class GestorCuestionario : MonoBehaviour
             if (opcionSeleccionada == 2) 
             {
                 if (reproductorAudio != null) reproductorAudio.Stop();
-                
                 enIntroduccion = false;
                 ActualizarPantalla();
             }
@@ -180,9 +142,7 @@ public class GestorCuestionario : MonoBehaviour
         {
             botonPresionado.image.color = colorCorrecto;
             textoFeedback.text = "<color=green>¡Excelente! Respuesta correcta.</color>";
-            
             if (reproductorAudio != null && sonidoCorrecto != null) reproductorAudio.PlayOneShot(sonidoCorrecto);
-
             esperandoSiguiente = true;
             StartCoroutine(SiguientePreguntaCo());
         }
@@ -190,7 +150,6 @@ public class GestorCuestionario : MonoBehaviour
         {
             botonPresionado.image.color = colorIncorrecto;
             textoFeedback.text = "<color=red>Respuesta incorrecta. Analiza el equipo e intenta de nuevo.</color>";
-            
             if (reproductorAudio != null && sonidoIncorrecto != null) reproductorAudio.PlayOneShot(sonidoIncorrecto);
         }
     }
@@ -217,12 +176,13 @@ public class GestorCuestionario : MonoBehaviour
             reproductorAudio.Play();
         }
 
-        yield return new WaitForSeconds(21.0f);
+        // Se reduce el tiempo para que el fade ocurra sin hacer esperar tanto al usuario
+        yield return new WaitForSeconds(5.0f); 
         
         Canvas miCanvas = GetComponent<Canvas>();
         if (miCanvas != null) miCanvas.enabled = false;
 
-        // --- TRANSICIÓN INMERSIVA CINEMATOGRÁFICA ---
+        // --- TRANSICIÓN INMERSIVA CINEMATOGRÁFICA (Local para quien viaja) ---
         GameObject canvasFadeObj = new GameObject("Canvas_FadeVirtual");
         Canvas canvasFade = canvasFadeObj.AddComponent<Canvas>();
         canvasFade.renderMode = RenderMode.WorldSpace;
@@ -256,19 +216,17 @@ public class GestorCuestionario : MonoBehaviour
         if (puntoDestinoEscena3 != null)
         {
             Transform rootJugador = camaraVR.root;
-
             float diferenciaRotacion = puntoDestinoEscena3.eulerAngles.y - camaraVR.eulerAngles.y;
             rootJugador.Rotate(0, diferenciaRotacion, 0);
-
             Vector3 diferenciaPosicion = puntoDestinoEscena3.position - camaraVR.position;
             diferenciaPosicion.y = 0; 
             rootJugador.position += diferenciaPosicion;
         }
 
-        if (canvasEscena3 != null)
-        {
-            canvasEscena3.SetActive(true);
-        }
+        // --- AVISO A LA RED ---
+        // Notificamos a VIROO que el usuario completó la transición.
+        // El componente de red conectado aquí se encargará de encender el Canvas 3 y el Video.
+        OnTransitionComplete?.Invoke(); 
 
         yield return new WaitForSeconds(0.5f);
 
@@ -279,14 +237,6 @@ public class GestorCuestionario : MonoBehaviour
             tiempo += Time.deltaTime;
             imagenNegra.color = new Color(0, 0, 0, Mathf.Lerp(1, 0, tiempo / duracionFade));
             yield return null;
-        }
-
-        // --- SECUENCIA AUTOMÁTICA DE VIDEO ---
-        if (canvasEscena3 != null) canvasEscena3.SetActive(false);
-        
-        if (OnTransitionComplete != null)
-        {
-            OnTransitionComplete.Invoke(); 
         }
 
         Destroy(canvasFadeObj);
