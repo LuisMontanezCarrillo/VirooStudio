@@ -19,7 +19,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             AssetDatabase.Refresh(); // asegura que los .ogg estén importados
 
             var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-            var engine = Object.FindFirstObjectByType<PasteurizerSimEngine>();
+            var engine = Object.FindObjectOfType<PasteurizerSimEngine>();
             if (engine == null)
             {
                 EditorUtility.DisplayDialog("Guía por voz",

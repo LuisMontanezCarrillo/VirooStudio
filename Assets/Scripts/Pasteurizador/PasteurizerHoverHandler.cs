@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.XR.Interaction.Toolkit.Interactors;
-using UnityEngine.XR.Interaction.Toolkit.UI;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -34,14 +32,6 @@ namespace ViroLab.Pasteurizador
         [Tooltip("Si true, ademas del ray VR tambien se intenta raycast con mouse.")]
         public bool alsoUseMouse = true;
         public LayerMask hitLayers = ~0;
-
-        [Header("VR en VIROO (auto)")]
-        [Tooltip("Busca el interactor de mano del rig de VIROO y lo usa como origen del ray " +
-                 "y como gatillo. No requiere componentes de red: la seleccion es local para " +
-                 "cada estudiante.")]
-        public bool autoBindVirooController = true;
-        [Tooltip("Mano preferida. Si no existe se usa la otra.")]
-        public InteractorHandedness preferredHand = InteractorHandedness.Right;
 
         [Header("Trigger de click")]
         [Tooltip("KeyCode adicional para pin (solo si el Input Legacy esta activo).")]
@@ -82,82 +72,10 @@ namespace ViroLab.Pasteurizador
         private readonly Dictionary<Renderer, Material[]> _originalMats = new();
         private Camera _mainCam;
 
-        // Interactor de mano del rig de VIROO. El rig se crea en runtime, asi que no se
-        // puede resolver en Awake: se reintenta cada BindRetrySeconds hasta encontrarlo.
-        private NearFarInteractor _handInteractor;
-        private float _nextBindAttempt;
-        private const float BindRetrySeconds = 0.5f;
-
-        // Click inyectado desde fuera (ver NotifyExternalClick).
-        private bool _externalClickQueued;
-
-        // El rayo esta sobre un Canvas de UI (carrusel, cuestionario, dashboard...).
-        // Mientras sea true no se pinea nada: la UI no tiene colliders fisicos, asi
-        // que el raycast la atraviesa y golpearia la maquina que hay detras.
-        private bool _rayOverUI;
-
         private void Awake()
         {
             if (registry == null) registry = GetComponent<PasteurizerPartsRegistry>();
             RefreshCamera();
-        }
-
-        /// Permite disparar el pin desde un evento externo, por ejemplo desde un
-        /// ControllerButtonPressInteraction de VIROO cableado en el inspector.
-        public void NotifyExternalClick()
-        {
-            _externalClickQueued = true;
-        }
-
-        /// Busca el interactor de mano del rig de VIROO y lo adopta como origen del ray.
-        /// Se usa curveOrigin para que el ray coincida exactamente con la linea que el
-        /// estudiante ve dibujada por el interactor.
-        private void TryBindHandInteractor()
-        {
-            _nextBindAttempt = Time.unscaledTime + BindRetrySeconds;
-
-            var interactors = FindObjectsByType<NearFarInteractor>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            if (interactors == null || interactors.Length == 0) return;
-
-            NearFarInteractor chosen = null;
-            foreach (var it in interactors)
-            {
-                if (it == null) continue;
-                if (it.handedness == preferredHand) { chosen = it; break; }
-                if (chosen == null) chosen = it;   // la otra mano como respaldo
-            }
-            if (chosen == null) return;
-
-            // Solo re-suscribir si cambio el interactor: TryBind puede reintentarse
-            // mientras curveOrigin siga sin resolverse, y no queremos listeners dobles.
-            if (_handInteractor != chosen)
-            {
-                if (_handInteractor != null)
-                {
-                    _handInteractor.uiHoverEntered.RemoveListener(OnUIHoverEntered);
-                    _handInteractor.uiHoverExited.RemoveListener(OnUIHoverExited);
-                }
-                _handInteractor = chosen;
-                chosen.uiHoverEntered.AddListener(OnUIHoverEntered);
-                chosen.uiHoverExited.AddListener(OnUIHoverExited);
-            }
-
-            if (chosen.curveOrigin != null) raySource = chosen.curveOrigin;
-        }
-
-        private void OnUIHoverEntered(UIHoverEventArgs args) => _rayOverUI = true;
-        private void OnUIHoverExited(UIHoverEventArgs args) => _rayOverUI = false;
-
-        private void OnDisable()
-        {
-            if (_handInteractor != null)
-            {
-                _handInteractor.uiHoverEntered.RemoveListener(OnUIHoverEntered);
-                _handInteractor.uiHoverExited.RemoveListener(OnUIHoverExited);
-            }
-            _handInteractor = null;
-            _rayOverUI = false;
         }
 
         private void RefreshCamera()
@@ -178,24 +96,10 @@ namespace ViroLab.Pasteurizador
             // Re-adquirir camara si se perdio (XR a veces la crea/destruye dinamicamente)
             if (_mainCam == null) RefreshCamera();
 
-            // El rig de VIROO aparece despues del Awake de la escena.
-            if (autoBindVirooController && (_handInteractor == null || raySource == null)
-                && Time.unscaledTime >= _nextBindAttempt)
-                TryBindHandInteractor();
-
-            // Si el rayo esta sobre un panel de UI no se toca el pasteurizador:
-            // la UI no tiene colliders, el raycast fisico la atravesaria y golpearia
-            // la maquina que hay detras (era lo que hacia saltar la tarjeta al pulsar
-            // ANTERIOR/SIGUIENTE del carrusel).
-            GameObject hit = _rayOverUI ? null : TryRaycast();
+            GameObject hit = TryRaycast();
             SetHover(hit);
 
-            // Se consulta siempre para consumir el click y que no quede pendiente,
-            // pero se ignora mientras el rayo este sobre la UI.
-            bool clicked = IsClickPressed();
-            if (_rayOverUI) clicked = false;
-
-            if (clicked)
+            if (IsClickPressed())
             {
                 if (hit != null) SetPinned(hit);
                 else SetPinned(null);
@@ -242,17 +146,6 @@ namespace ViroLab.Pasteurizador
 
         private bool IsClickPressed()
         {
-            // 1) Gatillo del mando (rig de VIROO). Es input de XRI, no de red:
-            //    el pin queda local para el estudiante que lo dispara.
-            if (_externalClickQueued)
-            {
-                _externalClickQueued = false;
-                return true;
-            }
-            if (_handInteractor != null && _handInteractor.selectInput != null
-                && _handInteractor.selectInput.ReadWasPerformedThisFrame())
-                return true;
-
 #if ENABLE_INPUT_SYSTEM
             // Input System nuevo (Viroo/XR usa este)
             if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
@@ -304,100 +197,29 @@ namespace ViroLab.Pasteurizador
 #endif
         }
 
-        // Buffer reutilizable: evita generar basura por frame con RaycastAll.
-        private readonly RaycastHit[] _hits = new RaycastHit[16];
-
         private GameObject TryRaycast()
         {
             // 1) VR ray source
             if (raySource != null)
             {
-                var go = FirstValidPartAlong(raySource.position, raySource.forward, rayMaxDistance);
-                if (go != null) return go;
+                if (Physics.Raycast(raySource.position, raySource.forward,
+                                    out var rh, rayMaxDistance, hitLayers))
+                {
+                    if (IsValidPart(rh.collider.gameObject)) return rh.collider.gameObject;
+                }
             }
-            // 2) Mouse fallback. Si hay un interactor de mano activo estamos en VR:
-            //    el raton solo generaria hovers fantasma y un raycast extra por frame.
-            if (alsoUseMouse && _handInteractor == null && _mainCam != null)
+            // 2) Mouse fallback
+            if (alsoUseMouse && _mainCam != null)
             {
-                // Mismo motivo que en VR: no atravesar la UI en modo escritorio.
-                var es = UnityEngine.EventSystems.EventSystem.current;
-                if (es != null && es.IsPointerOverGameObject()) return null;
-
                 var mp = GetMousePosition(out bool valid);
                 if (valid)
                 {
                     var ray = _mainCam.ScreenPointToRay(mp);
-                    var go = FirstValidPartAlong(ray.origin, ray.direction, _mainCam.farClipPlane);
-                    if (go != null) return go;
+                    if (Physics.Raycast(ray, out var rh, _mainCam.farClipPlane, hitLayers))
+                        if (IsValidPart(rh.collider.gameObject)) return rh.collider.gameObject;
                 }
             }
             return null;
-        }
-
-        /// Devuelve la primera PIEZA VALIDA a lo largo del rayo, atravesando colliders
-        /// que no son partes del pasteurizador.
-        ///
-        /// Antes se usaba Physics.Raycast, que devuelve solo el impacto mas cercano: si
-        /// delante habia un collider ajeno (los muros invisibles de _CollisionWalls, por
-        /// ejemplo) la funcion se rendia y devolvia null, o el hover se quedaba pegado a
-        /// las pocas piezas que no estaban tapadas. Por eso siempre acababa mostrandose
-        /// la misma descripcion.
-        private GameObject FirstValidPartAlong(Vector3 origin, Vector3 direction, float maxDistance)
-        {
-            int count = Physics.RaycastNonAlloc(origin, direction, _hits, maxDistance, hitLayers);
-            if (count <= 0) return null;
-
-            // RaycastNonAlloc no garantiza orden. Se ordena por distancia (insercion:
-            // como mucho hay 16 elementos) para poder recorrer los impactos de mas
-            // cercano a mas lejano y respetar lo que tape a lo que.
-            for (int i = 1; i < count; i++)
-            {
-                var actual = _hits[i];
-                int j = i - 1;
-                while (j >= 0 && _hits[j].distance > actual.distance)
-                {
-                    _hits[j + 1] = _hits[j];
-                    j--;
-                }
-                _hits[j + 1] = actual;
-            }
-
-            for (int i = 0; i < count; i++)
-            {
-                var col = _hits[i].collider;
-                if (col == null) continue;
-                var go = col.gameObject;
-
-                // Un bloqueador (panel de UI) interrumpe la busqueda: lo que haya
-                // detras no es alcanzable. Si su panel esta oculto no bloquea nada.
-                var blocker = go.GetComponent<PasteurizerRayBlocker>();
-                if (blocker != null)
-                {
-                    if (blocker.Blocks) return null;
-                    continue;
-                }
-
-                // Lo que se puede atravesar sin mas: triggers y los muros invisibles
-                // que solo existen para frenar al jugador al caminar.
-                if (col.isTrigger || EsMuroDeColision(go.transform)) continue;
-
-                if (IsValidPart(go)) return go;
-
-                // Cualquier otro solido TAPA lo que hay detras. Es la oclusion normal:
-                // sin esto el rayo atravesaba paredes y mesas y acababa señalando el
-                // pasteurizador de la sala contigua, mostrando siempre la misma ficha.
-                return null;
-            }
-            return null;
-        }
-
-        /// Los muros de "_CollisionWalls" existen para que el jugador no atraviese la
-        /// maquina caminando, no para tapar la vista. Ademas hoy estan mal orientados y
-        /// cruzan el propio modelo, asi que taparian las piezas que deben señalarse.
-        private static bool EsMuroDeColision(Transform t)
-        {
-            var parent = t.parent;
-            return parent != null && parent.name == "_CollisionWalls";
         }
 
         private bool IsValidPart(GameObject go)

@@ -28,23 +28,6 @@ namespace ViroLab.Pasteurizador
         {
             if (canvasGroup != null) canvasGroup.alpha = fadeAlpha;
             if (closeButton != null) closeButton.onClick.AddListener(OnCloseClick);
-            MakeDecorationsTransparentToRay();
-        }
-
-        /// La tarjeta flota a menos de un metro de la cara y ocupa buena parte del
-        /// campo visual. Si su fondo y sus textos capturan el rayo, el estudiante
-        /// deja de poder tocar la maquina que hay detras y el pin se queda congelado
-        /// en la ultima pieza. Solo los elementos realmente pulsables (el boton de
-        /// cerrar) deben capturar el rayo.
-        private void MakeDecorationsTransparentToRay()
-        {
-            var graphics = GetComponentsInChildren<Graphic>(true);
-            foreach (var g in graphics)
-            {
-                if (g == null) continue;
-                if (g.GetComponentInParent<Selectable>() != null) continue; // botones, sliders...
-                g.raycastTarget = false;
-            }
         }
 
         private void OnEnable()

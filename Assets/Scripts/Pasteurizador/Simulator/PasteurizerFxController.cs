@@ -51,8 +51,8 @@ namespace ViroLab.Pasteurizador.Simulator
 
         void Awake()
         {
-            if (engine == null) engine = FindFirstObjectByType<PasteurizerSimEngine>();
-            if (hover == null)  hover  = FindFirstObjectByType<ViroLab.Pasteurizador.PasteurizerHoverHandler>();
+            if (engine == null) engine = FindObjectOfType<PasteurizerSimEngine>();
+            if (hover == null)  hover  = FindObjectOfType<ViroLab.Pasteurizador.PasteurizerHoverHandler>();
 
             _sfx      = MakeSrc("FX_OneShot", false, sfxVolume);
             _touch    = MakeSrc("FX_Touch", false, touchVolume);
@@ -84,21 +84,11 @@ namespace ViroLab.Pasteurizador.Simulator
             return s;
         }
 
-        float _nextEngineLookup;
-
         void Update()
         {
             ApplyVolumes(); // permite mover las barritas del Inspector durante Play y oír el cambio al instante
 
-            if (engine == null)
-            {
-                // Igual que en la guia por voz: sin freno, este escaneo de escena
-                // completo se repetiria cada frame mientras el motor no exista.
-                if (Time.unscaledTime < _nextEngineLookup) return;
-                _nextEngineLookup = Time.unscaledTime + 0.5f;
-                engine = FindFirstObjectByType<PasteurizerSimEngine>();
-                if (engine == null) return;
-            }
+            if (engine == null) { engine = FindObjectOfType<PasteurizerSimEngine>(); if (engine == null) return; }
 
             // --- Planta en marcha ---
             if (Edge(ref pRunning, engine.running))

@@ -68,25 +68,15 @@ namespace ViroLab.Pasteurizador.Simulator
         {
             if (source == null) source = GetComponent<AudioSource>();
             if (source != null) { source.playOnAwake = false; source.loop = false; source.spatialBlend = 0f; }
-            if (engine == null) engine = FindFirstObjectByType<PasteurizerSimEngine>();
+            if (engine == null) engine = FindObjectOfType<PasteurizerSimEngine>();
             if (tablero == null) tablero = transform;
         }
 
         void OnEnable() { ResetGuide(); }
 
-        float _nextEngineLookup;
-
         void Update()
         {
-            if (engine == null)
-            {
-                // Buscar por toda la escena es O(n): sin este freno se repetia cada
-                // frame mientras el motor no existiera.
-                if (Time.unscaledTime < _nextEngineLookup) return;
-                _nextEngineLookup = Time.unscaledTime + 0.5f;
-                engine = FindFirstObjectByType<PasteurizerSimEngine>();
-                if (engine == null) return;
-            }
+            if (engine == null) { engine = FindObjectOfType<PasteurizerSimEngine>(); if (engine == null) return; }
             HandleProximity();
             HandleSequence();
             HandleCorrections();

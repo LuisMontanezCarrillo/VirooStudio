@@ -20,7 +20,7 @@ namespace ViroLab.Pasteurizador.Simulator
 
         void Awake()
         {
-            if (guide == null) guide = FindFirstObjectByType<PasteurizerVoiceGuide>();
+            if (guide == null) guide = FindObjectOfType<PasteurizerVoiceGuide>();
             if (panel == null) panel = gameObject;
         }
 
@@ -38,7 +38,7 @@ namespace ViroLab.Pasteurizador.Simulator
         /// <summary>Pulsó EMPEZAR: cierra la ventana y arranca la narración.</summary>
         public void OnStartPressed()
         {
-            if (guide == null) guide = FindFirstObjectByType<PasteurizerVoiceGuide>();
+            if (guide == null) guide = FindObjectOfType<PasteurizerVoiceGuide>();
             if (guide != null) guide.StartGuide();
             if (panel != null) panel.SetActive(false);
         }
