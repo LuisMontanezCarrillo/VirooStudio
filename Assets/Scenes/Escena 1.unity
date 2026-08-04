@@ -21683,7 +21683,6 @@ MonoBehaviour:
   sonidoCorrecto: {fileID: 8300000, guid: 7f290dbd13a49ea4686a822a94a5e853, type: 3}
   sonidoIncorrecto: {fileID: 8300000, guid: 0f1de9a42c6c27b4c9004db022cfcc61, type: 3}
   puntoDestinoEscena3: {fileID: 141025963}
-  canvasEscena3: {fileID: 1079882288}
   OnTransitionComplete:
     m_PersistentCalls:
       m_Calls:
@@ -45290,10 +45289,57 @@ MonoBehaviour:
   tiempoDeEspera: 25
   duracionFade: 5
   puntoDeDestino: {fileID: 1546685619}
-  canvasFase1: {fileID: 895087036}
-  canvasFase2: {fileID: 97840082}
-  puertaPlanta: {fileID: 2006931754}
-  audioAmbientePlanta: {fileID: 856857946}
+  OnTeletransporteEjecutado:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 895087036}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 97840082}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2006931754}
+        m_TargetAssemblyTypeName: ControladorPuerta, Assembly-CSharp
+        m_MethodName: CerrarInstante
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 856857946}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1908360778
 GameObject:
   m_ObjectHideFlags: 0
