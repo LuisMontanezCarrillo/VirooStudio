@@ -188,6 +188,20 @@ namespace ViroLab.Pasteurizador.Simulator
             vProd = vRet = vDes = false;
             alarm = false; lowTempAcc = 0f;
             cipStep = 0; cipTime = 0f;
+
+            // Servicios de agua y vapor. Step() sale antes de calcularlos cuando la
+            // planta no esta en marcha (if (!running) return), asi que al parar aqui
+            // se quedaban CONGELADOS con el ultimo valor del lote anterior: el
+            // manometro seguia marcando presion, la trampa seguia en "DRENA", el
+            // pulmon a medio nivel y el agua de reposicion abierta. Esa es la razon
+            // de que el boton pareciera no hacer nada: lo que si cambiaba (tanques y
+            // temperaturas) pasaba desapercibido al lado de todo lo que no cambiaba.
+            // Se devuelven a los valores con los que arrancan declarados arriba.
+            pulmonLevel = 0.80f;
+            makeupOn = false;
+            steamPsi = 0f;
+            trapOpen = false;
+
             hint = "Lote reiniciado. Pulsa Iniciar para comenzar de nuevo.";
         }
 
