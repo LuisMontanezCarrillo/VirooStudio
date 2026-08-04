@@ -10418,6 +10418,7 @@ MonoBehaviour:
   coldPumpBtn: {fileID: 246034909}
   milkPumpBtn: {fileID: 565767636}
   resetBatchBtn: {fileID: 908170575}
+  startOverlay: {fileID: 0}
   energyLbl: {fileID: 84347561}
   modeLbl: {fileID: 1262165694}
   fillLbl: {fileID: 126466560}
@@ -29740,7 +29741,8 @@ MonoBehaviour:
   panel: {fileID: 1227294753}
   startButton: {fileID: 141506981}
   guide: {fileID: 1328574941}
-  showAgainOnReset: 0
+  showAgainOnReset: 1
+  reiniciarGuiaAlReiniciar: 1
 --- !u!1 &1231326080
 GameObject:
   m_ObjectHideFlags: 0

@@ -49,6 +49,8 @@ namespace ViroLab.Pasteurizador.Simulator
         public Button coldPumpBtn;
         public Button milkPumpBtn;
         public Button resetBatchBtn;
+        [Tooltip("Ventana EMPEZAR. Si queda vacio se busca en la escena al reiniciar.")]
+        public PasteurizerStartOverlay startOverlay;
 
         [Header("Labels de botones (refrescamos texto ON/OFF)")]
         public TMP_Text energyLbl;
@@ -174,7 +176,25 @@ namespace ViroLab.Pasteurizador.Simulator
             if (hotPumpBtn  != null) hotPumpBtn.onClick.AddListener(engine.ToggleHotPump);
             if (coldPumpBtn != null) coldPumpBtn.onClick.AddListener(engine.ToggleColdPump);
             if (milkPumpBtn != null) milkPumpBtn.onClick.AddListener(engine.ToggleMilkPump);
-            if (resetBatchBtn != null) resetBatchBtn.onClick.AddListener(engine.ResetBatch);
+            if (resetBatchBtn != null)
+            {
+                resetBatchBtn.onClick.AddListener(engine.ResetBatch);
+                // Ademas del motor, el reinicio devuelve la INTERFAZ a su estado de
+                // entrada. PasteurizerStartOverlay.ShowAgain existia desde el
+                // principio pero nadie lo llamaba nunca: esta es la conexion que
+                // faltaba para que el simulador quede listo para el siguiente
+                // estudiante.
+                resetBatchBtn.onClick.AddListener(OnResetBatchPressed);
+            }
+        }
+
+        /// Devuelve la ventana EMPEZAR y, si esta configurado, reinicia la narracion.
+        private void OnResetBatchPressed()
+        {
+            if (startOverlay == null)
+                startOverlay = FindFirstObjectByType<PasteurizerStartOverlay>(FindObjectsInactive.Include);
+            if (startOverlay != null && startOverlay.showAgainOnReset)
+                startOverlay.ShowAgain();
         }
 
         private void BindSliders()

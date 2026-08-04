@@ -175,8 +175,9 @@ namespace ViroLab.Pasteurizador.Simulator
         {
             // Antes solo borraba volúmenes y métricas: las bombas seguían encendidas,
             // las temperaturas altas y las válvulas igual, así que "no pasaba nada".
-            // Ahora deja el equipo listo para volver a operar desde el principio
-            // (la planta sigue con energía; hay que pulsar Iniciar de nuevo).
+            // Ahora deja el equipo en el estado de arranque completo, para que el
+            // siguiente estudiante repita la secuencia entera desde cero.
+            energyOn = false;
             running = false;
             fillOn = pumpMilkOn = pumpHotOn = pumpColdOn = false;
             tempHeat = 20f; tempHold = 20f; tempOut = 13.6f; tempBoiler = 20f;
@@ -202,7 +203,8 @@ namespace ViroLab.Pasteurizador.Simulator
             steamPsi = 0f;
             trapOpen = false;
 
-            hint = "Lote reiniciado. Pulsa Iniciar para comenzar de nuevo.";
+            // La energia queda apagada, asi que el primer paso vuelve a ser Energia.
+            hint = "Lote reiniciado. Pulsa Energía para comenzar de nuevo.";
         }
 
         // (resto de hints traducidos al español puro)

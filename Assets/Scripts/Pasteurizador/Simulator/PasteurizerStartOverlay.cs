@@ -15,8 +15,13 @@ namespace ViroLab.Pasteurizador.Simulator
         public Button startButton;            // botón EMPEZAR
         public PasteurizerVoiceGuide guide;   // guía por voz (auto si queda vacío)
 
-        [Tooltip("Volver a mostrar la ventana cuando se reinicia el lote.")]
-        public bool showAgainOnReset = false;
+        [Tooltip("Volver a mostrar la ventana EMPEZAR cuando se reinicia el lote.")]
+        public bool showAgainOnReset = true;
+
+        [Tooltip("Al reiniciar el lote, volver a narrar la guia por voz desde la " +
+                 "bienvenida. Desactivalo si en las pruebas resulta repetitivo: la " +
+                 "ventana EMPEZAR seguira apareciendo igual.")]
+        public bool reiniciarGuiaAlReiniciar = true;
 
         void Awake()
         {
@@ -43,10 +48,17 @@ namespace ViroLab.Pasteurizador.Simulator
             if (panel != null) panel.SetActive(false);
         }
 
-        /// <summary>Vuelve a mostrar la ventana (por si se quiere reiniciar la experiencia).</summary>
+        /// <summary>
+        /// Vuelve a dejar el simulador como al entrar: ventana EMPEZAR visible y,
+        /// si esta activado, la narracion lista para sonar desde la bienvenida.
+        /// La llama el boton Reiniciar Lote del tablero.
+        /// </summary>
         public void ShowAgain()
         {
             if (panel != null) panel.SetActive(true);
+
+            if (!reiniciarGuiaAlReiniciar) return;
+            if (guide == null) guide = FindFirstObjectByType<PasteurizerVoiceGuide>();
             if (guide != null) guide.ResetGuide();
         }
     }
