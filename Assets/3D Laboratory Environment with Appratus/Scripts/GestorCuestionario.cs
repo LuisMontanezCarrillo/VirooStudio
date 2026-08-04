@@ -240,9 +240,11 @@ public class GestorCuestionario : MonoBehaviour
         while (duracionVO > 0f && Time.time < instanteInicioVO + duracionVO)
             yield return null;
 
-        // --- AVISO A LA RED ---
-        // Notificamos a VIROO que el usuario completó la transición.
-        // El componente de red conectado aquí se encargará de encender el Canvas 3 y el Video.
+        // --- AVISO DE FIN DE TRANSICION ---
+        // Se avisa con la pantalla AUN EN NEGRO, antes del fundido de entrada. Lo que
+        // se engancha aqui es el splash de la Escena 3: encendiendolo ahora, el
+        // fundido lo va revelando poco a poco en lugar de hacerlo aparecer de golpe
+        // ya aclarada la pantalla, que se percibia brusco y tardio.
         OnTransitionComplete?.Invoke();
 
         yield return new WaitForSeconds(0.5f);
