@@ -170,14 +170,25 @@ public class GestorCuestionario : MonoBehaviour
         if(botonB != null) botonB.gameObject.SetActive(false);
         if(botonC != null) botonC.gameObject.SetActive(false);
 
+        float instanteInicioVO = 0f;
+        float duracionVO = 0f;
         if (reproductorAudio != null && audioCierreReto2 != null)
         {
             reproductorAudio.clip = audioCierreReto2;
             reproductorAudio.Play();
+            instanteInicioVO = Time.time;
+            duracionVO = audioCierreReto2.length;
         }
 
-        // Se reduce el tiempo para que el fade ocurra sin hacer esperar tanto al usuario
-        yield return new WaitForSeconds(5.0f); 
+        // La espera sale de la duracion REAL del clip, no de un numero fijo. Antes
+        // eran 5 s fijos con una locucion de 18 s, asi que el video de la Escena 3
+        // arrancaba encima de la voz en off.
+        //
+        // Se descuenta la duracion del fundido para que el negro termine de cerrarse
+        // justo cuando acaba la locucion, en lugar de sumar 2 s de espera adicional.
+        float duracionFade = 2f;
+        const float margenLectura = 1f;   // minimo para alcanzar a leer el mensaje
+        yield return new WaitForSeconds(Mathf.Max(margenLectura, duracionVO - duracionFade));
         
         Canvas miCanvas = GetComponent<Canvas>();
         if (miCanvas != null) miCanvas.enabled = false;
@@ -201,7 +212,6 @@ public class GestorCuestionario : MonoBehaviour
         imagenNegra.rectTransform.sizeDelta = new Vector2(5000, 5000); 
         imagenNegra.raycastTarget = false; 
 
-        float duracionFade = 2f;
         float tiempo = 0;
 
         // FADE OUT
@@ -223,10 +233,17 @@ public class GestorCuestionario : MonoBehaviour
             rootJugador.position += diferenciaPosicion;
         }
 
+        // Garantia final: no encender el video hasta que la locucion haya terminado
+        // de verdad. El calculo de arriba ya deberia dejarlo justo, pero el audio
+        // puede tardar en arrancar, y este bucle no depende de eso porque mide
+        // tiempo transcurrido desde el Play, no el estado del AudioSource.
+        while (duracionVO > 0f && Time.time < instanteInicioVO + duracionVO)
+            yield return null;
+
         // --- AVISO A LA RED ---
         // Notificamos a VIROO que el usuario completó la transición.
         // El componente de red conectado aquí se encargará de encender el Canvas 3 y el Video.
-        OnTransitionComplete?.Invoke(); 
+        OnTransitionComplete?.Invoke();
 
         yield return new WaitForSeconds(0.5f);
 
