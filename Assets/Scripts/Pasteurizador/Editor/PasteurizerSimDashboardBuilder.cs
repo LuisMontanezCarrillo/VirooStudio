@@ -641,7 +641,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             var so = overlay.gameObject.AddComponent<PasteurizerStartOverlay>();
             so.panel = overlay.gameObject;
             so.startButton = btn;
-            so.guide = Object.FindObjectOfType<PasteurizerVoiceGuide>();
+            so.guide = Object.FindFirstObjectByType<PasteurizerVoiceGuide>();
         }
 
         private static Button BuildButton(Transform parent, string name, string text, int fontSize, out TMP_Text labelOut)

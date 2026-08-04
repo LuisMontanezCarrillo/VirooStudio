@@ -20,7 +20,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             AssetDatabase.Refresh();
             var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
 
-            var engine = Object.FindObjectOfType<PasteurizerSimEngine>();
+            var engine = Object.FindFirstObjectByType<PasteurizerSimEngine>();
             if (engine == null)
             {
                 EditorUtility.DisplayDialog("FX de sonido",
@@ -32,7 +32,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             if (fx == null) fx = Undo.AddComponent<PasteurizerFxController>(engine.gameObject);
 
             fx.engine = engine;
-            fx.hover = Object.FindObjectOfType<PasteurizerHoverHandler>();
+            fx.hover = Object.FindFirstObjectByType<PasteurizerHoverHandler>();
 
             AudioClip C(string n) => AssetDatabase.LoadAssetAtPath<AudioClip>(DIR + n + ".ogg");
 

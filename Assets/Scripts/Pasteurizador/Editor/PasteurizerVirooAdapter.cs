@@ -4,16 +4,19 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using Virtualware.DependencyInjection;
 
 namespace ViroLab.Pasteurizador.EditorTools
 {
     /// Adapta la escena activa a las reglas de Viroo Studio Project Validation:
     ///   1) Todos los GameObjects deben colgar de un único "Root" en raíz de escena.
-    ///   2) Ningún GameObject puede tener Layer "missing" (-1) — todo a "Default" mín.
-    ///   3) No puede haber EventSystem en la escena (Viroo aporta el suyo).
-    ///   4) No puede haber cámaras activas sin RenderTexture (Viroo trae su rig).
+    ///   2) El Root debe llevar DependencyInjectionContext + DependencyInjectionContextAutoWire.
+    ///   3) Ningún GameObject puede tener Layer "missing" (-1) — todo a "Default" mín.
+    ///   4) No puede haber EventSystem en la escena (Viroo aporta el suyo).
+    ///   5) No puede haber cámaras activas sin RenderTexture (Viroo trae su rig).
+    ///   6) Sólo puede haber un PlayerStart en la escena.
     ///
-    /// Esto NO toca los Mocks de Viroo (ViroоContextMock, ViroоInteractionsMock, etc.)
+    /// Esto NO toca los Mocks de Viroo (VirooContextMock, VirooInteractionsMock, etc.)
     /// porque esos son OK que estén en raíz — sólo mueve lo nuestro.
     public static class PasteurizerVirooAdapter
     {
@@ -33,7 +36,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             "Gaze Snap Volume",
         };
 
-        [MenuItem("Viroo/Pasteurizador HTST/8. Adaptar a Viroо (mover dentro de Root + layers)", priority = 109)]
+        [MenuItem("Viroo/Pasteurizador HTST/8. Adaptar a Viroo (mover dentro de Root + layers)", priority = 109)]
         public static void AdaptToViroo()
         {
             var scene = SceneManager.GetActiveScene();
@@ -59,6 +62,20 @@ namespace ViroLab.Pasteurizador.EditorTools
             {
                 root = new GameObject(RootName);
                 Undo.RegisterCreatedObjectUndo(root, "Crear Root");
+            }
+
+            // 1b) El validador de Viroo exige los dos componentes de inyección de dependencias
+            //     en el Root (HasNotDependencyInjectionScriptsInRootGameObject).
+            int addedDi = 0;
+            if (root.GetComponent<DependencyInjectionContext>() == null)
+            {
+                Undo.AddComponent<DependencyInjectionContext>(root);
+                addedDi++;
+            }
+            if (root.GetComponent<DependencyInjectionContextAutoWire>() == null)
+            {
+                Undo.AddComponent<DependencyInjectionContextAutoWire>(root);
+                addedDi++;
             }
 
             // 2) Mover a Root todo lo que esté en raíz y no esté en AllowedInRoot
@@ -112,21 +129,48 @@ namespace ViroLab.Pasteurizador.EditorTools
                 killedCameras++;
             }
 
+            // 6) Avisar si hay más de un PlayerStart (el validador exige uno solo)
+            int playerStarts = CountPlayerStarts();
+            string playerStartWarning = playerStarts > 1
+                ? $"\n\nATENCION: hay {playerStarts} PlayerStart en la escena. " +
+                  "Viroo exige exactamente uno; borra los sobrantes a mano."
+                : string.Empty;
+
             EditorSceneManager.MarkSceneDirty(scene);
             Debug.Log($"<color=cyan>[Pasteurizador HTST]</color> Viroo Adapter:\n" +
                       $"  - {moved} GameObjects movidos a '{RootName}'\n" +
+                      $"  - {addedDi} componentes de inyeccion de dependencias agregados al Root\n" +
                       $"  - {relayered} GameObjects con Layer corregido a Default\n" +
                       $"  - {killedEventSystems} EventSystems eliminados\n" +
-                      $"  - {killedCameras} cámaras rogue desactivadas");
+                      $"  - {killedCameras} camaras rogue desactivadas\n" +
+                      $"  - {playerStarts} PlayerStart encontrados");
 
             EditorUtility.DisplayDialog("Pasteurizador HTST",
-                $"Adaptación a Viroо completa:\n\n" +
+                $"Adaptación a Viroo completa:\n\n" +
                 $"• {moved} GO movidos dentro de 'Root'\n" +
+                $"• {addedDi} componentes DI agregados al Root\n" +
                 $"• {relayered} GO con layer corregido\n" +
                 $"• {killedEventSystems} EventSystems eliminados\n" +
-                $"• {killedCameras} cámaras rogue desactivadas\n\n" +
-                "Volvé a abrir Viroо Studio → Project Validation y dale 'Always refresh'.",
+                $"• {killedCameras} cámaras rogue desactivadas" +
+                playerStartWarning + "\n\n" +
+                "Volvé a abrir Viroo Studio → Project Validation y dale 'Always refresh'.",
                 "OK");
+        }
+
+        /// Cuenta los PlayerStart sin acoplarse al namespace del paquete de Viroo:
+        /// el tipo concreto cambia entre versiones (PlayerStart / InternalPlayerStart).
+        private static int CountPlayerStarts()
+        {
+            int count = 0;
+            var behaviours = Object.FindObjectsByType<MonoBehaviour>(
+                FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var mb in behaviours)
+            {
+                if (mb == null) continue;
+                var typeName = mb.GetType().Name;
+                if (typeName == "PlayerStart" || typeName == "InternalPlayerStart") count++;
+            }
+            return count;
         }
 
         private static bool IsUnderAllowedRoot(Transform t)

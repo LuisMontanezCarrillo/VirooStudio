@@ -1,15 +1,21 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Video;
 
 public class GestorEscena3 : MonoBehaviour
 {
-    // AJUSTE: Ya no necesitamos la referencia a 'canvasInicio' porque el GestorCuestionario lo apagará por sí solo
+    // AJUSTE: Ya no necesitamos la referencia a 'canvasInicio' porque el GestorCuestionario lo apagarï¿½ por sï¿½ solo
 
     [Header("Pantalla de Video")]
     [Tooltip("El Canvas duplicado que contiene la Raw Image y el Video Player (Canvas_VideoEsc3)")]
     public GameObject canvasVideo; 
     [Tooltip("El componente Video Player encargado de reproducir el tutorial")]
     public VideoPlayer reproductorTutorial;
+
+    [Header("Al terminar el video")]
+    [Tooltip("Se dispara cuando el video explicativo termina. Aqui se engancha la " +
+             "aparicion del tablero del simulador, que no debe verse antes.")]
+    public UnityEvent OnTutorialFinalizado;
 
     void Start()
     {
@@ -19,17 +25,21 @@ public class GestorEscena3 : MonoBehaviour
             canvasVideo.SetActive(false); 
         }
 
-        // Suscribimos el evento inteligente para cuando el video termine su reproducción de 1:45
+        // Suscribimos el evento inteligente para cuando el video termine su reproducciï¿½n de 1:45
         if (reproductorTutorial != null)
         {
             reproductorTutorial.loopPointReached += OcultarVideo;
         }
     }
 
-    // AJUSTE: Esta función ahora se llama automáticamente por el GestorCuestionario tras el Fade In
+    // AJUSTE: Esta funciï¿½n ahora se llama automï¿½ticamente por el GestorCuestionario tras el Fade In
     public void IniciarTutorialAutomatico()
     {
-        Debug.Log("<color=yellow>[GestorEscena3] Señal automática recibida. Activando video tutorial.</color>");
+        // Idempotente: si ya se esta reproduciendo, una segunda llamada lo reiniciaria
+        // desde cero para quien ya lo estaba viendo.
+        if (reproductorTutorial != null && reproductorTutorial.isPlaying) return;
+
+        Debug.Log("<color=yellow>[GestorEscena3] Senal automatica recibida. Activando video tutorial.</color>");
 
         // 1. Encendemos el Canvas del Video y le damos a Play
         if (canvasVideo != null) 
@@ -39,18 +49,27 @@ public class GestorEscena3 : MonoBehaviour
             if (reproductorTutorial != null)
             {
                 reproductorTutorial.Play();
-                Debug.Log("<color=green>[GestorEscena3] Reproducción automática del video tutorial iniciada con éxito.</color>");
+                Debug.Log("<color=green>[GestorEscena3] Reproducciï¿½n automï¿½tica del video tutorial iniciada con ï¿½xito.</color>");
             }
         }
     }
 
+    void OnDestroy()
+    {
+        if (reproductorTutorial != null)
+            reproductorTutorial.loopPointReached -= OcultarVideo;
+    }
+
     void OcultarVideo(VideoPlayer vp)
     {
-        // Esta función se activa automáticamente al finalizar el minuto y 45 segundos
+        // Esta funciï¿½n se activa automï¿½ticamente al finalizar el minuto y 45 segundos
         if (canvasVideo != null) 
         {
             canvasVideo.SetActive(false);
         }
         Debug.Log("<color=green>[GestorEscena3] Video tutorial finalizado. Simulador liberado para el estudiante.</color>");
+
+        // Ahora si: el estudiante ya sabe como funciona el proceso y puede operar.
+        OnTutorialFinalizado?.Invoke();
     }
 }

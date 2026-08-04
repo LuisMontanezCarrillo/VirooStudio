@@ -25,6 +25,7 @@ namespace ViroLab.Pasteurizador
             FaceCameraSmoothed,  // Sigue/orienta con lerp suave (recomendado)
             AnchorToTransform,   // Pegado a un Transform (ej. controller izquierdo)
             HUDAnchor,           // HUD estilo videojuego: anclado a un punto del viewport
+            LazyFollow,          // Quieto mientras lo usás; se recoloca solo si te girás
         }
 
         [Header("Modo")]
@@ -45,6 +46,16 @@ namespace ViroLab.Pasteurizador
         [Header("Suavizado (FaceCameraSmoothed)")]
         [Range(0.5f, 20f)] public float positionLerp = 6f;
         [Range(0.5f, 20f)] public float rotationLerp = 6f;
+
+        [Header("Lazy follow (paneles operables)")]
+        [Tooltip("Grados que podés girar la cabeza antes de que el panel se recoloque. " +
+                 "Mientras estés dentro de este margen el panel no se mueve, para que " +
+                 "apuntar y pulsar sea estable.")]
+        [Range(5f, 80f)] public float angleDeadzone = 22f;
+        [Tooltip("Metros que te podés alejar o acercar antes de que el panel se recoloque.")]
+        [Range(0.1f, 3f)] public float distanceDeadzone = 0.6f;
+        [Tooltip("Velocidad con la que el panel vuelve a su sitio. Valores bajos = mas suave.")]
+        [Range(0.5f, 10f)] public float recenterLerp = 3f;
 
         [Header("Anchor mode")]
         [Tooltip("Solo si followMode = AnchorToTransform")]
@@ -77,7 +88,12 @@ namespace ViroLab.Pasteurizador
         private CanvasGroup _canvasGroup;
         private Camera _cam;
         private bool _hasPinned;
-        private float _targetAlpha = 0f;
+        // Arranca VISIBLE. Si el valor inicial es 0 y showOnlyWhenPinned esta en false,
+        // SetVisible() no se llama nunca y el Update baja el alpha a cero: el canvas
+        // queda completamente transparente. Es lo que dejaba el tablero del simulador
+        // invisible, mostrando la pantalla blanca del televisor que hay detras.
+        private float _targetAlpha = 1f;
+        private bool _recentering = true;   // arranca colocandose frente al usuario
 
         private void Awake()
         {
@@ -120,7 +136,9 @@ namespace ViroLab.Pasteurizador
                 hover.OnPartPinned.AddListener(OnPin);
                 hover.OnPinCleared.AddListener(OnPinCleared);
             }
-            if (showOnlyWhenPinned) SetVisible(_hasPinned);
+            // Si el canvas no depende del pin (dashboard, paneles informativos) debe
+            // quedar visible siempre; si depende, arranca oculto hasta el primer pin.
+            SetVisible(showOnlyWhenPinned ? _hasPinned : true);
         }
 
         private void OnDisable()
@@ -225,7 +243,52 @@ namespace ViroLab.Pasteurizador
                     if (_cam == null) return;
                     PlaceHUDAnchor();
                     return;
+
+                case FollowMode.LazyFollow:
+                    if (_cam == null) return;
+                    PlaceLazyFollow();
+                    return;
             }
+        }
+
+        /// Fuerza que el panel vuelva a colocarse frente al usuario.
+        /// Util para un boton "Recentrar" o al iniciar un momento nuevo.
+        public void Recenter()
+        {
+            _recentering = true;
+            if (_cam == null) RefreshCamera();
+            if (_cam != null && followMode == FollowMode.Static) PlaceTargetInstant();
+        }
+
+        /// Se queda quieto mientras el usuario esta operando el panel y solo lo
+        /// recoloca cuando se sale del margen de tolerancia. Evita tener que
+        /// apuntar a un blanco en movimiento, que es lo que hace incomodo el
+        /// seguimiento continuo en paneles con botones.
+        private void PlaceLazyFollow()
+        {
+            var camT = _cam.transform;
+
+            var toPanel = transform.position - camT.position;
+            var flatToPanel = new Vector3(toPanel.x, 0f, toPanel.z);
+            var flatFwd = new Vector3(camT.forward.x, 0f, camT.forward.z);
+
+            if (!_recentering && flatToPanel.sqrMagnitude > 0.0001f && flatFwd.sqrMagnitude > 0.0001f)
+            {
+                float angle = Vector3.Angle(flatFwd, flatToPanel);
+                float distErr = Mathf.Abs(flatToPanel.magnitude - distance);
+                if (angle > angleDeadzone || distErr > distanceDeadzone)
+                    _recentering = true;
+            }
+
+            if (!_recentering) return;
+
+            var (targetPos, targetRot) = ComputeTarget();
+            transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * recenterLerp);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * recenterLerp);
+
+            // Se considera recolocado cuando ya esta practicamente en destino.
+            if (Vector3.Distance(transform.position, targetPos) < 0.02f)
+                _recentering = false;
         }
 
         private void PlaceHUDAnchor()

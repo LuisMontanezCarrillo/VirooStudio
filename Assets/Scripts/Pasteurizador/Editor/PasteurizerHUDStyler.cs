@@ -9,7 +9,7 @@ namespace ViroLab.Pasteurizador.EditorTools
 {
     /// Aplica un estilo HUD futurista al Canvas del pasteurizador y lo ancla
     /// en la esquina superior izquierda del campo visual del usuario.
-    /// Compatible con XR / Viroо (el canvas se posiciona en WorldSpace
+    /// Compatible con XR / Viroo (el canvas se posiciona en WorldSpace
     /// relativo al viewport de la cámara cada frame).
     ///
     /// Estética:

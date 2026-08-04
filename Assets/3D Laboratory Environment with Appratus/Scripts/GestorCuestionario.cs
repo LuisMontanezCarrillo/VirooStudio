@@ -40,7 +40,8 @@ public class GestorCuestionario : MonoBehaviour
     private bool esperandoSiguiente = false;
     
     private bool enIntroduccion = true;
-    private bool introReproducida = false; 
+    private bool introReproducida = false;
+    private bool finalizando = false; 
 
     private class DatosPregunta
     {
@@ -117,8 +118,11 @@ public class GestorCuestionario : MonoBehaviour
             
             esperandoSiguiente = false;
         }
-        else
+        else if (!finalizando)
         {
+            // Sin esta guarda, una segunda llamada lanzaria un segundo fade y un
+            // segundo arranque del video.
+            finalizando = true;
             StartCoroutine(FinalizarCuestionario());
         }
     }
@@ -170,14 +174,23 @@ public class GestorCuestionario : MonoBehaviour
         if(botonB != null) botonB.gameObject.SetActive(false);
         if(botonC != null) botonC.gameObject.SetActive(false);
 
+        float tInicioVO = 0f;
+        float duracionVO = 0f;
         if (reproductorAudio != null && audioCierreReto2 != null)
         {
             reproductorAudio.clip = audioCierreReto2;
             reproductorAudio.Play();
+            tInicioVO = Time.time;
+            duracionVO = audioCierreReto2.length;
         }
 
-        // Se reduce el tiempo para que el fade ocurra sin hacer esperar tanto al usuario
-        yield return new WaitForSeconds(5.0f); 
+        // La espera debe salir de la duracion real del clip, no de un numero fijo:
+        // con 5 s fijos y un audio de 18 s el video de la Escena 3 arrancaba encima
+        // de la voz en off. Se arranca el fade a falta de 'duracionFade' segundos
+        // para que el negro se complete justo cuando termina la locucion.
+        const float margenLectura = 1.0f;   // minimo para alcanzar a leer el mensaje
+        float duracionFade = 2f;
+        yield return new WaitForSeconds(Mathf.Max(margenLectura, duracionVO - duracionFade));
         
         Canvas miCanvas = GetComponent<Canvas>();
         if (miCanvas != null) miCanvas.enabled = false;
@@ -201,7 +214,6 @@ public class GestorCuestionario : MonoBehaviour
         imagenNegra.rectTransform.sizeDelta = new Vector2(5000, 5000); 
         imagenNegra.raycastTarget = false; 
 
-        float duracionFade = 2f;
         float tiempo = 0;
 
         // FADE OUT
@@ -223,10 +235,20 @@ public class GestorCuestionario : MonoBehaviour
             rootJugador.position += diferenciaPosicion;
         }
 
+        // Garantia dura: no encender el video hasta que la locucion haya terminado
+        // de verdad. Ademas hay que liberar el AudioSource, porque el VideoPlayer de
+        // la Escena 3 lo tiene asignado como salida de audio y se lo arrebataria.
+        if (reproductorAudio != null && duracionVO > 0f)
+        {
+            while (Time.time < tInicioVO + duracionVO) yield return null;
+            reproductorAudio.Stop();
+            reproductorAudio.clip = null;
+        }
+
         // --- AVISO A LA RED ---
         // Notificamos a VIROO que el usuario completó la transición.
         // El componente de red conectado aquí se encargará de encender el Canvas 3 y el Video.
-        OnTransitionComplete?.Invoke(); 
+        OnTransitionComplete?.Invoke();
 
         yield return new WaitForSeconds(0.5f);
 

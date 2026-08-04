@@ -101,7 +101,10 @@ namespace ViroLab.Pasteurizador
             if (Regex.IsMatch(partName, "Bomba_Booster")) return "05_Bomba_Booster";
             if (Regex.IsMatch(partName, "^PHE_")) return "06_Intercambiador_Placas";
             if (Regex.IsMatch(partName, "Valvula_FDV")) return "07_FDV_Diversion";
-            if (Regex.IsMatch(partName, "^VlvSup_")) return "07_Valvulas_Top_PHE";
+            // Sin anclar al inicio: el exportador antepone indices como "_07_VlvSup_1_Cuerpo",
+            // asi que "^VlvSup_" no coincidia nunca y las 36 piezas de las valvulas
+            // superiores del PHE caian al fallback "99_Otros".
+            if (Regex.IsMatch(partName, "VlvSup_")) return "07_Valvulas_Top_PHE";
             if (Regex.IsMatch(partName, "Valvula_")) return "07_Valvulas";
             if (Regex.IsMatch(partName, "^Holding_")) return "08_Tubo_Retencion";
             if (Regex.IsMatch(partName, "Manometro")) return "10_Instrumentos";
@@ -116,7 +119,8 @@ namespace ViroLab.Pasteurizador
             if (Regex.IsMatch(partName, "Salida_Producto|Drenaje|Puerto_Muestra")) return "11_Salidas_y_Drenajes";
             if (Regex.IsMatch(partName, "Placa_Tag")) return "11_Placas_ID";
             if (Regex.IsMatch(partName, "Borde")) return "01_Skid_Bastidor";
-            if (Regex.IsMatch(partName, "^(0[1-9]|10|11|12|13|14|15|16)_")) return "09_Tuberias_Proceso";
+            // "_?" por el mismo motivo: hay nombres que empiezan con guion bajo.
+            if (Regex.IsMatch(partName, "^_?(0[1-9]|10|11|12|13|14|15|16)_")) return "09_Tuberias_Proceso";
             if (Regex.IsMatch(partName, "(Suministro|Vapor|Aire|Servicio|Drenaje|Linea|Tuberia|Tanque_|Retorno|Acom|FT|CIP)", RegexOptions.IgnoreCase)) return "09_Tuberias_Proceso";
             return "99_Otros";
         }
