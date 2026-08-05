@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -32,6 +33,14 @@ namespace ViroLab.Pasteurizador
         [Tooltip("Si true, ademas del ray VR tambien se intenta raycast con mouse.")]
         public bool alsoUseMouse = true;
         public LayerMask hitLayers = ~0;
+
+        [Header("Mando VR (rig de VIROO)")]
+        [Tooltip("Busca el interactor de mano del rig de VIROO y lo usa como origen " +
+                 "del ray y como gatillo. Es input de XRI, no de red: la seleccion " +
+                 "es local para cada estudiante.")]
+        public bool autoBindVirooController = true;
+        [Tooltip("Mano preferida. Si no existe se usa la otra.")]
+        public InteractorHandedness preferredHand = InteractorHandedness.Right;
 
         [Header("Trigger de click")]
         [Tooltip("KeyCode adicional para pin (solo si el Input Legacy esta activo).")]
@@ -72,10 +81,50 @@ namespace ViroLab.Pasteurizador
         private readonly Dictionary<Renderer, Material[]> _originalMats = new();
         private Camera _mainCam;
 
+        // Interactor de mano del rig de VIROO. El rig se crea en runtime, asi que no
+        // se puede resolver en Awake: se reintenta cada BindRetrySeconds.
+        private NearFarInteractor _handInteractor;
+        private float _nextBindAttempt;
+        private const float BindRetrySeconds = 0.5f;
+
+        // Click inyectado desde fuera (ver NotifyExternalClick).
+        private bool _externalClickQueued;
+
         private void Awake()
         {
             if (registry == null) registry = GetComponent<PasteurizerPartsRegistry>();
             RefreshCamera();
+        }
+
+        /// Permite disparar el pin desde un evento externo, por ejemplo desde un
+        /// ControllerButtonPressInteraction de VIROO cableado en el inspector.
+        public void NotifyExternalClick()
+        {
+            _externalClickQueued = true;
+        }
+
+        /// Localiza el interactor de mano del rig de VIROO y adopta su curveOrigin
+        /// como origen del ray, para que este coincida exactamente con la linea que
+        /// el estudiante ve dibujada por el mando.
+        private void TryBindHandInteractor()
+        {
+            _nextBindAttempt = Time.unscaledTime + BindRetrySeconds;
+
+            var interactors = FindObjectsByType<NearFarInteractor>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            if (interactors == null || interactors.Length == 0) return;
+
+            NearFarInteractor chosen = null;
+            foreach (var it in interactors)
+            {
+                if (it == null) continue;
+                if (it.handedness == preferredHand) { chosen = it; break; }
+                if (chosen == null) chosen = it;   // la otra mano como respaldo
+            }
+            if (chosen == null) return;
+
+            _handInteractor = chosen;
+            if (chosen.curveOrigin != null) raySource = chosen.curveOrigin;
         }
 
         private void RefreshCamera()
@@ -95,6 +144,11 @@ namespace ViroLab.Pasteurizador
 
             // Re-adquirir camara si se perdio (XR a veces la crea/destruye dinamicamente)
             if (_mainCam == null) RefreshCamera();
+
+            // El rig de VIROO aparece despues del Awake de la escena.
+            if (autoBindVirooController && (_handInteractor == null || raySource == null)
+                && Time.unscaledTime >= _nextBindAttempt)
+                TryBindHandInteractor();
 
             GameObject hit = TryRaycast();
             SetHover(hit);
@@ -146,6 +200,17 @@ namespace ViroLab.Pasteurizador
 
         private bool IsClickPressed()
         {
+            // 1) Gatillo del mando (rig de VIROO). Es input de XRI, no de red:
+            //    el pin queda local para el estudiante que lo dispara.
+            if (_externalClickQueued)
+            {
+                _externalClickQueued = false;
+                return true;
+            }
+            if (_handInteractor != null && _handInteractor.selectInput != null
+                && _handInteractor.selectInput.ReadWasPerformedThisFrame())
+                return true;
+
 #if ENABLE_INPUT_SYSTEM
             // Input System nuevo (Viroo/XR usa este)
             if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
