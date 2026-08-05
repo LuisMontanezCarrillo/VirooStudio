@@ -211,6 +211,23 @@ namespace ViroLab.Pasteurizador
                 && _handInteractor.selectInput.ReadWasPerformedThisFrame())
                 return true;
 
+            // 2) Si el puntero esta sobre un panel de interfaz, el clic es de la UI y
+            //    no debe fijar ninguna pieza.
+            //
+            //    No se puede resolver con geometria: el carrusel cuelga de la pared del
+            //    fondo (x=3.93) y TODO el pasteurizador esta delante (x<=3.62), asi que
+            //    el rayo atraviesa la maquina antes de llegar al panel. Un collider en
+            //    el panel esta detras del obstaculo y no puede ocultarlo.
+            //
+            //    La guarda va SOLO aqui, en el clic, y no en el hover ni en TryRaycast:
+            //    asi el pin existente no se limpia al pulsar la UI, y si el puntero esta
+            //    sobre la propia ficha el clic va a su boton de cerrar, que es lo
+            //    correcto. EventSystem.current es null hasta que VIROO instancia el suyo,
+            //    de ahi la comprobacion.
+            var eventSystem = UnityEngine.EventSystems.EventSystem.current;
+            if (eventSystem != null && eventSystem.IsPointerOverGameObject())
+                return false;
+
 #if ENABLE_INPUT_SYSTEM
             // Input System nuevo (Viroo/XR usa este)
             if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
