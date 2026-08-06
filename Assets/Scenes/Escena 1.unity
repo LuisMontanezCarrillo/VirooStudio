@@ -16169,7 +16169,7 @@ MonoBehaviour:
   pantalla: {fileID: 462249271}
   reproductorAudio: {fileID: 656557425}
   diapositivas:
-  - {fileID: 5538667311117537506, guid: b193fd413d7b47f46938b21afea9c351, type: 3}
+  - {fileID: -2794361560066853070, guid: 48d778451cf7ad44da606daa9b474cc6, type: 3}
   - {fileID: 5536500807006463626, guid: 546651baca40eb44b80756c603344eb3, type: 3}
   - {fileID: -5592816355751049336, guid: ea726f0e92ad89844a5da50ce6c30977, type: 3}
   - {fileID: 8549529832964225473, guid: ea6d029e25bef814f8475e5177ae2738, type: 3}
@@ -48630,7 +48630,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2025531661
 RectTransform:
   m_ObjectHideFlags: 0
