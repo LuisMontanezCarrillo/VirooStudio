@@ -313,14 +313,18 @@ namespace ViroLab.Pasteurizador.Simulator
             trapOpen = boilerActive && tempHeat > 60f;
 
             // ---------- intercambiador
-            // Coherencia con la teoria (72 C / 15 s) y la norma colombiana (banda 72-76 C):
-            // - Sobreimpulso LIMITADO a SP_HEAT+3 (~75 C) en vez de seguir a la caldera (~87 C).
-            // - Operacion estabilizada en SP_HEAT+1 (~73 C): T_ret = 72.7 C, cumple >=72 y queda en banda.
+            // Ajuste (Luis, pruebas VIROO): la temperatura del proceso llega a MAXIMO 72 C.
+            // Coherencia con la teoria del cuestionario (72 C / 15 s) y la norma (Decreto 616: banda 72-76 C).
+            // - El objetivo interno apunta un poco por encima (SP_HEAT+2) solo para vencer la
+            //   aproximacion asintotica, pero tempHeat se RECORTA a SP_HEAT: nunca se muestra ni se
+            //   supera 72 C (sin el sobreimpulso a 75 ni la operacion a 73 que habia antes).
+            // - La retencion se sostiene al mismo 72 C, de modo que el criterio (>=72) se cumple
+            //   justo en el techo y el lote puede validarse.
             float heatTarget = 20f;
-            if (pumpHotOn) heatTarget = Mathf.Min(tempBoiler - 8f, SP_HEAT + 3f);
-            if (pumpHotOn && (pumpColdOn || pumpMilkOn)) heatTarget = Mathf.Min(heatTarget, SP_HEAT + 1f);
+            if (pumpHotOn) heatTarget = Mathf.Min(tempBoiler - 8f, SP_HEAT + 2f);
             tempHeat += (heatTarget - tempHeat) * Mathf.Min(1f, 0.5f * dt);
-            tempHold = tempHeat - 0.3f;
+            tempHeat = Mathf.Min(tempHeat, SP_HEAT);   // techo estricto: maximo 72 C
+            tempHold = tempHeat;                        // la retencion alcanza el mismo 72 C
 
             // ---------- temporizador retención
             if (pumpMilkOn && tempHold >= SP_HOLD_MIN) holdTimer += dt;
@@ -337,6 +341,8 @@ namespace ViroLab.Pasteurizador.Simulator
             else if (valid)
             {
                 vProd = true; vRet = false; vDes = false;
+                // Texto en pantalla coherente con la narracion VO_Sim_09_Valido (Luis).
+                hint = "¡Pasteurización válida! El proceso se está produciendo correctamente. Déjalo correr hasta vaciar el tanque de balance.";
             }
             else
             {

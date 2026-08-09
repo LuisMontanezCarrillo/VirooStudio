@@ -14,7 +14,7 @@
       "title": "TABLERO DE CONTROL",
       "colorHex": "ffd700",
       "showLabel": true,
-      "description": "Es el panel de mando de la máquina. Desde su pantalla táctil el operador la enciende, la apaga y controla el proceso, y vigila las temperaturas y las alertas."
+      "description": "Panel de control. Es el panel de mando de la máquina. Desde su pantalla táctil el operador la enciende, la apaga y controla el proceso, y vigila las temperaturas y las alertas. Desde aquí se supervisan los pasos 1 a 11."
     },
     {
       "key": "03_Tanque_Balance",
@@ -22,7 +22,7 @@
       "title": "TANQUE DE BALANCE",
       "colorHex": "7fdbff",
       "showLabel": true,
-      "description": "Un tanque que guarda la leche antes de procesarla y mantiene un flujo parejo, para que la máquina siempre reciba leche de forma estable y sin baches."
+      "description": "Paso 2. Un tanque que guarda la leche antes de procesarla y mantiene un flujo parejo, para que la máquina siempre reciba leche de forma estable y sin baches."
     },
     {
       "key": "04_Bomba_Alimentacion",
@@ -30,7 +30,7 @@
       "title": "BOMBA ALIMENTACION",
       "colorHex": "ff851b",
       "showLabel": true,
-      "description": "La bomba que toma la leche del tanque y la empuja hacia el resto del equipo. Es la que pone la leche en movimiento por el proceso."
+      "description": "Paso 3. La bomba que toma la leche del tanque y la empuja hacia el resto del equipo. Es la que pone la leche en movimiento por el proceso."
     },
     {
       "key": "05_Bomba_Booster",
@@ -38,7 +38,7 @@
       "title": "BOMBA BOOSTER",
       "colorHex": "ff851b",
       "showLabel": true,
-      "description": "Una segunda bomba que da un empujón extra de presión, para que la leche avance con fuerza y se mantenga segura sin riesgo de contaminarse."
+      "description": "Paso 4. Una segunda bomba que da un empujón extra de presión, para que la leche avance con fuerza y se mantenga segura sin riesgo de contaminarse."
     },
     {
       "key": "06_Intercambiador_Placas",
@@ -46,7 +46,7 @@
       "title": "INTERCAMBIADOR DE PLACAS",
       "colorHex": "39cccc",
       "showLabel": true,
-      "description": "El corazón del proceso. Son placas metálicas donde la leche primero se calienta y luego se enfría, sin mezclarse con el agua. Reaprovecha el calor para gastar menos energía."
+      "description": "Paso 5. Son placas que permiten el intercambio de calor, donde la leche primero se calienta y luego se enfría, sin mezclarse con el agua. Reaprovecha el calor para gastar menos energía."
     },
     {
       "key": "07_FDV_Diversion",
@@ -54,7 +54,7 @@
       "title": "VALVULA DE DESVIACION",
       "colorHex": "ff4136",
       "showLabel": true,
-      "description": "La válvula de seguridad más importante. Si la leche no alcanzó la temperatura necesaria, la devuelve automáticamente para procesarla de nuevo y evita que salga leche mal pasteurizada."
+      "description": "Paso 7. La válvula de seguridad más importante. Si la leche no alcanzó la temperatura necesaria, la devuelve automáticamente para procesarla de nuevo y evita que salga leche mal pasteurizada."
     },
     {
       "key": "07_Valvulas",
@@ -62,7 +62,7 @@
       "title": "VALVULAS SANITARIAS",
       "colorHex": "01ff70",
       "showLabel": false,
-      "description": "Llaves de paso higiénicas que abren y cierran para dirigir por dónde va la leche. Son de grado alimenticio."
+      "description": "Llaves de paso higiénicas que abren y cierran para dirigir el flujo de la leche. Su uso y material son de grado alimenticio."
     },
     {
       "key": "07_Valvulas_Top_PHE",
@@ -78,7 +78,7 @@
       "title": "TUBO DE RETENCION",
       "colorHex": "ff70a6",
       "showLabel": true,
-      "description": "Un tramo de tubería donde la leche caliente permanece los segundos justos para asegurar que quede bien pasteurizada. Es clave para eliminar los microbios."
+      "description": "Paso 6. Un tramo de tubería donde la leche permanece 15 segundos a 72 grados centígrados, asegurando la destrucción de microorganismos patógenos."
     },
     {
       "key": "09_Tuberias_Proceso",
@@ -86,7 +86,7 @@
       "title": "TUBERIAS DEL PROCESO",
       "colorHex": "dddddd",
       "showLabel": false,
-      "description": "Los tubos por donde viaja la leche de un equipo a otro. Están inclinados para vaciarse y limpiarse solos."
+      "description": "Los tubos por donde viaja la leche de un equipo a otro. El pasteurizador cuenta con un sistema de limpieza CIP (Cleaning in Place o limpieza in situ)."
     },
     {
       "key": "10_Instrumentos",
@@ -179,10 +179,10 @@
     {
       "key": "12_Silo_LecheCruda",
       "tag": "T-RAW-01",
-      "title": "SILO LECHE CRUDA",
+      "title": "TANQUE DE RECEPCION DE LECHE CRUDA",
       "colorHex": "fff4d6",
       "showLabel": true,
-      "description": "El gran tanque donde se guarda la leche cruda que llega del camión, antes de empezar a procesarla."
+      "description": "Paso 1. El gran tanque donde se recibe y se guarda la leche cruda que llega del camión, antes de empezar a procesarla."
     },
     {
       "key": "12_Tanque_Producto",
@@ -190,7 +190,7 @@
       "title": "TANQUE PRODUCTO PASTEURIZADO",
       "colorHex": "a0e0ff",
       "showLabel": true,
-      "description": "El tanque donde se recoge la leche ya pasteurizada y lista, al final del proceso."
+      "description": "Paso 8. El tanque donde se recoge la leche ya pasteurizada y lista, al final del proceso."
     },
     {
       "key": "12_Calderin_AguaCal",
@@ -198,7 +198,7 @@
       "title": "CALDERIN DE AGUA CALIENTE",
       "colorHex": "ff9999",
       "showLabel": true,
-      "description": "Un tanque que mantiene agua muy caliente, que se usa para calentar la leche en el intercambiador."
+      "description": "Paso 9 (servicio de calentamiento). Un tanque que mantiene el agua a una temperatura +/- 2 grados centígrados con respecto a la temperatura de pasteurización, en el intercambiador."
     },
     {
       "key": "12_Chiller_AguaFria",
@@ -206,7 +206,7 @@
       "title": "CHILLER DE AGUA FRIA",
       "colorHex": "aaccff",
       "showLabel": true,
-      "description": "Un equipo que enfría agua casi a punto de congelación, para enfriar rápido la leche al final del proceso."
+      "description": "Paso 11 (servicio de enfriamiento). Equipo que disminuye la temperatura del agua cerca al punto de congelación, con el objetivo de bajar la temperatura de la leche al final del proceso cerca a la temperatura de refrigeración."
     },
     {
       "key": "12_TanqueAguaMakeup",
@@ -246,7 +246,7 @@
       "title": "CALDERA DE VAPOR",
       "colorHex": "ff5500",
       "showLabel": true,
-      "description": "La máquina que produce el vapor con el que se calienta todo el proceso. Es la fuente principal de calor."
+      "description": "Paso 10 (servicio de calentamiento). La máquina que produce el vapor con el que se calienta todo el proceso. Es la fuente principal de calor."
     },
     {
       "key": "99_Otros",
@@ -289,10 +289,6 @@
     {
       "namePrefix": "Tanque_Termowell",
       "description": "Una funda que protege el sensor de temperatura y permite cambiarlo sin detener la producción, sin que toque directamente la leche."
-    },
-    {
-      "namePrefix": "CB_01_Caldera_Vapor_Cuerpo",
-      "description": "El cuerpo de la caldera. Adentro está el agua que se convierte en vapor gracias al quemador."
     },
     {
       "namePrefix": "CB_01_Caldera_Vapor_Quemador",
