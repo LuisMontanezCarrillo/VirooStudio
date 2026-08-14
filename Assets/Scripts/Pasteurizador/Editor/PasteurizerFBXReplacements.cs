@@ -33,9 +33,41 @@ namespace ViroLab.Pasteurizador.EditorTools
         private const float TargetHeightMm = 1800f;
         private const float UnityScale     = 0.001f;  // mm -> m
 
-        [MenuItem("Viroo/Pasteurizador HTST/5. Agregar tanques FBX (Silo + Producto)", priority = 105)]
+        // ─────────────────────────────────────────────────────────────────────────
+        // MENU DESACTIVADO A PROPOSITO. NO REACTIVAR SIN LEER ESTO.
+        //
+        // Este menu borra y vuelve a crear las instancias de los tanques (ver el
+        // DestroyImmediate de mas abajo). Al recrearlas cambian sus fileID, y con ello
+        // se PIERDEN los overrides que "Escena 1.unity" guarda sobre
+        // T_RAW_FBX_SiloLecheCruda: posicion, rotacion y escala ajustadas a mano.
+        // El tanque volveria a la pose del prefab y habria que recolocarlo.
+        //
+        // Ya cumplio su funcion: los dos tanques estan creados y colocados. Solo tendria
+        // sentido volver a ejecutarlo si se sustituyera el modelo FBX de origen, y en
+        // ese caso hay que anotar antes la pose de la escena para restituirla.
+        //
+        // Se desactiva con un validador (queda visible pero en gris, para que conste que
+        // existe) y ademas con una confirmacion dentro del metodo, por si alguien
+        // quitara el validador.
+        // ─────────────────────────────────────────────────────────────────────────
+        private const string MenuAddTanks =
+            "Viroo/Pasteurizador HTST/5. Agregar tanques FBX (DESACTIVADO: borraria la pose de escena)";
+
+        [MenuItem(MenuAddTanks, true)]
+        private static bool AddFBXTanksValidate() => false;
+
+        [MenuItem(MenuAddTanks, priority = 105)]
         public static void AddFBXTanks()
         {
+            if (!EditorUtility.DisplayDialog(
+                    "Agregar tanques FBX — operacion destructiva",
+                    "Este paso BORRA y vuelve a crear los tanques.\n\n" +
+                    "Perderas la posicion y rotacion que la escena tiene guardadas para " +
+                    "el tanque de leche cruda, y habra que recolocarlo a mano.\n\n" +
+                    "Los tanques ya estan creados: normalmente NO hace falta ejecutarlo.",
+                    "Entiendo el riesgo, continuar", "Cancelar"))
+                return;
+
             var tankFbx = AssetDatabase.LoadAssetAtPath<GameObject>(TankFbxPath);
             if (tankFbx == null)
             {
