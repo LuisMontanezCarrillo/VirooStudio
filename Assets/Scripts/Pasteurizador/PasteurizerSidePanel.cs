@@ -196,7 +196,10 @@ namespace ViroLab.Pasteurizador
             foreach (var kvp in registry.ByName)
             {
                 if (!kvp.Value.activeInHierarchy) continue;
-                var r = kvp.Value.GetComponent<Renderer>();
+                // InChildren: en los tanques FBX la parte indexada es la raiz y la
+                // malla cuelga de un hijo, de modo que con GetComponent quedaban fuera
+                // del encuadre. Para el resto de piezas devuelve el propio Renderer.
+                var r = kvp.Value.GetComponentInChildren<Renderer>();
                 if (r == null) continue;
                 if (!init) { b = r.bounds; init = true; }
                 else b.Encapsulate(r.bounds);

@@ -380,9 +380,17 @@ namespace ViroLab.Pasteurizador
             };
         }
 
+        // GetComponentInChildren mira primero el propio GameObject, de modo que para
+        // las 860 piezas normales (que llevan el Renderer encima) devuelve lo mismo que
+        // GetComponent. El descenso solo entra en juego con los tanques FBX, cuya parte
+        // indexada es la raiz y cuya malla cuelga de un hijo.
+        // includeInactive para que ApplyTint y RestoreMaterials resuelvan siempre el
+        // mismo Renderer aunque la pieza se haya desactivado por el camino.
+        private static Renderer RendererDe(GameObject go) => go.GetComponentInChildren<Renderer>(true);
+
         private void ApplyTint(GameObject go, Color color)
         {
-            var r = go.GetComponent<Renderer>();
+            var r = RendererDe(go);
             if (r == null) return;
             if (!_originalMats.ContainsKey(r)) _originalMats[r] = r.sharedMaterials;
             var newMats = new Material[r.sharedMaterials.Length];
@@ -404,7 +412,7 @@ namespace ViroLab.Pasteurizador
 
         private void RestoreMaterials(GameObject go)
         {
-            var r = go.GetComponent<Renderer>();
+            var r = RendererDe(go);
             if (r != null && _originalMats.TryGetValue(r, out var mats))
             {
                 r.sharedMaterials = mats;
