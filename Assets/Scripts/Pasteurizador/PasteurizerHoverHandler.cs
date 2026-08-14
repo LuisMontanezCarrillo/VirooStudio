@@ -114,10 +114,14 @@ namespace ViroLab.Pasteurizador
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             if (interactors == null || interactors.Length == 0) return;
 
+            // El rig de VIROO trae CUATRO interactores: dos de los mandos y dos de
+            // escritorio que cuelgan de la camara. Si se engancha uno de escritorio,
+            // el origen del ray pasa a ser la mirada y la ficha "sigue a la cabeza".
+            // Se descartan explicitamente y se prefiere la mano configurada.
             NearFarInteractor chosen = null;
             foreach (var it in interactors)
             {
-                if (it == null) continue;
+                if (it == null || EsDeEscritorio(it.transform)) continue;
                 if (it.handedness == preferredHand) { chosen = it; break; }
                 if (chosen == null) chosen = it;   // la otra mano como respaldo
             }
@@ -125,6 +129,18 @@ namespace ViroLab.Pasteurizador
 
             _handInteractor = chosen;
             if (chosen.curveOrigin != null) raySource = chosen.curveOrigin;
+        }
+
+        /// Los interactores de escritorio del rig cuelgan de "DesktopControllers".
+        private static bool EsDeEscritorio(Transform t)
+        {
+            while (t != null)
+            {
+                if (t.name.IndexOf("Desktop", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    return true;
+                t = t.parent;
+            }
+            return false;
         }
 
         private void RefreshCamera()
@@ -207,8 +223,13 @@ namespace ViroLab.Pasteurizador
                 _externalClickQueued = false;
                 return true;
             }
-            if (_handInteractor != null && _handInteractor.selectInput != null
-                && _handInteractor.selectInput.ReadWasPerformedThisFrame())
+            // Se lee activateInput, NO selectInput. En el mapeo de XRI que usa VIROO,
+            // Select esta enlazado a {GripButton} y Activate a {TriggerButton}. En los
+            // mandos wand del HTC Vive el grip son los botones laterales que se aprietan
+            // al sujetar el mando, de modo que con selectInput la ficha se abria sola y
+            // el gatillo no hacia nada.
+            if (_handInteractor != null && _handInteractor.activateInput != null
+                && _handInteractor.activateInput.ReadWasPerformedThisFrame())
                 return true;
 
             // 2) Si el puntero esta sobre un panel de interfaz, el clic es de la UI y
