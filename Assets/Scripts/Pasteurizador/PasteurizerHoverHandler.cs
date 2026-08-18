@@ -216,7 +216,36 @@ namespace ViroLab.Pasteurizador
 
         private bool IsClickPressed()
         {
-            // 1) Gatillo del mando (rig de VIROO). Es input de XRI, no de red:
+            // 1) Si el puntero esta sobre un panel de interfaz, el clic pertenece a la
+            //    UI y no debe fijar ninguna pieza.
+            //
+            //    Esta comprobacion va LO PRIMERO. Estando despues del gatillo solo
+            //    protegia a la rama de raton y era codigo muerto para el mando: la ficha
+            //    flotante se coloca a 0.85 m de la cara y ocupa buena parte del campo
+            //    visual, pero no tiene collider, asi que el mismo pulsado que accionaba
+            //    su boton de cerrar atravesaba la ficha y fijaba de paso la pieza que
+            //    quedara detras. Para el estudiante eso se percibia como que la
+            //    descripcion cambiaba sola.
+            //
+            //    No se puede resolver con geometria: el carrusel cuelga de la pared del
+            //    fondo (x=3.93) y TODO el pasteurizador esta delante (x<=3.62), asi que
+            //    el rayo atraviesa la maquina antes de llegar al panel. Un collider en
+            //    el panel esta detras del obstaculo y no puede ocultarlo.
+            //
+            //    Va solo en el clic, y no en el hover ni en TryRaycast, para que el pin
+            //    existente no se limpie al pulsar la UI. EventSystem.current es null
+            //    hasta que VIROO instancia el suyo, de ahi la comprobacion.
+            //    XRUIInputModule.IsPointerOverGameObject recorre tambien los punteros de
+            //    tracked device, de modo que cubre el rayo del mando y no solo el raton.
+            var eventSystem = UnityEngine.EventSystems.EventSystem.current;
+            if (eventSystem != null && eventSystem.IsPointerOverGameObject())
+            {
+                // Se consume igualmente para que no se dispare un frame mas tarde.
+                _externalClickQueued = false;
+                return false;
+            }
+
+            // 2) Gatillo del mando (rig de VIROO). Es input de XRI, no de red:
             //    el pin queda local para el estudiante que lo dispara.
             if (_externalClickQueued)
             {
@@ -232,23 +261,7 @@ namespace ViroLab.Pasteurizador
                 && _handInteractor.activateInput.ReadWasPerformedThisFrame())
                 return true;
 
-            // 2) Si el puntero esta sobre un panel de interfaz, el clic es de la UI y
-            //    no debe fijar ninguna pieza.
-            //
-            //    No se puede resolver con geometria: el carrusel cuelga de la pared del
-            //    fondo (x=3.93) y TODO el pasteurizador esta delante (x<=3.62), asi que
-            //    el rayo atraviesa la maquina antes de llegar al panel. Un collider en
-            //    el panel esta detras del obstaculo y no puede ocultarlo.
-            //
-            //    La guarda va SOLO aqui, en el clic, y no en el hover ni en TryRaycast:
-            //    asi el pin existente no se limpia al pulsar la UI, y si el puntero esta
-            //    sobre la propia ficha el clic va a su boton de cerrar, que es lo
-            //    correcto. EventSystem.current es null hasta que VIROO instancia el suyo,
-            //    de ahi la comprobacion.
-            var eventSystem = UnityEngine.EventSystems.EventSystem.current;
-            if (eventSystem != null && eventSystem.IsPointerOverGameObject())
-                return false;
-
+            // 3) Raton y teclado, para el modo escritorio.
 #if ENABLE_INPUT_SYSTEM
             // Input System nuevo (Viroo/XR usa este)
             if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)

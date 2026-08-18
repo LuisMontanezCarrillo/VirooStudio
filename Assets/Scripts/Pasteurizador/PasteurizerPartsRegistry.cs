@@ -52,15 +52,16 @@ namespace ViroLab.Pasteurizador
             {
                 var go = r.gameObject;
 
-                // Los dos tanques vienen del mismo FBX, cuyo unico nodo con malla se
-                // llama "tripo_node_a7bcadc3" en AMBOS. Indexarlo por ese nombre es
-                // inservible: no distingue un tanque del otro, ResolveSubsystemKey lo
-                // manda a "99_Otros" y el ContainsKey de abajo descarta el segundo.
-                // Se indexa en su lugar la raiz del FBX, que PasteurizerFBXReplacements
-                // marca con PasteurizerFBXTankInfo y nombra T_RAW_FBX_* / T_PROD_FBX_*,
-                // nombres que ResolveSubsystemKey si reconoce. Es tambien la raiz la que
-                // recibe el collider en AddColliders, y solo estando en ByName la acepta
-                // el IsValidPart del hover.
+                // Se indexa siempre la raiz del FBX del tanque, no el objeto que lleve la
+                // malla. La raiz es la que PasteurizerFBXReplacements marca con
+                // PasteurizerFBXTankInfo y nombra T_RAW_FBX_* / T_PROD_FBX_*, y son esos
+                // nombres los que ResolveSubsystemKey sabe resolver.
+                //
+                // Si la malla estuviera en un hijo, ese hijo se llamaria como el nodo del
+                // FBX ("tripo_node_a7bcadc3"), identico en los DOS tanques: no los
+                // distinguiria, ResolveSubsystemKey lo mandaria a "99_Otros" y el
+                // ContainsKey de abajo descartaria el segundo. Si la malla ya esta en la
+                // raiz, esta redireccion es un no-op inofensivo. Vale en los dos casos.
                 // includeInactive: el barrido de renderers incluye objetos apagados y
                 // GetComponentInParent, por defecto, ignora los padres inactivos.
                 var tanque = r.GetComponentInParent<PasteurizerFBXTankInfo>(true);
@@ -86,33 +87,43 @@ namespace ViroLab.Pasteurizador
                 var go = kvp.Value;
                 if (go.TryGetComponent<Collider>(out _)) continue;
 
+                // Los tanques FBX van PRIMERO, antes de intentar el MeshCollider.
+                //
+                // Su malla esta importada con isReadable = 0, de modo que PhysX no puede
+                // cocinar un MeshCollider convex en runtime: el collider queda sin
+                // geometria y el rayo atraviesa el tanque. Ese es justo el fallo que se
+                // vio en el laboratorio. Con el orden inverso, si la malla cuelga del
+                // propio GameObject, el camino del MeshCollider se llevaba el continue y
+                // este nunca se alcanzaba.
+                //
+                // AgregarBoxAjustadoALaMalla busca el MeshFilter con GetComponentsInChildren,
+                // que mira primero el propio objeto, asi que funciona tanto si la malla
+                // esta en la raiz del FBX como si cuelga de un hijo.
+                if (go.GetComponent<PasteurizerFBXTankInfo>() != null)
+                {
+                    AgregarBoxAjustadoALaMalla(go);
+                    continue;
+                }
+
                 var mf = go.GetComponent<MeshFilter>();
                 if (mf != null && mf.sharedMesh != null)
                 {
                     var mc = go.AddComponent<MeshCollider>();
                     mc.sharedMesh = mf.sharedMesh;
                     mc.convex = convexColliders;
-                    continue;
                 }
-
-                // Los tanques FBX no tienen malla propia: la parte indexada es la raiz
-                // y el mesh cuelga de un hijo, asi que el camino de arriba los deja sin
-                // collider y el rayo los atraviesa. Tampoco sirve un MeshCollider
-                // convex sobre el hijo, porque el FBX esta importado con isReadable = 0
-                // y en runtime no se puede cocinar. Se usa un BoxCollider ajustado.
-                if (go.GetComponent<PasteurizerFBXTankInfo>() != null)
-                    AgregarBoxDesdeMallaHija(go);
             }
         }
 
-        /// Coloca en `raiz` un BoxCollider que envuelve la malla de su hijo.
-        /// Mesh.bounds es metadato del asset y esta disponible aunque la malla no sea
-        /// legible, que es justo el caso de los tanques.
-        private static void AgregarBoxDesdeMallaHija(GameObject raiz)
+        /// Coloca en `raiz` un BoxCollider que envuelve su malla, este donde este.
+        /// Mesh.bounds es metadato del asset y se lee aunque la malla no sea legible,
+        /// que es justo el caso de los tanques (isReadable = 0).
+        private static void AgregarBoxAjustadoALaMalla(GameObject raiz)
         {
-            // Se busca el primer MeshFilter CON malla: GetComponentInChildren mira
-            // primero la propia raiz, y si algun dia esta llevara un MeshFilter vacio
-            // nos quedariamos con el y sin collider.
+            // Se busca el primer MeshFilter CON malla. GetComponentsInChildren recorre
+            // primero el propio objeto, de modo que sirve tanto si la malla esta en la
+            // raiz del FBX como si cuelga de un hijo, y salta un MeshFilter vacio en vez
+            // de quedarse con el y no crear collider.
             MeshFilter mf = null;
             foreach (var c in raiz.GetComponentsInChildren<MeshFilter>(true))
             {
