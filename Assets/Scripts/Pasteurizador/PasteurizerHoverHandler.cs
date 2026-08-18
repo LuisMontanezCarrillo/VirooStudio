@@ -311,8 +311,21 @@ namespace ViroLab.Pasteurizador
                     if (IsValidPart(rh.collider.gameObject)) return rh.collider.gameObject;
                 }
             }
-            // 2) Mouse fallback
-            if (alsoUseMouse && _mainCam != null)
+            // 2) Respaldo de raton, SOLO si no hay visor activo.
+            //
+            //    En build VR no hay cursor, pero Mouse.current sigue devolviendo una
+            //    posicion —normalmente (0,0)— que pasa el test de validez. El rayo salia
+            //    entonces de la camara y la ficha terminaba siguiendo a la mirada en vez
+            //    de a donde apuntaba el mando.
+            //
+            //    La solucion anterior fue apagar alsoUseMouse en el inspector, y eso dejo
+            //    el explorador completamente muerto en modo play de escritorio, que es
+            //    donde se prueba: raySource esta sin asignar y se enlaza en runtime al
+            //    interactor del mando, pero en el editor sin visor no hay ninguno (los de
+            //    escritorio se descartan a proposito en TryBindHandInteractor), asi que el
+            //    raton era el unico rayo que quedaba. Condicionarlo al visor cubre los dos
+            //    casos y permite dejar alsoUseMouse activado.
+            if (alsoUseMouse && _mainCam != null && !UnityEngine.XR.XRSettings.isDeviceActive)
             {
                 var mp = GetMousePosition(out bool valid);
                 if (valid)
