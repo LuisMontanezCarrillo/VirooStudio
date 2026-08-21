@@ -57,10 +57,10 @@ namespace ViroLab.Pasteurizador.Simulator
         public bool pumpMilkOn = false;
 
         [Header("Temperaturas y tiempo (°C, s)")]
-        public float tempHeat = 20f;
-        public float tempHold = 20f;
-        public float tempOut = 13.6f;
-        public float tempBoiler = 20f;
+        public float tempHeat = 4f;   // leche cruda refrigerada en reposo (~4 C, cadena de frio)
+        public float tempHold = 4f;
+        public float tempOut = 4f;
+        public float tempBoiler = 20f; // caldera: equipo a temperatura ambiente cuando esta apagada
         public float holdTimer = 0f;
 
         [Header("Válvulas (P&ID FDV)")]
@@ -180,7 +180,7 @@ namespace ViroLab.Pasteurizador.Simulator
             energyOn = false;
             running = false;
             fillOn = pumpMilkOn = pumpHotOn = pumpColdOn = false;
-            tempHeat = 20f; tempHold = 20f; tempOut = 13.6f; tempBoiler = 20f;
+            tempHeat = 4f; tempHold = 4f; tempOut = 4f; tempBoiler = 20f;
             tankInVol = 0f;
             tankOutVol = 0f;
             vFilled = vFinal = vRecirc = vEvap = vLoss = 0f;
@@ -234,7 +234,7 @@ namespace ViroLab.Pasteurizador.Simulator
         {
             running = false;
             fillOn = pumpMilkOn = pumpHotOn = pumpColdOn = false;
-            tempHeat = 20f; tempHold = 20f; tempOut = 13.6f; tempBoiler = 20f;
+            tempHeat = 4f; tempHold = 4f; tempOut = 4f; tempBoiler = 20f;
             holdTimer = 0f;
             vProd = vRet = vDes = false;
             alarm = false; lowTempAcc = 0f;
@@ -320,7 +320,7 @@ namespace ViroLab.Pasteurizador.Simulator
             //   supera 72 C (sin el sobreimpulso a 75 ni la operacion a 73 que habia antes).
             // - La retencion se sostiene al mismo 72 C, de modo que el criterio (>=72) se cumple
             //   justo en el techo y el lote puede validarse.
-            float heatTarget = 20f;
+            float heatTarget = 4f; // sin calefaccion la leche permanece refrigerada (~4 C)
             if (pumpHotOn) heatTarget = Mathf.Min(tempBoiler - 8f, SP_HEAT + 2f);
             tempHeat += (heatTarget - tempHeat) * Mathf.Min(1f, 0.5f * dt);
             tempHeat = Mathf.Min(tempHeat, SP_HEAT);   // techo estricto: maximo 72 C
