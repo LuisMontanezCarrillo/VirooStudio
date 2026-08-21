@@ -160,6 +160,14 @@ namespace ViroLab.Pasteurizador.EditorTools
                 var seg = PipeSegment(holder.transform, $"seg{i}", pts[i], pts[i + 1]);
                 list.Add(seg);
             }
+            // Uniones en cada vértice (codos y extremos). Sin ellas, dos segmentos
+            // rectangulares perpendiculares dejan un hueco en la esquina y la tubería
+            // se ve "cortada"; en los extremos, además, remata la conexión contra el
+            // equipo. Un cuadro del grosor de la tubería cierra cada codo. Se añaden
+            // al final para que el dashboard los coloree junto con los segmentos
+            // (SetPipe recorre todo el array de Image).
+            for (int i = 0; i < pts.Length; i++)
+                list.Add(PipeJoint(holder.transform, $"joint{i}", pts[i]));
             return list.ToArray();
         }
 
@@ -189,6 +197,23 @@ namespace ViroLab.Pasteurizador.EditorTools
             rt.sizeDelta = new Vector2(length + PIPE_THICKNESS, PIPE_THICKNESS);
             rt.localEulerAngles = new Vector3(0, 0, angle);
 
+            var img = go.GetComponent<Image>();
+            img.color = CPipeOff;
+            img.raycastTarget = false;
+            return img;
+        }
+
+        // Cuadro de unión en un vértice, del grosor de la tubería. Cierra el codo
+        // entre dos segmentos perpendiculares y remata los extremos.
+        private static Image PipeJoint(Transform parent, string name, Vector2 p)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image));
+            go.transform.SetParent(parent, false);
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.zero;
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(Px(p.x), Py(p.y));
+            rt.sizeDelta = new Vector2(PIPE_THICKNESS, PIPE_THICKNESS);
             var img = go.GetComponent<Image>();
             img.color = CPipeOff;
             img.raycastTarget = false;
