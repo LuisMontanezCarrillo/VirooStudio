@@ -604,7 +604,9 @@ namespace ViroLab.Pasteurizador.EditorTools
             var rt = (RectTransform)go.transform;
             rt.anchorMin = rt.anchorMax = Vector2.zero;
             rt.pivot = new Vector2(0, 0.5f);
-            rt.anchoredPosition = new Vector2(Px(svgPos.x), Py(SVG_H - svgPos.y));
+            // MISMA convención Y que equipos y tuberías (antes usaba SVG_H - y, lo que
+            // espejaba verticalmente las etiquetas y las alejaba de su equipo).
+            rt.anchoredPosition = new Vector2(Px(svgPos.x), Py(svgPos.y));
 
             var chip = go.GetComponent<Image>();
             chip.color = new Color(1f, 1f, 1f, 0.85f);
@@ -638,7 +640,8 @@ namespace ViroLab.Pasteurizador.EditorTools
             var rt = (RectTransform)go.transform;
             rt.anchorMin = rt.anchorMax = Vector2.zero;
             rt.pivot = new Vector2(0, 1);
-            rt.anchoredPosition = new Vector2(Px(svgTopLeft.x), Py(SVG_H - svgTopLeft.y));
+            // Misma convención Y que el resto (antes espejaba con SVG_H - y).
+            rt.anchoredPosition = new Vector2(Px(svgTopLeft.x), Py(svgTopLeft.y));
             rt.sizeDelta = new Vector2(w, h);
             var img = go.GetComponent<Image>();
             img.color = new Color(0.05f, 0.07f, 0.10f, 1f);
