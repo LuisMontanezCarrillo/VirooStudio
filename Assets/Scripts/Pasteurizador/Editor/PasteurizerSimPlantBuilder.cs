@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 using TMPro;
 using ViroLab.Pasteurizador.Simulator;
 
@@ -35,7 +36,8 @@ namespace ViroLab.Pasteurizador.EditorTools
         // viewBox SVG original
         private const float SVG_W = 1280f;
         private const float SVG_H = 720f;
-        private const float PIPE_THICKNESS = 5f;  // grosor de tubería en px de canvas
+        private const float PIPE_THICKNESS = 6f;  // grosor de tubería en px de canvas
+        private const int   LBL_SIZE = 16;        // tamaño uniforme de TODAS las etiquetas (legibilidad)
 
         // Paleta
         private static readonly Color CPipeOff   = new Color(0.30f, 0.34f, 0.38f, 1f);
@@ -53,6 +55,7 @@ namespace ViroLab.Pasteurizador.EditorTools
         private static readonly Color CPlateCool = new Color(0.40f, 0.65f, 1.00f, 0.15f);
 
         private static RectTransform _root;
+        private static RectTransform _overlay;   // capa superior: TODAS las etiquetas/displays van aquí
         private static float _scaleX, _scaleY;
 
         public static PlantRefs Build(Transform parent, Vector2 areaSize)
@@ -70,6 +73,14 @@ namespace ViroLab.Pasteurizador.EditorTools
             // Fondo del plant
             var bg = AddImage(_root, "Bg", new Color(0.93f, 0.95f, 0.98f, 1f));
             Stretch(bg.rectTransform);
+
+            // Capa superior para TODAS las etiquetas y displays. Se crea aquí para que
+            // AddLabelAt/AddDisplayPanel la usen, y al final se envía al frente
+            // (SetAsLastSibling) para que ningún texto quede tapado por tuberías ni equipos.
+            var overlayGO = new GameObject("Labels", typeof(RectTransform));
+            overlayGO.transform.SetParent(_root, false);
+            _overlay = (RectTransform)overlayGO.transform;
+            Stretch(_overlay);
 
             var refs = new PlantRefs();
 
@@ -130,6 +141,8 @@ namespace ViroLab.Pasteurizador.EditorTools
             BuildValve(_root, "valveRet",   V(260,380), "V. RETORNO",    out refs.valveRetBody,  out refs.valveRetHandle);
             BuildValve(_root, "valveFill",  V(160,230), "V. LLENADO",    out refs.valveFillBody, out refs.valveFillHandle);
 
+            // Todas las etiquetas y displays por ENCIMA de tuberías y equipos.
+            _overlay.SetAsLastSibling();
             return refs;
         }
 
@@ -232,6 +245,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             AddRect(g, "Window", new Vector2(Px(15), -Py(15)), new Vector2(Px(22), Py(150)), CTankBack);
             // fill (vertical filled)
             var fill = AddImage(g, "Fill", CMilkFill);
+            fill.sprite = UISprite();   // sin sprite, el fillAmount no se dibuja
             fill.type = Image.Type.Filled;
             fill.fillMethod = Image.FillMethod.Vertical;
             fill.fillOrigin = (int)Image.OriginVertical.Bottom;
@@ -263,6 +277,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             AddRect(g, "Window", new Vector2(Px(8), -Py(10)), new Vector2(Px(20), Py(90)), CTankBack);
             // fill
             var fill = AddImage(g, "Fill", CMilkFill);
+            fill.sprite = UISprite();   // sin sprite, el fillAmount no se dibuja
             fill.type = Image.Type.Filled;
             fill.fillMethod = Image.FillMethod.Vertical;
             fill.fillOrigin = (int)Image.OriginVertical.Bottom;
@@ -427,6 +442,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             AddRect(g, "Window", new Vector2(Px(8), -Py(12)), new Vector2(Px(14), Py(120)), CTankBack);
             // fill vertical
             var fill = AddImage(g, "Fill", new Color(0.62f, 0.83f, 1f));
+            fill.sprite = UISprite();   // sin sprite, el fillAmount no se dibuja
             fill.type = Image.Type.Filled;
             fill.fillMethod = Image.FillMethod.Vertical;
             fill.fillOrigin = (int)Image.OriginVertical.Bottom;
@@ -559,6 +575,17 @@ namespace ViroLab.Pasteurizador.EditorTools
             return img;
         }
 
+        // Sprite de UI integrado de Unity. Necesario para que Image.Type.Filled
+        // (relleno de los tanques por fillAmount) se dibuje; sin sprite, el
+        // fillAmount no tiene efecto visible y el tanque no muestra el llenado.
+        private static Sprite _uiSprite;
+        private static Sprite UISprite()
+        {
+            if (_uiSprite == null)
+                _uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+            return _uiSprite;
+        }
+
         private static void Stretch(RectTransform rt)
         {
             rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
@@ -573,7 +600,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             // aunque quede encima de una tubería.
             var go = new GameObject("Lbl_" + text, typeof(RectTransform), typeof(Image),
                                     typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
-            go.transform.SetParent(parent, false);
+            go.transform.SetParent(_overlay != null ? _overlay : parent, false); // siempre en la capa superior
             var rt = (RectTransform)go.transform;
             rt.anchorMin = rt.anchorMax = Vector2.zero;
             rt.pivot = new Vector2(0, 0.5f);
@@ -596,7 +623,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             tgo.transform.SetParent(go.transform, false);
             var tmp = tgo.GetComponent<TextMeshProUGUI>();
             tmp.text = text;
-            tmp.fontSize = size;
+            tmp.fontSize = LBL_SIZE;   // tamaño uniforme para todas las etiquetas
             tmp.color = color;
             tmp.alignment = align;
             tmp.raycastTarget = false;
@@ -607,7 +634,7 @@ namespace ViroLab.Pasteurizador.EditorTools
         private static RectTransform AddDisplayPanel(Transform parent, Vector2 svgTopLeft, float w, float h)
         {
             var go = new GameObject("DispPanel", typeof(RectTransform), typeof(Image));
-            go.transform.SetParent(parent, false);
+            go.transform.SetParent(_overlay != null ? _overlay : parent, false); // displays por encima de todo
             var rt = (RectTransform)go.transform;
             rt.anchorMin = rt.anchorMax = Vector2.zero;
             rt.pivot = new Vector2(0, 1);
@@ -628,7 +655,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             rt.offsetMin = Vector2.zero; rt.offsetMax = Vector2.zero;
             var tmp = go.GetComponent<TextMeshProUGUI>();
             tmp.text = text;
-            tmp.fontSize = 11;
+            tmp.fontSize = 13;
             tmp.color = new Color(0f, 0.88f, 1f);
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.fontStyle = FontStyles.Bold;
