@@ -126,3 +126,73 @@ precisamente para esto.
   no llevan botones.
 - El explorador de piezas y la selección son **locales por estudiante**: cada uno ve su
   propia ficha, y eso es lo decidido, no un fallo.
+
+---
+
+## Bloque 10 — Los tres ajustes previos a las pruebas de usuario
+
+Añadido en la rama `ajustes-pruebas-usuario`. Estos puntos no existían en la primera
+prueba; todos requieren visor.
+
+### 10.1 Mandos en lugar de manos
+
+- [ ] Al entrar en la sala aparecen los **mandos**, no las manos.
+- [ ] Girar las palmas hacia arriba **ya no abre el menú de VIROO**.
+- [ ] El rayo del puntero sale del mando y el gatillo sigue seleccionando piezas.
+
+*Qué se cambió:* en `Assets/XR/Settings/Open XR Package Settings.asset` se desactivaron,
+solo en **Standalone**, `Hand Tracking Subsystem`, `Hand Interaction Profile`,
+`Microsoft Hand Interaction Profile` y `Eye Gaze Interaction Profile`. Siguen activos
+todos los perfiles de mando (HTC Vive, Valve Index, Oculus Touch, Meta Quest Touch Pro,
+Microsoft Motion, Khronos Simple).
+
+*Si el validador de VIROO protesta:* volver a activar solo `Hand Tracking Subsystem` y
+dejar apagados los dos perfiles de interacción de mano.
+
+*Si en la sala se usan visores standalone Android* (Focus 3 / XR Elite ejecutando el
+build en el propio visor) esto no basta: no hay ningún perfil HTC habilitado en Android y
+haría falta instalar el plugin `VIVE OpenXR`.
+
+### 10.2 Tablero fijo de descripciones
+
+- [ ] Al apuntar a una pieza, la ficha aparece **quieta junto al pasteurizador** y ya no
+      flota delante de la cara.
+- [ ] Caminar por la sala **no arrastra** el tablero.
+- [ ] El tablero **se lee bien** desde donde el estudiante se sitúa. Anotar si queda lejos,
+      escorado o atravesando algún equipo: se corrige moviendo el GameObject
+      **`Planta_Piloto / Anclaje_FichaPasteurizador`** en el editor, sin tocar código.
+- [ ] La **X de cerrar es grande** y se pulsa con el rayo sin puntería fina.
+- [ ] Si no se toca nada, la ficha **desaparece sola a los 30 s**.
+
+*Qué se cambió:* el `PasteurizerWorldCanvas` de la escena pasó de `FaceCameraSmoothed` a
+`AnchorToTransform` apuntando al anclaje nuevo, y su `worldScale` subió de `0.0016` a
+`0.004` para compensar que ahora se lee desde más lejos. El botón de cerrar pasó de
+24×24 px a 96×96 px. El auto-ocultado es el campo `autoHideSeconds` del componente
+`PasteurizerDescriptionCard`.
+
+### 10.3 Controles del vídeo de la Escena 3
+
+- [ ] El vídeo sigue arrancando solo tras el splash, como antes.
+- [ ] El botón **PAUSA** responde al rayo del mando y detiene imagen y sonido.
+- [ ] Al pulsarlo de nuevo pone **REANUDAR** y el vídeo continúa donde estaba.
+- [ ] El botón **CERRAR** apaga el vídeo y libera al estudiante.
+- [ ] Los botones se ven **por debajo de la pantalla** y no tapan el vídeo.
+
+*Qué se cambió:* dos botones nuevos dentro de `Canvas_VideoEsc3` y el componente
+`ControlesVideoEsc3` sobre ese mismo canvas. `GestorEscena3` no se tocó. Los controles
+son **locales por estudiante**: si uno pausa, los demás no.
+
+---
+
+## Corrección a la sección "Antes de ir al laboratorio"
+
+El punto que dice *«Confirmar que el modo estéreo sigue en Multi-Pass (VIROO lo exige) …
+Ambos ya están así»* **es incorrecto**: el proyecto está en **Single Pass Instanced**
+(`m_renderMode: 1` en todas las plataformas de `Open XR Package Settings.asset`), y ya
+estaba así en el commit anterior a estos ajustes. La guía de VIROO Studio pide Multi-Pass
+(`m_renderMode: 0`).
+
+No se ha cambiado porque queda fuera de los tres ajustes pedidos y afecta al rendimiento
+de toda la aplicación. **Decidir antes del laboratorio** si se pasa a Multi-Pass; si al
+probar en el visor la imagen sale mal en un ojo o los canvas se ven duplicados, ésta es la
+primera sospecha.
