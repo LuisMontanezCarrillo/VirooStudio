@@ -22757,13 +22757,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 900000001}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.3090170, z: 0, w: 0.9510565}
-  m_LocalPosition: {x: 2.0000, y: 2.6667, z: 11.4167}
+  m_LocalRotation: {x: 0, y: 0.309017, z: 0, w: 0.9510565}
+  m_LocalPosition: {x: 2.85, y: 2.6667, z: 11.09}
   m_LocalScale: {x: 1.6666667, y: 1.6666667, z: 1.6666667}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3571493831561879702}
-  m_LocalEulerAnglesHint: {x: 0, y: 36.00, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 36, z: 0}
 --- !u!1 &900001001
 GameObject:
   m_ObjectHideFlags: 0
@@ -22800,7 +22800,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -260, y: -1000}
+  m_AnchoredPosition: {x: -260, y: -764}
   m_SizeDelta: {x: 440, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &900001003
@@ -22969,8 +22969,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 90
-  m_fontSizeBase: 90
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 30
@@ -23057,7 +23057,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 260, y: -1000}
+  m_AnchoredPosition: {x: 260, y: -768}
   m_SizeDelta: {x: 440, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &900002003
@@ -23226,8 +23226,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 90
-  m_fontSizeBase: 90
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 30
@@ -29414,7 +29414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68010db56d4f0b5439777308efcbb5f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followMode: 3
+  followMode: 5
   distance: 0.85
   verticalOffset: -0.2
   horizontalOffset: 0

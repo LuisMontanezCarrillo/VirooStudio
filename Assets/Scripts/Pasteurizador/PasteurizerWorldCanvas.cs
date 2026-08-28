@@ -14,6 +14,11 @@ namespace ViroLab.Pasteurizador
     ///
     /// Si querés que aparezca SOLO cuando hay pinned part, asigná `hover`
     /// y poné `showOnlyWhenPinned = true`.
+    ///
+    /// AnchorFacingUser es el punto medio entre Static y FaceCamera*: el tablero
+    /// se queda clavado donde diga `anchor` (no estorba al caminar ni tapa la
+    /// maquina) pero gira para que siempre se lea de frente. En ese modo
+    /// `anchorLocalEuler` no se usa: la orientacion la manda la camara.
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Canvas))]
     public class PasteurizerWorldCanvas : MonoBehaviour
@@ -25,6 +30,7 @@ namespace ViroLab.Pasteurizador
             FaceCameraSmoothed,  // Sigue/orienta con lerp suave (recomendado)
             AnchorToTransform,   // Pegado a un Transform (ej. controller izquierdo)
             HUDAnchor,           // HUD estilo videojuego: anclado a un punto del viewport
+            AnchorFacingUser,    // Fijo en el anchor, pero girando para mirar al usuario
         }
 
         [Header("Modo")]
@@ -225,7 +231,40 @@ namespace ViroLab.Pasteurizador
                     if (_cam == null) return;
                     PlaceHUDAnchor();
                     return;
+
+                case FollowMode.AnchorFacingUser:
+                    if (anchor == null || _cam == null) return;
+                    PlaceAnchorFacingUser();
+                    return;
             }
+        }
+
+        /// Posicion fija (la del anchor) con orientacion hacia el usuario.
+        /// Resuelve el compromiso del tablero de descripciones: al no moverse no
+        /// interfiere con el desplazamiento ni tapa el pasteurizador, y al girar
+        /// se lee igual de bien desde cualquier punto de la sala.
+        ///
+        /// Solo gira en yaw: el vector hacia el usuario se aplana en el plano
+        /// horizontal, de modo que el tablero se mantiene vertical y no se inclina
+        /// cuando el estudiante mira hacia arriba o hacia abajo.
+        private void PlaceAnchorFacingUser()
+        {
+            var pos = anchor.TransformPoint(anchorLocalOffset);
+            transform.position = pos;
+
+            // Mismo convenio que ComputeTarget: el forward del Canvas apunta EN
+            // CONTRA del observador, que es como se lee de frente una UI World Space.
+            var away = pos - _cam.transform.position;
+            away.y = 0f;
+            // Usuario justo encima o debajo del tablero: no hay yaw que calcular,
+            // se conserva la orientacion previa en vez de dar un giro brusco.
+            if (away.sqrMagnitude < 0.0001f) return;
+            away.Normalize();
+
+            var targetRot = Quaternion.LookRotation(away, Vector3.up);
+            transform.rotation = rotationLerp > 0f
+                ? Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * rotationLerp)
+                : targetRot;
         }
 
         private void PlaceHUDAnchor()

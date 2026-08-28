@@ -157,18 +157,29 @@ haría falta instalar el plugin `VIVE OpenXR`.
 
 - [ ] Al apuntar a una pieza, la ficha aparece **quieta junto al pasteurizador** y ya no
       flota delante de la cara.
-- [ ] Caminar por la sala **no arrastra** el tablero.
-- [ ] El tablero **se lee bien** desde donde el estudiante se sitúa. Anotar si queda lejos,
-      escorado o atravesando algún equipo: se corrige moviendo el GameObject
-      **`Planta_Piloto / Anclaje_FichaPasteurizador`** en el editor, sin tocar código.
+- [ ] Caminar por la sala **no arrastra** el tablero: se queda en el mismo punto.
+- [ ] Al rodear el pasteurizador, el tablero **gira sobre su sitio** para seguir mirando
+      al estudiante, y se lee de frente desde cualquier posición.
+- [ ] El tablero **no se inclina** al mirar hacia arriba o hacia abajo: sigue vertical.
+- [ ] Anotar si queda lejos, escorado o atravesando algún equipo: se corrige moviendo el
+      GameObject **`Planta_Piloto / Anclaje_FichaPasteurizador`** en el editor, sin tocar
+      código.
 - [ ] La **X de cerrar es grande** y se pulsa con el rayo sin puntería fina.
 - [ ] Si no se toca nada, la ficha **desaparece sola a los 30 s**.
 
-*Qué se cambió:* el `PasteurizerWorldCanvas` de la escena pasó de `FaceCameraSmoothed` a
-`AnchorToTransform` apuntando al anclaje nuevo, y su `worldScale` subió de `0.0016` a
-`0.004` para compensar que ahora se lee desde más lejos. El botón de cerrar pasó de
-24×24 px a 96×96 px. El auto-ocultado es el campo `autoHideSeconds` del componente
+*Qué se cambió:* se añadió a `PasteurizerWorldCanvas` un modo nuevo,
+**`AnchorFacingUser`**, al final del enum `FollowMode` (índice 5, para no alterar los
+valores ya serializados de los modos existentes). Mantiene la posición fija del `anchor`
+pero orienta el canvas hacia la cámara, girando solo en yaw. El componente de la escena
+pasó de `FaceCameraSmoothed` a ese modo, apuntando al anclaje nuevo, y su `worldScale`
+subió de `0.0016` a `0.004` porque ahora se lee desde más lejos. El botón de cerrar pasó
+de 24×24 px a 96×96 px. El auto-ocultado es el campo `autoHideSeconds` de
 `PasteurizerDescriptionCard`.
+
+*Dónde está el anclaje:* mundo **(1.20, 1.60, −0.05)**, en el hueco entre el extremo este
+del pasteurizador (el equipo llega a `X 0.66`, `Z 0.71…1.47`) y `Workstation_5`
+(`0.21, 1.04, −1.78`). En este modo `anchorLocalEuler` ya no se usa: la orientación la
+manda la cámara.
 
 ### 10.3 Controles del vídeo de la Escena 3
 
