@@ -95,7 +95,7 @@ public class DestinoEscena3Multiusuario : MonoBehaviour
             if (p is IPlayer ip)
             {
                 j.id = Convert.ToString(ip.ClientId);
-                j.local = ip.IsLocalPlayer;
+                j.local = ip.IsLocalPlayer == true;   // IsLocalPlayer es bool? en la API de VIROO
             }
             if (string.IsNullOrEmpty(j.id)) j.id = p.GetInstanceID().ToString();
             lista.Add(j);
