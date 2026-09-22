@@ -39,6 +39,7 @@ public class DestinoEscena3Multiusuario : MonoBehaviour
 
     private float _proximo;
     private Transform _ultimo;
+    private bool _suscrito;
 
     private struct Jugador { public string id; public bool local; public Vector3 pos; }
 
@@ -51,12 +52,28 @@ public class DestinoEscena3Multiusuario : MonoBehaviour
             gestor = FindObjectsByType<GestorCuestionario>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault();
         if (gestor == null || puntos == null || puntos.Length == 0) return;
 
+        // Una vez que el usuario local viaja a la Escena 3, este componente ya no
+        // tiene nada que decidir: se apaga para dejar de rastrear la escena en
+        // busca de jugadores durante el resto de la sesion.
+        if (!_suscrito && gestor.OnTransitionComplete != null)
+        {
+            gestor.OnTransitionComplete.AddListener(Apagarse);
+            _suscrito = true;
+        }
+
         var elegido = Elegir();
         if (elegido == null || elegido == _ultimo) return;
 
         gestor.puntoDestinoEscena3 = elegido;
         _ultimo = elegido;
         if (log) Debug.Log($"[DestinoEscena3Multiusuario] Punto de llegada asignado: {elegido.name}");
+    }
+
+    /// El usuario local ya viajó: el punto de llegada está decidido.
+    private void Apagarse()
+    {
+        if (log) Debug.Log("[DestinoEscena3Multiusuario] Transición hecha; el componente se apaga.");
+        enabled = false;
     }
 
     private Transform Elegir()

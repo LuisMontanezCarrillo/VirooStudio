@@ -32,24 +32,58 @@ namespace ViroLab.Pasteurizador
         [Tooltip("Segundos entre rastreos del rig. El rig de VIROO puede aparecer despues de cargar la escena, por eso se reintenta.")]
         public float retrySeconds = 1f;
 
+        [Tooltip("Segundos durante los cuales se busca el rig. Pasado ese plazo el " +
+                 "componente se apaga solo. Antes rastreaba la escena entera una vez " +
+                 "por segundo durante toda la sesion, de modo que cada jugador que " +
+                 "entraba traia interactores nuevos y disparaba una reasignacion de " +
+                 "acciones justo en ese instante, que es cuando se notaban los tirones.")]
+        public float segundosDeBusqueda = 25f;
+
+        [Tooltip("Reasignar solo los interactores del jugador LOCAL. Los avatares de " +
+                 "los demas no reciben entrada en esta maquina, de modo que tocar sus " +
+                 "acciones no sirve de nada y cuesta.")]
+        public bool soloElJugadorLocal = true;
+
         [Tooltip("Escribir en la consola las acciones reasignadas.")]
         public bool log = true;
 
         private readonly HashSet<InputAction> _hechas = new HashSet<InputAction>();
         private float _proximo;
+        private float _limite;
+        private int _reasignadas;
+
+        private void Start()
+        {
+            _limite = Time.unscaledTime + Mathf.Max(1f, segundosDeBusqueda);
+        }
 
         private void Update()
         {
             if (Time.unscaledTime < _proximo) return;
             _proximo = Time.unscaledTime + Mathf.Max(0.1f, retrySeconds);
 
+            if (Time.unscaledTime > _limite)
+            {
+                if (log)
+                    Debug.Log($"[GatilloComoSelect] Busqueda terminada: {_reasignadas} accion(es) " +
+                              "pasadas al gatillo. El componente se apaga para no volver a " +
+                              "rastrear la escena durante la sesion.");
+                enabled = false;
+                return;
+            }
+
             var interactores = FindObjectsByType<XRBaseInputInteractor>(
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             if (interactores == null) return;
 
+            Transform raizLocal = null;
+            if (soloElJugadorLocal && Camera.main != null)
+                raizLocal = Camera.main.transform.root;
+
             foreach (var it in interactores)
             {
                 if (it == null || EsDeEscritorio(it.transform)) continue;
+                if (raizLocal != null && it.transform.root != raizLocal) continue;
                 Reasignar(it.selectInput, it.name);
             }
         }
@@ -91,6 +125,8 @@ namespace ViroLab.Pasteurizador
                 accion.ApplyBindingOverride(i, nuevo);
                 cambiados++;
             }
+
+            _reasignadas += cambiados;
 
             if (log && cambiados > 0)
                 Debug.Log($"[GatilloComoSelect] '{accion.actionMap?.name}/{accion.name}' ({origen}): {cambiados} binding(s) del grip pasan al gatillo.");
