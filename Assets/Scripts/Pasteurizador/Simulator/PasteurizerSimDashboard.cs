@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -184,6 +185,21 @@ namespace ViroLab.Pasteurizador.Simulator
                  "por detrás, que es lo que impedía leerlos.")]
         public bool contornoEnRotulosDelDiagrama = true;
 
+        [Tooltip("Tamaño mínimo para los rótulos del diagrama de planta. El constructor " +
+                 "dejó los de las válvulas en 8 pt y los de las bombas en 9, que a la " +
+                 "escala del lienzo son 1,44 y 1,62 cm: ilegibles a dos metros. Con 18 pt " +
+                 "quedan en 3,24 cm, igual que el panel de control. Pon 0 para desactivarlo.")]
+        public float minFontSizeDiagrama = 18f;
+
+        [Tooltip("Separar en vertical los rótulos del diagrama que se solapen tras " +
+                 "agrandarlos. El desplazamiento está acotado para que ninguno se aleje " +
+                 "del equipo que nombra.")]
+        public bool separarRotulosQueChocan = true;
+
+        [Tooltip("Desplazamiento máximo, en unidades de lienzo, que se permite a un " +
+                 "rótulo para dejar de solaparse con otro.")]
+        public float separacionMaxima = 26f;
+
         [Tooltip("Nombre del contenedor del diagrama de planta.")]
         public string zonaDelDiagrama = "PlantArea";
 
@@ -252,6 +268,7 @@ namespace ViroLab.Pasteurizador.Simulator
             // calculo de disposicion.
             AplicarRejillaDeUnaColumna();
             OrdenarYNumerarBotones();
+            AplicarLegibilidadDelDiagrama();
 
             if (!ocultarHastaElReto3) return;
 
@@ -374,7 +391,10 @@ namespace ViroLab.Pasteurizador.Simulator
             if (!engine.pumpHotOn) return "Falta paso 4";
             if (engine.tankInVol < PasteurizerSimEngine.TANK_MIN_VOL)
                 return $"Falta nivel: {PasteurizerSimEngine.TANK_MIN_VOL:F0} L";
-            return $"Esperando {PasteurizerSimEngine.T_PUMP_READY:F0} °C";
+            // Con la temperatura actual al lado se ve de un vistazo si sube o si
+            // se quedo parada, que es justo lo que no se podia distinguir.
+            return $"Faltan {PasteurizerSimEngine.T_PUMP_READY - engine.tempHeat:F0} °C " +
+                   $"({engine.tempHeat:F0} de {PasteurizerSimEngine.T_PUMP_READY:F0})";
         }
 
         private static void PonerTexto(Button b, string texto)
@@ -409,6 +429,102 @@ namespace ViroLab.Pasteurizador.Simulator
             if (_fondoAviso != null)
                 _fondoAviso.color = Color.Lerp(_colorAvisoReposo, colorResalteAviso, _brilloAviso);
             hintTxt.color = Color.Lerp(Color.white, colorResalteTexto, _brilloAviso);
+        }
+
+        /// Sube el tamaño de los rótulos del diagrama y, si al crecer se pisan
+        /// entre ellos, los separa en vertical dentro de un margen acotado.
+        ///
+        /// Va aparte del tamaño minimo general porque estos rotulos estan
+        /// colocados por coordenadas absolutas sobre el esquema, no dentro de una
+        /// disposicion que los recoloque sola: aqui agrandar sin separar produce
+        /// choques, y separar de mas aleja el rotulo de su equipo.
+        private void AplicarLegibilidadDelDiagrama()
+        {
+            if (minFontSizeDiagrama <= 0f || string.IsNullOrEmpty(zonaDelDiagrama)) return;
+
+            var zona = transform.Find("PlantArea/PlantSVG");
+            if (zona == null) return;
+
+            var rotulos = new List<RectTransform>();
+            int subidos = 0;
+
+            foreach (Transform hijo in zona)
+            {
+                if (!hijo.name.StartsWith("Lbl_")) continue;
+                var rt = hijo as RectTransform;
+                if (rt == null) continue;
+                rotulos.Add(rt);
+
+                foreach (var t in hijo.GetComponentsInChildren<TMP_Text>(true))
+                {
+                    if (t == null || t.enableAutoSizing) continue;
+                    if (t.fontSize >= minFontSizeDiagrama) continue;
+                    t.fontSize = minFontSizeDiagrama;
+                    subidos++;
+                }
+            }
+
+            if (subidos > 0)
+                Debug.Log($"[SimDashboard] Diagrama: {subidos} rótulos subidos a {minFontSizeDiagrama} pt.");
+
+            if (!separarRotulosQueChocan || rotulos.Count < 2) return;
+
+            // El tamaño del recuadro lo calcula un ContentSizeFitter, de modo que
+            // hay que forzar el calculo antes de medir nada.
+            foreach (var rt in rotulos) LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
+
+            var original = rotulos.Select(r => r.anchoredPosition.y).ToArray();
+            int movidos = 0;
+
+            for (int pasada = 0; pasada < 12; pasada++)
+            {
+                bool hubo = false;
+                for (int i = 0; i < rotulos.Count; i++)
+                    for (int j = i + 1; j < rotulos.Count; j++)
+                    {
+                        if (!SeTocan(rotulos[i], rotulos[j], out float empuje)) continue;
+                        hubo = true;
+                        Separar(rotulos[i], original[i], +empuje / 2f);
+                        Separar(rotulos[j], original[j], -empuje / 2f);
+                    }
+                if (!hubo) break;
+            }
+
+            for (int i = 0; i < rotulos.Count; i++)
+                if (Mathf.Abs(rotulos[i].anchoredPosition.y - original[i]) > 0.5f) movidos++;
+
+            if (movidos > 0)
+                Debug.Log($"[SimDashboard] Diagrama: {movidos} rótulos separados para no solaparse.");
+        }
+
+        private void Separar(RectTransform rt, float yOriginal, float delta)
+        {
+            var ap = rt.anchoredPosition;
+            ap.y = Mathf.Clamp(ap.y + delta,
+                               yOriginal - separacionMaxima,
+                               yOriginal + separacionMaxima);
+            rt.anchoredPosition = ap;
+        }
+
+        /// Solape en vertical de dos rótulos que además se cruzan en horizontal.
+        private static bool SeTocan(RectTransform a, RectTransform b, out float empuje)
+        {
+            empuje = 0f;
+            Rect ra = a.rect, rb = b.rect;
+            Vector2 pa = a.anchoredPosition, pb = b.anchoredPosition;
+
+            float ax0 = pa.x + ra.xMin, ax1 = pa.x + ra.xMax;
+            float bx0 = pb.x + rb.xMin, bx1 = pb.x + rb.xMax;
+            if (ax1 <= bx0 || bx1 <= ax0) return false;
+
+            float ay0 = pa.y + ra.yMin, ay1 = pa.y + ra.yMax;
+            float by0 = pb.y + rb.yMin, by1 = pb.y + rb.yMax;
+            float solape = Mathf.Min(ay1, by1) - Mathf.Max(ay0, by0);
+            if (solape <= 0f) return false;
+
+            // El que esté más arriba sube; el otro baja.
+            empuje = (pa.y >= pb.y ? 1f : -1f) * (solape + 2f);
+            return true;
         }
 
         private static bool EstaDentroDe(Transform t, string[] nombres)
@@ -754,7 +870,20 @@ namespace ViroLab.Pasteurizador.Simulator
             if (energyLbl   != null) energyLbl.text   = $"1. Energía: {(engine.energyOn ? "ENCENDIDA" : "APAGADA")}";
             if (modeLbl     != null) modeLbl.text     = $"Modo de operación\n{(engine.mode == PasteurizerSimEngine.Mode.Production ? "Producción" : "Limpieza CIP")}";
             if (fillLbl     != null) fillLbl.text     = $"{n3}Válvula de llenado\n{(engine.fillOn ? "ABIERTA" : "CERRADA")}";
-            if (hotPumpLbl  != null) hotPumpLbl.text  = $"{n4}Calefactor\n{(engine.pumpHotOn ? "ENCENDIDO" : "APAGADO")}";
+            // Mientras calienta, el boton dice a que temperatura va. La subida de
+            // 20 a 65 grados tarda unos seis segundos, y sin este numero la espera
+            // parece que el simulador se colgo.
+            if (hotPumpLbl != null)
+            {
+                string estadoCal;
+                if (!engine.pumpHotOn)
+                    estadoCal = engine.CanStartHot() ? "APAGADO" : "Falta paso 2";
+                else if (engine.tempHeat < PasteurizerSimEngine.T_PUMP_READY)
+                    estadoCal = $"CALENTANDO {engine.tempHeat:F0} °C";
+                else
+                    estadoCal = $"ENCENDIDO {engine.tempHeat:F0} °C";
+                hotPumpLbl.text = $"{n4}Calefactor\n{estadoCal}";
+            }
             if (coldPumpLbl != null) coldPumpLbl.text = $"{n5}Refrigerador\n{(engine.pumpColdOn ? "ENCENDIDO" : "APAGADO")}";
             // La bomba de producto es el unico boton con cuatro enclavamientos
             // encadenados, y por eso es el que parece averiado: se pulsa y no
