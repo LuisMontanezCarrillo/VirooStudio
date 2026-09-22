@@ -157,6 +157,23 @@ namespace ViroLab.Pasteurizador.Simulator
             if (on) { if (clip != null && (!src.isPlaying || src.clip != clip)) { src.clip = clip; src.loop = true; src.Play(); } }
             else src.Stop();
         }
+        /// <summary>
+        /// Silencia el simulador por completo: los cinco bucles continuos y
+        /// tambien los sonidos puntuales que pudieran estar sonando. La llama el
+        /// boton Reiniciar Lote del tablero.
+        ///
+        /// No basta con confiar en la deteccion de flancos de Update: esa solo
+        /// para los bucles cuando el estado del motor CAMBIA, de modo que si el
+        /// lote ya estaba cerrado y la planta seguia en marcha, o si se reinicia
+        /// dos veces seguidas, algun bucle se quedaba sonando.
+        /// </summary>
+        public void DetenerTodo()
+        {
+            StopAllLoops();
+            if (_sfx   != null) _sfx.Stop();
+            if (_touch != null) _touch.Stop();
+        }
+
         void StopAllLoops()
         {
             foreach (var s in new[] { _procLoop, _pumpLoop, _waterLoop, _boilerLoop, _vaporLoop })

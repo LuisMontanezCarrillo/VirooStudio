@@ -50,6 +50,8 @@ public class ControlesVideoEsc3 : MonoBehaviour
         }
         else
         {
+            // Al reanudar, el video vuelve a tomar la palabra.
+            NarradorUnico.TomarLaPalabra(reproductor);
             reproductor.Play();
             if (etiquetaPlayPausa != null) etiquetaPlayPausa.text = textoPausar;
         }

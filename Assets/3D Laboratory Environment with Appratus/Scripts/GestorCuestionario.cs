@@ -60,6 +60,8 @@ public class GestorCuestionario : MonoBehaviour
 
     void Start()
     {
+        NarradorUnico.Registrar(reproductorAudio);
+
         if (botonA != null) colorOriginalBotones = botonA.image.color;
         
         if (botonA != null) { botonA.onClick.RemoveAllListeners(); botonA.onClick.AddListener(() => ValidarRespuesta(0, botonA)); }
@@ -96,6 +98,7 @@ public class GestorCuestionario : MonoBehaviour
             
             if (!introReproducida && reproductorAudio != null && audioIntroReto2 != null)
             {
+                NarradorUnico.TomarLaPalabra(reproductorAudio);
                 reproductorAudio.clip = audioIntroReto2;
                 reproductorAudio.Play();
                 introReproducida = true;
@@ -174,6 +177,7 @@ public class GestorCuestionario : MonoBehaviour
         float duracionVO = 0f;
         if (reproductorAudio != null && audioCierreReto2 != null)
         {
+            NarradorUnico.TomarLaPalabra(reproductorAudio);
             reproductorAudio.clip = audioCierreReto2;
             reproductorAudio.Play();
             instanteInicioVO = Time.time;

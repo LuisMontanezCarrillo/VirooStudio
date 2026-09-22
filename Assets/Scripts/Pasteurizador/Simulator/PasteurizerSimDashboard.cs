@@ -167,11 +167,25 @@ namespace ViroLab.Pasteurizador.Simulator
         // ====================================================================
 
         [Header("Legibilidad")]
-        [Tooltip("Tamaño mínimo de letra para CUALQUIER texto del tablero. El builder " +
+        [Tooltip("Tamaño mínimo de letra dentro de las zonas listadas abajo. El builder " +
                  "dejó las etiquetas de los botones en 11 pt, que a la escala del lienzo " +
                  "son 2 cm y resultaron ilegibles en las pruebas con docentes. Pon 0 para " +
                  "desactivar este ajuste y volver al tamaño original.")]
         public float minFontSize = 18f;
+
+        [Tooltip("Zonas donde se aplica el tamaño mínimo, por nombre del contenedor. " +
+                 "Fuera de ellas el texto conserva su tamaño: las celdas de la barra " +
+                 "superior y los rótulos del diagrama están pegados a su sitio, y al " +
+                 "agrandarlos se desbordan de su celda o se cruzan con las tuberías.")]
+        public string[] zonasConTamanoMinimo = { "PanelControl", "PanelMetrics" };
+
+        [Tooltip("Añadir un contorno claro a los rótulos del diagrama de planta. No " +
+                 "cambia su tamaño; los separa visualmente de las tuberías que pasan " +
+                 "por detrás, que es lo que impedía leerlos.")]
+        public bool contornoEnRotulosDelDiagrama = true;
+
+        [Tooltip("Nombre del contenedor del diagrama de planta.")]
+        public string zonaDelDiagrama = "PlantArea";
 
         [Tooltip("Pasar la rejilla de botones de 2 columnas a 1. Es lo que deja sitio " +
                  "para los nombres completos: cada botón pasa de 118 a 264 unidades de " +
@@ -181,16 +195,36 @@ namespace ViroLab.Pasteurizador.Simulator
         [Tooltip("Alto de cada botón cuando la rejilla va a una columna.")]
         public float altoBotonUnaColumna = 50f;
 
+        [Tooltip("Numerar del 1 al 6 los botones que componen el procedimiento y " +
+                 "ordenarlos como se ejecutan. Los que no son un paso (modo, detener, " +
+                 "reiniciar) bajan al final sin número.")]
+        public bool numerarLosPasos = true;
+
+        [Header("Aviso al pie")]
+        [Tooltip("Segundos que dura el resalte de la barra de mensajes cuando cambia el aviso.")]
+        public float duracionDelResalte = 2f;
+
+        public Color colorResalteAviso = new Color(0.65f, 0.45f, 0.05f, 0.9f);
+        public Color colorResalteTexto = new Color(1f, 0.85f, 0.35f);
+
+        private Image _fondoAviso;
+        private Color _colorAvisoReposo = new Color(0f, 0f, 0f, 0.6f);
+        private string _avisoAnterior = "";
+        private float _brilloAviso;
+
         [Header("Visibilidad")]
         [Tooltip("Mantener el tablero apagado hasta que el estudiante llegue al reto 3. " +
                  "Hasta ahora estaba encendido desde el arranque y se veía de lejos " +
                  "durante el reto 2, lo que confundía sobre en qué reto se estaba.")]
         public bool ocultarHastaElReto3 = true;
 
-        [Tooltip("Distancia en metros por debajo de la cual el tablero se enciende solo. " +
-                 "Es la red de seguridad para quien entre a la sesión ya empezada y por " +
-                 "tanto nunca reciba el aviso de transición.")]
-        public float distanciaDeEncendido = 6f;
+        [Tooltip("Distancia en metros por debajo de la cual el tablero se enciende solo, " +
+                 "como red de seguridad para quien entre a la sesión ya empezada. Va en 0, " +
+                 "es decir desactivada: con 6 m el tablero se encendía durante el reto 2, " +
+                 "porque desde la zona del cuestionario ya se está dentro de ese radio. " +
+                 "Súbela solo si se confirma que alguien puede llegar al reto 3 sin pasar " +
+                 "por la transición.")]
+        public float distanciaDeEncendido = 0f;
 
         private Canvas _canvas;
         private GraphicRaycaster _raycaster;
@@ -208,6 +242,7 @@ namespace ViroLab.Pasteurizador.Simulator
             _raycaster = GetComponent<GraphicRaycaster>();
 
             AplicarTamanoMinimoDeLetra();
+            AplicarContornoDelDiagrama();
         }
 
         private void Start()
@@ -216,6 +251,7 @@ namespace ViroLab.Pasteurizador.Simulator
             // area de botones, y RectTransform.rect no es fiable antes del primer
             // calculo de disposicion.
             AplicarRejillaDeUnaColumna();
+            OrdenarYNumerarBotones();
 
             if (!ocultarHastaElReto3) return;
 
@@ -249,6 +285,7 @@ namespace ViroLab.Pasteurizador.Simulator
         private void ComprobarDistancia()
         {
             if (_visible || !ocultarHastaElReto3) return;
+            if (distanciaDeEncendido <= 0f) return;
             if (Time.unscaledTime < _proximaComprobacionDistancia) return;
             _proximaComprobacionDistancia = Time.unscaledTime + 0.5f;
 
@@ -260,8 +297,12 @@ namespace ViroLab.Pasteurizador.Simulator
                 MostrarTablero();
         }
 
-        /// Sube a minFontSize cualquier texto que este por debajo. No toca los
-        /// que ya son mayores ni los que usan autoajuste de TMP.
+        /// Sube a minFontSize los textos que esten por debajo, SOLO dentro de las
+        /// zonas listadas. La primera version lo aplicaba a todo el tablero y el
+        /// resultado fue peor que el problema: en la barra superior los valores
+        /// ya estaban a 18 y las claves subieron encima de ellos, en la fila de
+        /// SECUENCIA los seis rotulos se pisaron entre si, y en el diagrama de
+        /// planta los nombres se montaron sobre las tuberias.
         private void AplicarTamanoMinimoDeLetra()
         {
             if (minFontSize <= 0f) return;
@@ -271,12 +312,112 @@ namespace ViroLab.Pasteurizador.Simulator
             {
                 if (t == null || t.enableAutoSizing) continue;
                 if (t.fontSize >= minFontSize) continue;
+                if (!EstaDentroDe(t.transform, zonasConTamanoMinimo)) continue;
                 t.fontSize = minFontSize;
                 subidos++;
             }
 
             if (subidos > 0)
-                Debug.Log($"[SimDashboard] Legibilidad: {subidos} textos subidos a {minFontSize} pt.");
+                Debug.Log($"[SimDashboard] Legibilidad: {subidos} textos subidos a {minFontSize} pt " +
+                          $"dentro de {string.Join(", ", zonasConTamanoMinimo)}.");
+        }
+
+        /// Contornea los rotulos del diagrama para que se despeguen de las
+        /// tuberias que pasan por detras, sin tocar su tamano ni su posicion.
+        private void AplicarContornoDelDiagrama()
+        {
+            if (!contornoEnRotulosDelDiagrama || string.IsNullOrEmpty(zonaDelDiagrama)) return;
+
+            var zona = new[] { zonaDelDiagrama };
+            int tocados = 0;
+            foreach (var t in GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (t == null || !EstaDentroDe(t.transform, zona)) continue;
+                t.outlineColor = new Color32(255, 255, 255, 235);
+                t.outlineWidth = 0.22f;
+                tocados++;
+            }
+
+            if (tocados > 0)
+                Debug.Log($"[SimDashboard] Contorno aplicado a {tocados} rótulos del diagrama.");
+        }
+
+        /// Ordena los botones del panel en el orden real del procedimiento y
+        /// numera los seis pasos que lo componen. Los tres que no son un paso
+        /// (modo, detener, reiniciar) bajan al final y quedan sin numero.
+        private void OrdenarYNumerarBotones()
+        {
+            if (!numerarLosPasos) return;
+
+            var orden = new[] { startBtn, fillBtn, hotPumpBtn, coldPumpBtn, milkPumpBtn,
+                                modeBtn, stopBtn, resetBatchBtn };
+            int i = 0;
+            foreach (var b in orden)
+            {
+                if (b == null) continue;
+                b.transform.SetSiblingIndex(i++);
+            }
+
+            // Los rotulos de estos tres son fijos: el builder los escribe una vez
+            // y RefreshButtons no los toca, asi que se ponen aqui.
+            PonerTexto(startBtn,      "2. ▶ Iniciar");
+            PonerTexto(stopBtn,       "■ Detener");
+            PonerTexto(resetBatchBtn, "↻ Reiniciar lote");
+        }
+
+        /// Que falta para poder arrancar la bomba de producto, en el orden en que
+        /// el motor lo comprueba. Mismo criterio que PasteurizerSimEngine.
+        private string MotivoBombaProducto()
+        {
+            if (!engine.energyOn)  return "Falta paso 1";
+            if (!engine.running)   return "Falta paso 2";
+            if (!engine.pumpHotOn) return "Falta paso 4";
+            if (engine.tankInVol < PasteurizerSimEngine.TANK_MIN_VOL)
+                return $"Falta nivel: {PasteurizerSimEngine.TANK_MIN_VOL:F0} L";
+            return $"Esperando {PasteurizerSimEngine.T_PUMP_READY:F0} °C";
+        }
+
+        private static void PonerTexto(Button b, string texto)
+        {
+            if (b == null) return;
+            var t = b.GetComponentInChildren<TMP_Text>(true);
+            if (t != null) t.text = texto;
+        }
+
+        /// Resalta la barra de mensajes cuando el motor cambia el aviso. Sin esto,
+        /// pulsar un boton cuyo enclavamiento no se cumple (el caso tipico es la
+        /// bomba de producto, que exige energia, marcha, calefactor, nivel minimo
+        /// y temperatura) parecia no hacer nada: el motor si respondia, pero lo
+        /// hacia en un texto pequeño al pie que nadie miraba.
+        private void ResaltarAvisoSiCambio()
+        {
+            if (hintTxt == null) return;
+
+            if (_fondoAviso == null && hintTxt.transform.parent != null)
+                _fondoAviso = hintTxt.transform.parent.GetComponent<Image>();
+
+            string actual = engine != null ? (engine.hint ?? "") : "";
+            if (actual != _avisoAnterior)
+            {
+                _avisoAnterior = actual;
+                _brilloAviso = 1f;
+            }
+
+            if (_brilloAviso <= 0f) return;
+            _brilloAviso = Mathf.Max(0f, _brilloAviso - Time.deltaTime / Mathf.Max(0.1f, duracionDelResalte));
+
+            if (_fondoAviso != null)
+                _fondoAviso.color = Color.Lerp(_colorAvisoReposo, colorResalteAviso, _brilloAviso);
+            hintTxt.color = Color.Lerp(Color.white, colorResalteTexto, _brilloAviso);
+        }
+
+        private static bool EstaDentroDe(Transform t, string[] nombres)
+        {
+            if (nombres == null || nombres.Length == 0) return false;
+            for (var p = t; p != null; p = p.parent)
+                foreach (var n in nombres)
+                    if (!string.IsNullOrEmpty(n) && p.name == n) return true;
+            return false;
         }
 
         /// Pasa la rejilla de botones a una sola columna y ensancha las celdas,
@@ -346,7 +487,16 @@ namespace ViroLab.Pasteurizador.Simulator
                 startOverlay = FindFirstObjectByType<PasteurizerStartOverlay>(FindObjectsInactive.Include);
             if (startOverlay != null && startOverlay.showAgainOnReset)
                 startOverlay.ShowAgain();
+
+            // Silencio explicito de la planta. Al cerrarse el lote la maquina
+            // sigue en marcha y sus bucles continuan sonando, que es lo correcto,
+            // pero al reiniciar deben callarse todos sin depender de que el motor
+            // cambie de estado en el orden justo.
+            if (_fx == null) _fx = FindFirstObjectByType<PasteurizerFxController>(FindObjectsInactive.Include);
+            if (_fx != null) _fx.DetenerTodo();
         }
+
+        private PasteurizerFxController _fx;
 
         private void BindSliders()
         {
@@ -560,7 +710,11 @@ namespace ViroLab.Pasteurizador.Simulator
             SetValveText(vDesTxt,  engine.vDes);
             if (trapStateTxt != null)
             {
-                trapStateTxt.text = engine.trapOpen ? "DRENANDO" : "CERRADA";
+                // Forma corta a proposito: la celda de esta tesela mide unas 100
+                // unidades y el valor ya esta a 18 pt en negrita, de modo que
+                // "DRENANDO" se partia en dos lineas. El nombre completo del
+                // elemento vive en el panel de control.
+                trapStateTxt.text = engine.trapOpen ? "DRENA" : "CERR";
                 trapStateTxt.color = engine.trapOpen ? colorOk : colorOff;
             }
             if (alarmTxt != null)
@@ -574,7 +728,9 @@ namespace ViroLab.Pasteurizador.Simulator
         private void SetValveText(TMP_Text txt, bool open)
         {
             if (txt == null) return;
-            txt.text = open ? "ABIERTA" : "CERRADA";
+            // Igual que la trampa: en la tesela VÁLVULAS de la barra superior no
+            // caben las palabras completas. Ver la nota de RefreshValves.
+            txt.text = open ? "ABR" : "CERR";
             txt.color = open ? colorOk : colorOff;
         }
 
@@ -590,12 +746,27 @@ namespace ViroLab.Pasteurizador.Simulator
             // VO_Sim_04_Calefactor_Espera dice "calefactor": cambiar solo el rotulo
             // dejaria el texto y la voz diciendo cosas distintas. El cambio va
             // junto con la regrabacion, en el bloque de contenido.
+            string n3 = numerarLosPasos ? "3. " : "";
+            string n4 = numerarLosPasos ? "4. " : "";
+            string n5 = numerarLosPasos ? "5. " : "";
+            string n6 = numerarLosPasos ? "6. " : "";
+
             if (energyLbl   != null) energyLbl.text   = $"1. Energía: {(engine.energyOn ? "ENCENDIDA" : "APAGADA")}";
             if (modeLbl     != null) modeLbl.text     = $"Modo de operación\n{(engine.mode == PasteurizerSimEngine.Mode.Production ? "Producción" : "Limpieza CIP")}";
-            if (fillLbl     != null) fillLbl.text     = $"Válvula de llenado\n{(engine.fillOn ? "ABIERTA" : "CERRADA")}";
-            if (hotPumpLbl  != null) hotPumpLbl.text  = $"Calefactor\n{(engine.pumpHotOn ? "ENCENDIDO" : "APAGADO")}";
-            if (coldPumpLbl != null) coldPumpLbl.text = $"Refrigerador\n{(engine.pumpColdOn ? "ENCENDIDO" : "APAGADO")}";
-            if (milkPumpLbl != null) milkPumpLbl.text = $"Bomba de producto\n{(engine.pumpMilkOn ? "ENCENDIDA" : "APAGADA")}";
+            if (fillLbl     != null) fillLbl.text     = $"{n3}Válvula de llenado\n{(engine.fillOn ? "ABIERTA" : "CERRADA")}";
+            if (hotPumpLbl  != null) hotPumpLbl.text  = $"{n4}Calefactor\n{(engine.pumpHotOn ? "ENCENDIDO" : "APAGADO")}";
+            if (coldPumpLbl != null) coldPumpLbl.text = $"{n5}Refrigerador\n{(engine.pumpColdOn ? "ENCENDIDO" : "APAGADO")}";
+            // La bomba de producto es el unico boton con cuatro enclavamientos
+            // encadenados, y por eso es el que parece averiado: se pulsa y no
+            // pasa nada visible. En vez de dejar el motivo solo en la barra del
+            // pie, se escribe en el propio boton.
+            if (milkPumpLbl != null)
+            {
+                string estado = engine.pumpMilkOn      ? "ENCENDIDA"
+                              : engine.CanStartMilk()  ? "APAGADA"
+                              : MotivoBombaProducto();
+                milkPumpLbl.text = $"{n6}Bomba de producto\n{estado}";
+            }
 
             SetBtnColor(energyBtn,   engine.energyOn);
             SetBtnColor(fillBtn,     engine.fillOn);
@@ -652,6 +823,7 @@ namespace ViroLab.Pasteurizador.Simulator
         private void RefreshHints()
         {
             if (hintTxt != null) hintTxt.text = engine.hint ?? "";
+            ResaltarAvisoSiCambio();
         }
     }
 }

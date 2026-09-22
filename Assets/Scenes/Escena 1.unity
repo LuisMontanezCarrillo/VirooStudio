@@ -10544,6 +10544,11 @@ MonoBehaviour:
   colorBtnOn: {r: 0, g: 0.55, b: 0.85, a: 1}
   colorBtnOff: {r: 0.16, g: 0.2, b: 0.25, a: 1}
   colorBtnDis: {r: 0.1, g: 0.12, b: 0.14, a: 1}
+  minFontSize: 18
+  rejillaDeUnaColumna: 1
+  altoBotonUnaColumna: 50
+  ocultarHastaElReto3: 1
+  distanciaDeEncendido: 0
 --- !u!114 &374619247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16194,6 +16199,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9dab2b7a6a48bbe4fa634bedb1f7e544, type: 3}
   - {fileID: 8300000, guid: d508041b405d2a046aad6864cfcb9235, type: 3}
   - {fileID: 8300000, guid: b24c06b8870d78b4c856d18f0aaf8ae5, type: 3}
+  botonSiguiente: {fileID: 874806753}
+  botonAnterior: {fileID: 205466874}
+  ocultarEnLugarDeApagar: 1
 --- !u!82 &656557425
 AudioSource:
   m_ObjectHideFlags: 0
@@ -30605,6 +30613,7 @@ MonoBehaviour:
   guide: {fileID: 1328574941}
   showAgainOnReset: 1
   reiniciarGuiaAlReiniciar: 1
+  elVeloBloqueaElRayo: 1
 --- !u!1 &1231326080
 GameObject:
   m_ObjectHideFlags: 0

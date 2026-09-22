@@ -34,6 +34,16 @@ public class ControladorCarrusel : MonoBehaviour
 
     private int indiceActual = 0;
 
+    void Awake()
+    {
+        NarradorUnico.Registrar(reproductorAudio);
+    }
+
+    void OnDestroy()
+    {
+        NarradorUnico.Olvidar(reproductorAudio);
+    }
+
     void Start()
     {
         // Al iniciar, SOLO mostramos la primera imagen en silencio
@@ -87,6 +97,9 @@ public class ControladorCarrusel : MonoBehaviour
         // Verificamos que haya audios configurados y que correspondan al índice actual
         if (audiosVoz.Length > indice && audiosVoz[indice] != null)
         {
+            // Calla cualquier otra narración de la experiencia antes de hablar.
+            NarradorUnico.TomarLaPalabra(reproductorAudio);
+
             reproductorAudio.Stop(); // Detenemos el audio anterior si seguía sonando
             reproductorAudio.clip = audiosVoz[indice]; // Cargamos el nuevo audio
             reproductorAudio.Play(); // Le damos play

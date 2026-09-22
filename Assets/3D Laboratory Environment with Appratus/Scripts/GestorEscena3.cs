@@ -3,7 +3,7 @@ using UnityEngine.Video;
 
 public class GestorEscena3 : MonoBehaviour
 {
-    // AJUSTE: Ya no necesitamos la referencia a 'canvasInicio' porque el GestorCuestionario lo apagar· por sÌ solo
+    // AJUSTE: Ya no necesitamos la referencia a 'canvasInicio' porque el GestorCuestionario lo apagar√° por s√≠ solo
 
     [Header("Pantalla de Video")]
     [Tooltip("El Canvas duplicado que contiene la Raw Image y el Video Player (Canvas_VideoEsc3)")]
@@ -19,34 +19,39 @@ public class GestorEscena3 : MonoBehaviour
             canvasVideo.SetActive(false); 
         }
 
-        // Suscribimos el evento inteligente para cuando el video termine su reproducciÛn de 1:45
+        // Suscribimos el evento inteligente para cuando el video termine su reproducci√≥n de 1:45
         if (reproductorTutorial != null)
         {
             reproductorTutorial.loopPointReached += OcultarVideo;
+            NarradorUnico.Registrar(reproductorTutorial);
         }
     }
 
-    // AJUSTE: Esta funciÛn ahora se llama autom·ticamente por el GestorCuestionario tras el Fade In
+    // AJUSTE: Esta funci√≥n ahora se llama autom√°ticamente por el GestorCuestionario tras el Fade In
     public void IniciarTutorialAutomatico()
     {
-        Debug.Log("<color=yellow>[GestorEscena3] SeÒal autom·tica recibida. Activando video tutorial.</color>");
+        Debug.Log("<color=yellow>[GestorEscena3] Se√±al autom√°tica recibida. Activando video tutorial.</color>");
 
         // 1. Encendemos el Canvas del Video y le damos a Play
         if (canvasVideo != null) 
         {
             canvasVideo.SetActive(true);
-            
+
             if (reproductorTutorial != null)
             {
+                // El video del reto 3 es la voz que manda al llegar: calla la
+                // locuci√≥n del carrusel si el estudiante activ√≥ una diapositiva
+                // justo antes de que se disparara la transici√≥n.
+                NarradorUnico.TomarLaPalabra(reproductorTutorial);
                 reproductorTutorial.Play();
-                Debug.Log("<color=green>[GestorEscena3] ReproducciÛn autom·tica del video tutorial iniciada con Èxito.</color>");
+                Debug.Log("<color=green>[GestorEscena3] Reproducci√≥n autom√°tica del video tutorial iniciada con √©xito.</color>");
             }
         }
     }
 
     void OcultarVideo(VideoPlayer vp)
     {
-        // Esta funciÛn se activa autom·ticamente al finalizar el minuto y 45 segundos
+        // Esta funci√≥n se activa autom√°ticamente al finalizar el minuto y 45 segundos
         if (canvasVideo != null) 
         {
             canvasVideo.SetActive(false);

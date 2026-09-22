@@ -67,7 +67,11 @@ namespace ViroLab.Pasteurizador.Simulator
         void Awake()
         {
             if (source == null) source = GetComponent<AudioSource>();
-            if (source != null) { source.playOnAwake = false; source.loop = false; source.spatialBlend = 0f; }
+            if (source != null)
+            {
+                source.playOnAwake = false; source.loop = false; source.spatialBlend = 0f;
+                NarradorUnico.Registrar(source);
+            }
             if (engine == null) engine = FindObjectOfType<PasteurizerSimEngine>();
             if (tablero == null) tablero = transform;
         }
@@ -167,6 +171,9 @@ namespace ViroLab.Pasteurizador.Simulator
         void Play(AudioClip c)
         {
             if (c == null || source == null) return;
+            // Manda el ultimo que habla: la guia calla al carrusel, al video y a
+            // cualquier otra narracion antes de arrancar la suya.
+            NarradorUnico.TomarLaPalabra(source);
             source.Stop();
             source.clip = c;
             source.Play();
