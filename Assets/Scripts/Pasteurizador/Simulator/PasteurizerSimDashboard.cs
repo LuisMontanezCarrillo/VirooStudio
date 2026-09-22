@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -158,12 +159,162 @@ namespace ViroLab.Pasteurizador.Simulator
         public Color colorBtnOff = new Color(0.16f, 0.20f, 0.25f);
         public Color colorBtnDis = new Color(0.10f, 0.12f, 0.14f);
 
+        // ====================================================================
+        //  Legibilidad y visibilidad (bloque A de los ajustes previos a las
+        //  pruebas con estudiantes). Todo se resuelve en tiempo de ejecucion
+        //  para no tener que reconstruir el tablero ni editar la escena, que
+        //  es donde viven las referencias que el builder dejo asignadas.
+        // ====================================================================
+
+        [Header("Legibilidad")]
+        [Tooltip("Tamaño mínimo de letra para CUALQUIER texto del tablero. El builder " +
+                 "dejó las etiquetas de los botones en 11 pt, que a la escala del lienzo " +
+                 "son 2 cm y resultaron ilegibles en las pruebas con docentes. Pon 0 para " +
+                 "desactivar este ajuste y volver al tamaño original.")]
+        public float minFontSize = 18f;
+
+        [Tooltip("Pasar la rejilla de botones de 2 columnas a 1. Es lo que deja sitio " +
+                 "para los nombres completos: cada botón pasa de 118 a 264 unidades de " +
+                 "ancho. Desmárcalo si prefieres la disposición anterior.")]
+        public bool rejillaDeUnaColumna = true;
+
+        [Tooltip("Alto de cada botón cuando la rejilla va a una columna.")]
+        public float altoBotonUnaColumna = 50f;
+
+        [Header("Visibilidad")]
+        [Tooltip("Mantener el tablero apagado hasta que el estudiante llegue al reto 3. " +
+                 "Hasta ahora estaba encendido desde el arranque y se veía de lejos " +
+                 "durante el reto 2, lo que confundía sobre en qué reto se estaba.")]
+        public bool ocultarHastaElReto3 = true;
+
+        [Tooltip("Distancia en metros por debajo de la cual el tablero se enciende solo. " +
+                 "Es la red de seguridad para quien entre a la sesión ya empezada y por " +
+                 "tanto nunca reciba el aviso de transición.")]
+        public float distanciaDeEncendido = 6f;
+
+        private Canvas _canvas;
+        private GraphicRaycaster _raycaster;
+        private bool _visible = true;
+        private float _proximaComprobacionDistancia;
+
         private void Awake()
         {
             if (engine == null) engine = GetComponentInParent<PasteurizerSimEngine>();
             if (engine == null) engine = FindFirstObjectByType<PasteurizerSimEngine>();
             BindButtons();
             BindSliders();
+
+            _canvas = GetComponent<Canvas>();
+            _raycaster = GetComponent<GraphicRaycaster>();
+
+            AplicarTamanoMinimoDeLetra();
+        }
+
+        private void Start()
+        {
+            // Va en Start y no en Awake porque necesita el ancho ya resuelto del
+            // area de botones, y RectTransform.rect no es fiable antes del primer
+            // calculo de disposicion.
+            AplicarRejillaDeUnaColumna();
+
+            if (!ocultarHastaElReto3) return;
+
+            FijarVisible(false);
+
+            // El aviso de que el estudiante entro al reto 3 lo emite
+            // GestorCuestionario al terminar su transicion. El listener se
+            // agrega en codigo y es LOCAL: solo enciende el tablero de quien
+            // viajo, no el de los demas.
+            var gestor = FindFirstObjectByType<GestorCuestionario>(FindObjectsInactive.Include);
+            if (gestor != null && gestor.OnTransitionComplete != null)
+                gestor.OnTransitionComplete.AddListener(MostrarTablero);
+        }
+
+        /// Enciende el tablero. La llama la transicion al reto 3 y la red de
+        /// seguridad por distancia.
+        public void MostrarTablero()
+        {
+            FijarVisible(true);
+        }
+
+        private void FijarVisible(bool visible)
+        {
+            _visible = visible;
+            if (_canvas != null) _canvas.enabled = visible;
+            if (_raycaster != null) _raycaster.enabled = visible;
+        }
+
+        /// Red de seguridad: si el estudiante llega al tablero sin haber pasado
+        /// por la transicion, el tablero se enciende al acercarse.
+        private void ComprobarDistancia()
+        {
+            if (_visible || !ocultarHastaElReto3) return;
+            if (Time.unscaledTime < _proximaComprobacionDistancia) return;
+            _proximaComprobacionDistancia = Time.unscaledTime + 0.5f;
+
+            var cam = Camera.main;
+            if (cam == null) return;
+
+            var d = cam.transform.position - transform.position;
+            if (d.sqrMagnitude <= distanciaDeEncendido * distanciaDeEncendido)
+                MostrarTablero();
+        }
+
+        /// Sube a minFontSize cualquier texto que este por debajo. No toca los
+        /// que ya son mayores ni los que usan autoajuste de TMP.
+        private void AplicarTamanoMinimoDeLetra()
+        {
+            if (minFontSize <= 0f) return;
+
+            int subidos = 0;
+            foreach (var t in GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (t == null || t.enableAutoSizing) continue;
+                if (t.fontSize >= minFontSize) continue;
+                t.fontSize = minFontSize;
+                subidos++;
+            }
+
+            if (subidos > 0)
+                Debug.Log($"[SimDashboard] Legibilidad: {subidos} textos subidos a {minFontSize} pt.");
+        }
+
+        /// Pasa la rejilla de botones a una sola columna y ensancha las celdas,
+        /// que es lo que permite escribir los nombres completos sin que el texto
+        /// se parta en tres lineas.
+        private void AplicarRejillaDeUnaColumna()
+        {
+            if (!rejillaDeUnaColumna) return;
+
+            var grid = GetComponentsInChildren<GridLayoutGroup>(true)
+                       .FirstOrDefault(g => g != null && g.name == "ButtonsGrid");
+            if (grid == null)
+            {
+                // El nombre lo pone el builder. Si cambio, se usa la primera
+                // rejilla que aparezca dentro del panel de control.
+                grid = GetComponentsInChildren<GridLayoutGroup>(true).FirstOrDefault();
+            }
+            if (grid == null) return;
+
+            var area = grid.GetComponent<RectTransform>();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(area);
+
+            float anchoUtil = area.rect.width - grid.padding.left - grid.padding.right;
+            // Si la disposicion todavia no esta resuelta, rect.width sale 0 o un
+            // valor absurdo. Se cae entonces al ancho conocido del panel de
+            // control (280) menos sus margenes.
+            if (anchoUtil < 60f) anchoUtil = 264f;
+
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = 1;
+            grid.cellSize = new Vector2(anchoUtil, altoBotonUnaColumna);
+
+            int botones = grid.transform.childCount;
+            float alto = botones * (altoBotonUnaColumna + grid.spacing.y) + 12f;
+            area.sizeDelta = new Vector2(area.sizeDelta.x, alto);
+
+            Debug.Log($"[SimDashboard] Rejilla de botones a 1 columna: " +
+                      $"{botones} botones de {anchoUtil:F0} x {altoBotonUnaColumna:F0}.");
         }
 
         private void BindButtons()
@@ -217,6 +368,8 @@ namespace ViroLab.Pasteurizador.Simulator
 
         private void Update()
         {
+            ComprobarDistancia();
+
             if (engine == null) return;
             RefreshReadings();
             RefreshSteps();
@@ -407,12 +560,12 @@ namespace ViroLab.Pasteurizador.Simulator
             SetValveText(vDesTxt,  engine.vDes);
             if (trapStateTxt != null)
             {
-                trapStateTxt.text = engine.trapOpen ? "DRENA" : "CERR";
+                trapStateTxt.text = engine.trapOpen ? "DRENANDO" : "CERRADA";
                 trapStateTxt.color = engine.trapOpen ? colorOk : colorOff;
             }
             if (alarmTxt != null)
             {
-                alarmTxt.text = engine.alarm ? "ALARMA" : "OK";
+                alarmTxt.text = engine.alarm ? "ALARMA" : "NORMAL";
                 alarmTxt.color = engine.alarm ? colorAlarm : colorOk;
             }
             if (cipTxt != null) cipTxt.text = engine.GetCipStatus();
@@ -421,19 +574,28 @@ namespace ViroLab.Pasteurizador.Simulator
         private void SetValveText(TMP_Text txt, bool open)
         {
             if (txt == null) return;
-            txt.text = open ? "ABR" : "CERR";
+            txt.text = open ? "ABIERTA" : "CERRADA";
             txt.color = open ? colorOk : colorOff;
         }
 
         private void RefreshButtons()
         {
-            // Labels en español, formato 2 líneas para grid 2-columnas
-            if (energyLbl   != null) energyLbl.text   = $"1. ENERGÍA: {(engine.energyOn ? "ON" : "OFF")}";
-            if (modeLbl     != null) modeLbl.text     = $"Modo:\n{(engine.mode == PasteurizerSimEngine.Mode.Production ? "Producción" : "CIP")}";
-            if (fillLbl     != null) fillLbl.text     = $"V. Llenado\n{(engine.fillOn ? "ON" : "OFF")}";
-            if (hotPumpLbl  != null) hotPumpLbl.text  = $"Calefactor\n{(engine.pumpHotOn ? "ON" : "OFF")}";
-            if (coldPumpLbl != null) coldPumpLbl.text = $"Refrigerador\n{(engine.pumpColdOn ? "ON" : "OFF")}";
-            if (milkPumpLbl != null) milkPumpLbl.text = $"B. Producto\n{(engine.pumpMilkOn ? "ON" : "OFF")}";
+            // Labels en español, dos líneas: nombre completo arriba y estado abajo.
+            // Las abreviaturas anteriores ("V. Llenado", "B. Producto") venian de
+            // cuando la rejilla tenia dos columnas de 118 unidades. Con una sola
+            // columna de 264 caben los nombres enteros.
+            //
+            // "Calefactor" se deja como esta a proposito. La denominacion correcta
+            // es intercambiador, tal como señalo un docente, pero la locucion
+            // VO_Sim_04_Calefactor_Espera dice "calefactor": cambiar solo el rotulo
+            // dejaria el texto y la voz diciendo cosas distintas. El cambio va
+            // junto con la regrabacion, en el bloque de contenido.
+            if (energyLbl   != null) energyLbl.text   = $"1. Energía: {(engine.energyOn ? "ENCENDIDA" : "APAGADA")}";
+            if (modeLbl     != null) modeLbl.text     = $"Modo de operación\n{(engine.mode == PasteurizerSimEngine.Mode.Production ? "Producción" : "Limpieza CIP")}";
+            if (fillLbl     != null) fillLbl.text     = $"Válvula de llenado\n{(engine.fillOn ? "ABIERTA" : "CERRADA")}";
+            if (hotPumpLbl  != null) hotPumpLbl.text  = $"Calefactor\n{(engine.pumpHotOn ? "ENCENDIDO" : "APAGADO")}";
+            if (coldPumpLbl != null) coldPumpLbl.text = $"Refrigerador\n{(engine.pumpColdOn ? "ENCENDIDO" : "APAGADO")}";
+            if (milkPumpLbl != null) milkPumpLbl.text = $"Bomba de producto\n{(engine.pumpMilkOn ? "ENCENDIDA" : "APAGADA")}";
 
             SetBtnColor(energyBtn,   engine.energyOn);
             SetBtnColor(fillBtn,     engine.fillOn);

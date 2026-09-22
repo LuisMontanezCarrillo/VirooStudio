@@ -603,6 +603,10 @@ namespace ViroLab.Pasteurizador.EditorTools
             // velo que cubre el tablero
             var veil = AddImage(overlay, "Veil", new Color(0.02f, 0.04f, 0.07f, 0.94f));
             Stretch(veil.rectTransform);
+            // AddImage deja raycastTarget en false para todo, lo que aqui es un
+            // defecto: el velo debe interceptar el rayo del mando para que no se
+            // alcancen los botones del tablero mientras la ventana esta abierta.
+            veil.raycastTarget = true;
 
             // caja central
             var box = NewContainer(overlay, "Box",

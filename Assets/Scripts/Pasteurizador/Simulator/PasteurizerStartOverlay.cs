@@ -23,10 +23,35 @@ namespace ViroLab.Pasteurizador.Simulator
                  "ventana EMPEZAR seguira apareciendo igual.")]
         public bool reiniciarGuiaAlReiniciar = true;
 
+        [Tooltip("Hacer que el velo de la ventana bloquee el rayo del mando. El builder " +
+                 "lo crea con raycastTarget apagado, de modo que el estudiante podía " +
+                 "pulsar los botones del tablero a través de la ventana, sin haber " +
+                 "pulsado EMPEZAR.")]
+        public bool elVeloBloqueaElRayo = true;
+
         void Awake()
         {
             if (guide == null) guide = FindObjectOfType<PasteurizerVoiceGuide>();
             if (panel == null) panel = gameObject;
+
+            BloquearElVelo();
+        }
+
+        /// El velo es el rectangulo oscuro que cubre el tablero mientras la ventana
+        /// esta abierta. AddImage lo crea con raycastTarget = false, igual que todo
+        /// lo demas del builder, y por eso no bloqueaba nada: un docente reporto que
+        /// alcanzaba los controles de detras. Aqui se corrige sin reconstruir.
+        private void BloquearElVelo()
+        {
+            if (!elVeloBloqueaElRayo) return;
+
+            var raiz = panel != null ? panel.transform : transform;
+            foreach (var img in raiz.GetComponentsInChildren<Image>(true))
+            {
+                if (img == null || img.name != "Veil") continue;
+                img.raycastTarget = true;
+                return;
+            }
         }
 
         void OnEnable()

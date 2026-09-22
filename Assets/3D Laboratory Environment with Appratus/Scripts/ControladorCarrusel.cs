@@ -3,17 +3,34 @@ using UnityEngine.UI;
 
 public class ControladorCarrusel : MonoBehaviour
 {
-    [Tooltip("Arrastra aqu� el objeto Image 'Pantalla_Principal'")]
+    [Tooltip("Arrastra aquí el objeto Image 'Pantalla_Principal'")]
     public Image pantalla;
 
-    [Tooltip("Arrastra aqu� el componente AudioSource que pusimos en el Canvas")]
+    [Tooltip("Arrastra aquí el componente AudioSource que pusimos en el Canvas")]
     public AudioSource reproductorAudio;
 
-    [Tooltip("Coloca aqu� las im�genes en orden")]
+    [Tooltip("Coloca aquí las imágenes en orden")]
     public Sprite[] diapositivas;
 
-    [Tooltip("Coloca aqu� los audios en el MISMO ORDEN que las im�genes")]
+    [Tooltip("Coloca aquí los audios en el MISMO ORDEN que las imágenes")]
     public AudioClip[] audiosVoz;
+
+    // Los limites ya estaban protegidos en Siguiente() y Anterior(), de modo que
+    // pulsar de mas no rompia nada. El problema era otro: el boton seguia visible
+    // y pulsable sin hacer nada, y el estudiante no tenia forma de saber que habia
+    // llegado al final del carrusel. Asignando aqui los dos botones, cada uno se
+    // retira cuando deja de tener sentido.
+    [Header("Botones de navegación")]
+    [Tooltip("Botón SIGUIENTE. Se retira al llegar a la última diapositiva.")]
+    public Button botonSiguiente;
+
+    [Tooltip("Botón ANTERIOR. Se retira mientras se está en la primera diapositiva.")]
+    public Button botonAnterior;
+
+    [Tooltip("Marcado: el botón desaparece al llegar al límite. Sin marcar: sigue " +
+             "visible pero apagado. Ambas opciones comunican el límite; la primera " +
+             "es más clara con el rayo del mando.")]
+    public bool ocultarEnLugarDeApagar = true;
 
     private int indiceActual = 0;
 
@@ -24,6 +41,8 @@ public class ControladorCarrusel : MonoBehaviour
         {
             pantalla.sprite = diapositivas[0];
         }
+
+        ActualizarBotones();
     }
 
     public void Siguiente()
@@ -34,6 +53,8 @@ public class ControladorCarrusel : MonoBehaviour
             indiceActual++;
             MostrarDiapositiva(indiceActual);
         }
+
+        ActualizarBotones();
     }
 
     public void Anterior()
@@ -44,6 +65,17 @@ public class ControladorCarrusel : MonoBehaviour
             indiceActual--;
             MostrarDiapositiva(indiceActual);
         }
+
+        ActualizarBotones();
+    }
+
+    /// <summary>
+    /// Detiene la locución de la diapositiva en curso. La llama la transición al
+    /// salir de la zona del carrusel, para que la voz no viaje con el estudiante.
+    /// </summary>
+    public void DetenerAudio()
+    {
+        if (reproductorAudio != null) reproductorAudio.Stop();
     }
 
     private void MostrarDiapositiva(int indice)
@@ -52,12 +84,35 @@ public class ControladorCarrusel : MonoBehaviour
         pantalla.sprite = diapositivas[indice];
 
         // 2. Manejar el audio
-        // Verificamos que haya audios configurados y que correspondan al �ndice actual
+        // Verificamos que haya audios configurados y que correspondan al índice actual
         if (audiosVoz.Length > indice && audiosVoz[indice] != null)
         {
-            reproductorAudio.Stop(); // Detenemos el audio anterior si segu�a sonando
+            reproductorAudio.Stop(); // Detenemos el audio anterior si seguía sonando
             reproductorAudio.clip = audiosVoz[indice]; // Cargamos el nuevo audio
             reproductorAudio.Play(); // Le damos play
+        }
+    }
+
+    /// Retira cada botón cuando ya no tiene a dónde llevar.
+    private void ActualizarBotones()
+    {
+        int ultima = Mathf.Max(0, diapositivas.Length - 1);
+        AplicarEstado(botonAnterior, indiceActual > 0);
+        AplicarEstado(botonSiguiente, indiceActual < ultima);
+    }
+
+    private void AplicarEstado(Button boton, bool disponible)
+    {
+        if (boton == null) return;
+
+        if (ocultarEnLugarDeApagar)
+        {
+            if (boton.gameObject.activeSelf != disponible)
+                boton.gameObject.SetActive(disponible);
+        }
+        else
+        {
+            boton.interactable = disponible;
         }
     }
 }
