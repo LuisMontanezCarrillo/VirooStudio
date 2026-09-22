@@ -423,16 +423,20 @@ namespace ViroLab.Pasteurizador.EditorTools
             float r = 22f;
             var g = NewAt(parent, "PSIGauge", V(1110 - r, 220 - r), Px(r * 2), Py(r * 2));
             // círculo (rect cuadrado claro)
-            AddRect(g, "Face", Vector2.zero, new Vector2(Px(r * 2), Py(r * 2)), new Color(0.98f, 0.98f, 1f));
+            var face = AddRect(g, "Face", Vector2.zero, new Vector2(Px(r * 2), Py(r * 2)), new Color(0.98f, 0.98f, 1f));
+            // La aguja, el eje y el numero cuelgan de la ESFERA, no del grupo.
+            // Colgados del grupo se centraban en el rectangulo del contenedor, que
+            // no coincide con la esfera, y la aguja quedaba fuera del reloj.
+            var cara = face.transform;
             // hub central
-            var hub = AddImage(g, "Hub", CMetalDk);
+            var hub = AddImage(cara, "Hub", CMetalDk);
             hub.rectTransform.anchorMin = hub.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
             hub.rectTransform.pivot = new Vector2(0.5f, 0.5f);
             hub.rectTransform.anchoredPosition = Vector2.zero;
             hub.rectTransform.sizeDelta = new Vector2(6, 6);
             // aguja
             var needleGO = new GameObject("Needle", typeof(RectTransform));
-            needleGO.transform.SetParent(g, false);
+            needleGO.transform.SetParent(cara, false);
             var nrt = (RectTransform)needleGO.transform;
             nrt.anchorMin = nrt.anchorMax = new Vector2(0.5f, 0.5f);
             nrt.pivot = new Vector2(0.5f, 0f);
@@ -443,7 +447,7 @@ namespace ViroLab.Pasteurizador.EditorTools
             refs.psiNeedle = nrt;
             // PSI text encima
             var txtGO = new GameObject("PSITxt", typeof(RectTransform), typeof(TextMeshProUGUI));
-            txtGO.transform.SetParent(g, false);
+            txtGO.transform.SetParent(cara, false);
             var trt = (RectTransform)txtGO.transform;
             trt.anchorMin = trt.anchorMax = new Vector2(0.5f, 1f);
             trt.pivot = new Vector2(0.5f, 0f);
@@ -503,7 +507,19 @@ namespace ViroLab.Pasteurizador.EditorTools
             go.transform.SetParent(parent, false);
             var rt = (RectTransform)go.transform;
             rt.anchorMin = rt.anchorMax = Vector2.zero;
-            rt.pivot = new Vector2(0f, 1f);
+            // PIVOTE ABAJO-IZQUIERDA, no arriba-izquierda.
+            //
+            // Los hijos de estos grupos se crean con AddRect y AddImage, que anclan
+            // en (0,0), es decir en la esquina INFERIOR izquierda del padre, con
+            // pivote arriba-izquierda. Con el pivote del grupo arriba, la esquina
+            // inferior del grupo caia una altura por debajo de donde marca
+            // svgTopLeft, y TODO el contenido del equipo se dibujaba esa altura
+            // mas abajo de lo previsto. En el intercambiador de placas, que mide
+            // 380 unidades, eso mandaba la seccion de enfriamiento entera fuera
+            // del lienzo. Con el pivote abajo, la esquina inferior del grupo
+            // coincide con svgTopLeft y los hijos cuelgan desde ahi hacia abajo,
+            // que es lo que el codigo de cada equipo da por supuesto.
+            rt.pivot = new Vector2(0f, 0f);
             rt.anchoredPosition = new Vector2(Px(svgTopLeft.x), Py(svgTopLeft.y));
             rt.sizeDelta = new Vector2(w, h);
             return rt;
@@ -552,7 +568,12 @@ namespace ViroLab.Pasteurizador.EditorTools
             var rt = (RectTransform)go.transform;
             rt.anchorMin = rt.anchorMax = Vector2.zero;
             rt.pivot = new Vector2(0, 0.5f);
-            rt.anchoredPosition = new Vector2(Px(svgPos.x), Py(SVG_H - svgPos.y));
+            // Sin volver a invertir la Y. Todas las llamadas pasan coordenadas que
+            // ya vienen de V(), de modo que aplicar aqui otra vez SVG_H - y
+            // deshacia la conversion y dejaba cada rotulo reflejado en vertical:
+            // CALENTAMIENTO caia sobre la seccion de enfriamiento y viceversa, y
+            // etiquetas como PRODUCTO FINAL quedaban a 484 unidades de su tanque.
+            rt.anchoredPosition = new Vector2(Px(svgPos.x), Py(svgPos.y));
 
             var chip = go.GetComponent<Image>();
             chip.color = new Color(1f, 1f, 1f, 0.85f);
@@ -586,7 +607,8 @@ namespace ViroLab.Pasteurizador.EditorTools
             var rt = (RectTransform)go.transform;
             rt.anchorMin = rt.anchorMax = Vector2.zero;
             rt.pivot = new Vector2(0, 1);
-            rt.anchoredPosition = new Vector2(Px(svgTopLeft.x), Py(SVG_H - svgTopLeft.y));
+            // Misma correccion que en AddLabelAt: svgTopLeft ya viene de V().
+            rt.anchoredPosition = new Vector2(Px(svgTopLeft.x), Py(svgTopLeft.y));
             rt.sizeDelta = new Vector2(w, h);
             var img = go.GetComponent<Image>();
             img.color = new Color(0.05f, 0.07f, 0.10f, 1f);
