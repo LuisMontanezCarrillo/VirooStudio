@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -44,6 +45,22 @@ namespace ViroLab.Multiusuario
         [Tooltip("Radio, en metros, dentro del cual se da por pisada la marca.")]
         public float radio = 0.8f;
 
+        [Header("Cuándo convocar")]
+        [Tooltip("OPCIONAL. Si se asigna, no se convoca a nadie hasta que este " +
+                 "audio termine. Es para no cortar la locución de cierre del reto. " +
+                 "En el reto 1 va aquí el SND_Click_Lavamanos, que reproduce los " +
+                 "19 segundos de FX_Reto3Botas.")]
+        public AudioSource esperarAQueTermine;
+
+        [Tooltip("Segundos de espera adicionales antes de convocar, contando desde " +
+                 "que termine el audio de arriba. Sirve para dar margen a lo que no " +
+                 "sea audio, como la puerta, que tarda 5 segundos en abrirse.")]
+        public float esperaAdicional = 0f;
+
+        [Tooltip("Tope de seguridad, en segundos, esperando a ese audio. Si algo " +
+                 "impide que termine, se convoca igualmente.")]
+        public float esperaMaximaDelAudio = 30f;
+
         [Header("Qué pasa después")]
         [Tooltip("El AvanceEnGrupo al que se le anuncia el fin una vez reunidos. Si " +
                  "se deja vacío se busca en este mismo objeto, que es donde suele " +
@@ -76,6 +93,7 @@ namespace ViroLab.Multiusuario
         [Header("Diagnóstico")]
         public bool log = true;
 
+        private bool _pedido;
         private bool _convocado;
         private bool _yaAnuncie;
         private float _convocadoEn;
@@ -114,6 +132,43 @@ namespace ViroLab.Multiusuario
         /// se llamaba a AvanceEnGrupo.AnunciarQueTermine.
         /// </summary>
         public void Convocar()
+        {
+            if (_pedido || _convocado || _yaAnuncie) return;
+            _pedido = true;
+
+            // Sin nada que esperar, se convoca en el acto.
+            if (esperarAQueTermine == null && esperaAdicional <= 0f) { ConvocarYa(); return; }
+
+            StartCoroutine(ConvocarCuandoToque());
+        }
+
+        /// Espera a que acabe de hablar el reto antes de mandar a nadie a su marca.
+        /// El aviso de reunion pisando la locucion de cierre se percibe como que la
+        /// experiencia atropella al estudiante.
+        private IEnumerator ConvocarCuandoToque()
+        {
+            if (esperarAQueTermine != null)
+            {
+                float tope = Time.unscaledTime + Mathf.Max(0f, esperaMaximaDelAudio);
+
+                // Un fotograma de cortesia: si a Convocar lo llama el mismo evento
+                // que arranca el audio, todavia no consta como sonando.
+                yield return null;
+
+                while (esperarAQueTermine.isPlaying && Time.unscaledTime < tope)
+                    yield return null;
+
+                if (Time.unscaledTime >= tope)
+                    Debug.LogWarning($"[ReunionEnElCentro] El audio de cierre no terminó en " +
+                                     $"{esperaMaximaDelAudio:F0} s. Se convoca igualmente.", this);
+            }
+
+            if (esperaAdicional > 0f) yield return new WaitForSeconds(esperaAdicional);
+
+            ConvocarYa();
+        }
+
+        private void ConvocarYa()
         {
             if (_convocado || _yaAnuncie) return;
 
@@ -227,6 +282,8 @@ namespace ViroLab.Multiusuario
 
         public void ReiniciarAlInicio()
         {
+            StopAllCoroutines();
+            _pedido = false;
             _convocado = false;
             _yaAnuncie = false;
             _convocadoEn = 0f;
