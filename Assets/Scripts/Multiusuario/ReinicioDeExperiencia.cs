@@ -24,10 +24,10 @@ namespace ViroLab.Multiusuario
     /// 1. El moderador pulsa una sola vez, desde su cliente de escritorio.
     /// 2. La peticion viaja por una accion de difusion de VIROO, de modo que los
     ///    dos visores se reinician a la vez y no se queda uno a medias.
-    /// 3. Con la pantalla ya en negro, cada componente que sabe reiniciarse se
-    ///    reinicia solo (ver IReiniciable). Lo que no se puede expresar en
-    ///    codigo, que son los lienzos y las puertas, se cablea en los dos
-    ///    eventos de abajo.
+    /// 3. Con la pantalla ya en negro, FotoDeLaEscena devuelve la jerarquia al
+    ///    estado que tenia al arrancar (lienzos, puertas, y los componentes de
+    ///    interaccion que se habian desactivado solos al usarse), y despues cada
+    ///    componente que guarda avance se reinicia a si mismo (ver IReiniciable).
     /// 4. El grupo vuelve al punto de partida con el teletransporte propio de
     ///    VIROO, que mueve a todos conservando las posiciones relativas. Moverlos
     ///    por separado rompe la proteccion frente a choques.
@@ -62,15 +62,15 @@ namespace ViroLab.Multiusuario
                  "que un doble clic del moderador reinicie dos veces.")]
         public float margenAntirrebote = 3f;
 
-        [Header("Estado de la escena (cableado en el Inspector)")]
-        [Tooltip("Se dispara con la pantalla aún clara, al empezar. Úsalo para APAGAR " +
-                 "lo que pertenece a los retos 2 y 3: el lienzo del cuestionario, el " +
-                 "del vídeo, el tablero del simulador.")]
+        [Header("Enganches opcionales")]
+        [Tooltip("OPCIONAL. Se dispara con la pantalla aún clara, al empezar. De los " +
+                 "lienzos y los componentes ya se encarga FotoDeLaEscena; esto es " +
+                 "solo por si hace falta algo más.")]
         public UnityEvent AlEmpezarElReinicio;
 
-        [Tooltip("Se dispara con la pantalla aún en negro, al terminar. Úsalo para " +
-                 "ENCENDER el estado de partida: el lienzo del reto 1, la puerta " +
-                 "cerrada, los casilleros llenos.")]
+        [Tooltip("OPCIONAL. Se dispara con la pantalla aún en negro, al terminar, " +
+                 "cuando la escena ya está devuelta a su estado de partida. Úsalo " +
+                 "si algo tiene que ocurrir justo antes de que vuelva la vista.")]
         public UnityEvent AlTerminarElReinicio;
 
         [Header("Diagnóstico")]
@@ -161,21 +161,35 @@ namespace ViroLab.Multiusuario
             var todos = FindObjectsByType<MonoBehaviour>(
                 FindObjectsInactive.Include, FindObjectsSortMode.None);
 
+            // La foto de la escena va PRIMERO, y el orden importa. Devuelve la
+            // jerarquia entera de un golpe (lienzos encendidos, componentes de
+            // interaccion que se habian desactivado solos); lo que cada
+            // componente sepa hacer con su propio estado se aplica encima. Al
+            // reves, la foto borraria lo que los demas acaban de dejar bien.
             int n = 0;
             foreach (var mb in todos)
-            {
-                if (mb is not IReiniciable r) continue;
+                if (mb is FotoDeLaEscena foto) n += Reiniciar(foto);
 
-                // Un componente que falle al reiniciarse no puede dejar a medias a
-                // los demas, ni dejar la pantalla en negro.
-                try { r.ReiniciarAlInicio(); n++; }
-                catch (System.Exception e)
-                {
-                    Debug.LogError("[ReinicioDeExperiencia] " + mb.GetType().Name +
-                                   " falló al reiniciarse: " + e.Message, mb);
-                }
+            foreach (var mb in todos)
+            {
+                if (mb is FotoDeLaEscena) continue;
+                if (mb is not IReiniciable r) continue;
+                n += Reiniciar(r);
             }
             return n;
+        }
+
+        /// Un componente que falle al reiniciarse no puede dejar a medias a los
+        /// demas, ni dejar la pantalla en negro.
+        private int Reiniciar(IReiniciable r)
+        {
+            try { r.ReiniciarAlInicio(); return 1; }
+            catch (System.Exception e)
+            {
+                Debug.LogError("[ReinicioDeExperiencia] " + r.GetType().Name +
+                               " falló al reiniciarse: " + e.Message, r as Object);
+                return 0;
+            }
         }
 
         private void DevolverAlGrupoAlInicio()
