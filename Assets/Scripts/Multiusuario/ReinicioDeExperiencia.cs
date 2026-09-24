@@ -79,6 +79,41 @@ namespace ViroLab.Multiusuario
         private float _ultimoReinicio = -999f;
         private Coroutine _enCurso;
 
+
+        // ================================================================
+        //  Puesta a punto
+        // ================================================================
+
+        /// Al anadir el componente desde el Inspector, deja los campos ya
+        /// rellenos con las acciones que haya en este mismo objeto.
+        private void Reset() { BuscarLoQueFalte(); }
+
+        private void Awake()
+        {
+            // Red de seguridad. Las dos acciones van siempre en el mismo objeto, y
+            // olvidar un arrastre no se nota hasta que el estudiante ya ha hecho el
+            // reto entero y la tanda siguiente no arranca.
+            BuscarLoQueFalte();
+
+            if (avisoDeReinicio == null)
+                Debug.LogWarning("[ReinicioDeExperiencia] Sin acción de difusión: ni asignada ni en este " +
+                                 "objeto. Añade un UnityEventAction.", this);
+            if (saltoAlInicio == null)
+                Debug.LogWarning("[ReinicioDeExperiencia] Sin TeleportAllAction: ni asignado ni en este " +
+                                 "objeto. Añádelo o el grupo no se moverá.", this);
+        }
+
+        private void BuscarLoQueFalte()
+        {
+            // El TeleportAllAction TAMBIEN es un ObjectAction, asi que para el
+            // aviso hay que coger el que no lo sea.
+            if (avisoDeReinicio == null)
+                foreach (var a in GetComponents<ObjectAction>())
+                    if (a is not TeleportAllAction) { avisoDeReinicio = a; break; }
+
+            if (saltoAlInicio == null) saltoAlInicio = GetComponent<TeleportAllAction>();
+        }
+
         // ================================================================
         //  Entradas
         // ================================================================

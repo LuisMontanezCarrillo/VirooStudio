@@ -115,6 +115,41 @@ namespace ViroLab.Multiusuario
         private bool _yaSalto;
         private float _instanteDelPrimerAnuncio = -1f;
 
+
+        // ================================================================
+        //  Puesta a punto
+        // ================================================================
+
+        /// Al anadir el componente desde el Inspector, deja los campos ya
+        /// rellenos con las acciones que haya en este mismo objeto.
+        private void Reset() { BuscarLoQueFalte(); }
+
+        private void Awake()
+        {
+            // Red de seguridad. Las dos acciones van siempre en el mismo objeto, y
+            // olvidar un arrastre no se nota hasta que el estudiante ya ha hecho el
+            // reto entero y el grupo no avanza.
+            BuscarLoQueFalte();
+
+            if (anuncioDeFin == null)
+                Debug.LogWarning("[AvanceEnGrupo] Sin acción de difusión: ni asignada ni en este " +
+                                 "objeto. Añade un UnityEventAction.", this);
+            if (saltoDeGrupo == null)
+                Debug.LogWarning("[AvanceEnGrupo] Sin TeleportAllAction: ni asignado ni en este " +
+                                 "objeto. Añádelo o el grupo no se moverá.", this);
+        }
+
+        private void BuscarLoQueFalte()
+        {
+            // El TeleportAllAction TAMBIEN es un ObjectAction, asi que para el
+            // aviso hay que coger el que no lo sea.
+            if (anuncioDeFin == null)
+                foreach (var a in GetComponents<ObjectAction>())
+                    if (a is not TeleportAllAction) { anuncioDeFin = a; break; }
+
+            if (saltoDeGrupo == null) saltoDeGrupo = GetComponent<TeleportAllAction>();
+        }
+
         // ================================================================
         //  Entrada: lo llama el reto cuando el participante termina
         // ================================================================

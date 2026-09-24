@@ -154,8 +154,8 @@ Rellene así:
 
 | Campo | Qué arrastrar o escribir |
 |---|---|
-| **Anuncio de fin** | el `UnityEventAction` del paso 2.2 (arrastre el propio objeto `Avance_Reto1` al campo; Unity elige el componente) |
-| **Salto de grupo** | el `TeleportAllAction` del paso 2.3 |
+| **Anuncio de fin** | arrastre el propio objeto `Avance_Reto1`; Unity coge su `UnityEventAction` |
+| **Salto de grupo** | arrastre otra vez `Avance_Reto1`; Unity coge su `TeleportAllAction` |
 | **Destino** | `Root/Planta_Piloto/Punto_Destino_Planta` |
 | **Esperar a todos** | marcado |
 | **Espera máxima** | 180 |
@@ -493,7 +493,7 @@ Leído del archivo de escena, no de memoria.
 | Síntoma | Causa probable |
 |---|---|
 | «No hay acción de difusión asignada» en la consola | Falta el `UnityEventAction` en el campo `Anuncio de fin` o `Aviso de reinicio` |
-| «Falta el TeleportAllAction» | Falta asignarlo en `Salto de grupo` o `Salto al inicio` |
+| «Falta el TeleportAllAction» | Falta el componente en el objeto, o el campo `Salto de grupo` / `Salto al inicio` sin asignar. **Si sale este error, la difusión por red ya funcionó**: el aviso salió, viajó y volvió |
 | «Avance individual: no hay AvanceEnGrupo asignado» | Falta rellenar el campo `avanceEnGrupo` de `FadeOutVR` o `GestorCuestionario`. **No es un error**: avisa de que todavía va por el camino antiguo |
 | El grupo salta dos veces | Los dos clientes están ejecutando el teletransporte. Avíseme: es un fallo del reparto de turnos |
 | Tras el reinicio no se puede hacer clic en el lavamanos | Falta la `Foto de la escena`, o le falta alguna raíz, o `Incluir componentes` está desmarcado |
