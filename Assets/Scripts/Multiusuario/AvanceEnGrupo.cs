@@ -238,38 +238,17 @@ namespace ViroLab.Multiusuario
 }
 
 /*
-INSTRUCCIONES DE CABLEADO EN UNITY
-==================================
-Las acciones de VIROO llevan identificador, inyección de dependencias y
-validadores de editor, así que hay que crearlas desde el inspector. Por cada
-transición (reto 1 a escena 2, y escena 2 a reto 3):
+CABLEADO EN UNITY
+=================
+Las acciones de VIROO llevan identificador, inyeccion de dependencias y
+validadores de editor, asi que no se pueden crear editando el archivo de escena
+a mano: hay que anadirlas desde el Inspector.
 
-1. Crear un objeto vacío, por ejemplo "Avance_Reto1".
+La lista completa y actualizada esta en CABLEADO.md, en esta misma carpeta.
+Cubre las dos transiciones, el reinicio entre tandas, donde van las marcas de
+reunion y que hay que retirar cuando todo esto este probado.
 
-2. Añadirle "Viroo/Actions/UnityEventAction". Ese es el aviso de fin, y se
-   difunde a todos los clientes.
-
-3. Añadirle "Viroo/Actions/TeleportAllAction". Dejar su Teleport Position
-   vacío: lo fija este componente antes de ejecutarlo.
-
-4. Añadirle este componente, "ViroLab/Multiusuario/Avance en grupo", y asignar:
-      Anuncio de fin  -> el UnityEventAction del paso 2
-      Salto de grupo  -> el TeleportAllAction del paso 3
-      Destino         -> Punto_Destino_Planta  (o Punto_Inicio_Escena3)
-
-5. En el UnityEventAction del paso 2, en su evento expuesto, añadir una entrada
-   que llame a AvanceEnGrupo.RegistrarAnuncio de este mismo objeto.
-
-6. Donde hoy se llama a la transición, llamar en su lugar a
-   AvanceEnGrupo.AnunciarQueTermine.
-
-7. Conectar AntesDelSalto al fundido a negro, y AlQuedarEnEspera al cartel de
-   "esperando al resto del grupo".
-
-QUE HAY QUE RETIRAR
--------------------
-- FadeOutVR: su teletransporte manual (mueve camaraVR.root).
-- GestorCuestionario: el bloque de teletransporte de FinalizarCuestionario.
-- DestinoEscena3Multiusuario: queda sin sentido. Repartir a cada usuario a un
-  punto distinto es justo lo contrario de lo que exige una sala compartida.
+Se saco de aqui a proposito: al entrar ReunionEnElCentro dejo de ser cierto que
+la salida del reto llame directamente a AnunciarQueTermine, y dos copias de unas
+instrucciones es la forma de que un dia dejen de coincidir.
 */
