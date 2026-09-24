@@ -3,8 +3,9 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using TMPro;
 using System.Collections;
+using ViroLab.Multiusuario;
 
-public class GestorCuestionario : MonoBehaviour
+public class GestorCuestionario : MonoBehaviour, IReiniciable
 {
     [Header("Referencias de la Interfaz (UI)")]
     public TextMeshProUGUI textoPregunta;
@@ -24,8 +25,15 @@ public class GestorCuestionario : MonoBehaviour
     public AudioClip sonidoCorrecto;
     public AudioClip sonidoIncorrecto;
 
-    [Header("Transición Local a Escena 3")]
-    [Tooltip("Arrastra aquí el objeto vacío hacia donde se teletransportará el jugador para operar la máquina")]
+    [Header("Avance al reto 3")]
+    [Tooltip("Asigna aquí el AvanceEnGrupo del reto 2. Con él asignado, el salto " +
+             "lo hace VIROO moviendo a los dos participantes a la vez, que es lo " +
+             "único compatible con la protección frente a choques. Mientras esté " +
+             "vacío se mantiene el camino antiguo, que mueve solo a quien termina.")]
+    public AvanceEnGrupo avanceEnGrupo;
+
+    [Tooltip("SOLO para el camino antiguo, mientras no esté cableado el avance en " +
+             "grupo. Destino del teletransporte individual.")]
     public Transform puntoDestinoEscena3;
     
     // NOTA SENIOR: Hemos eliminado la variable 'canvasEscena3' del script.
@@ -40,7 +48,8 @@ public class GestorCuestionario : MonoBehaviour
     private bool esperandoSiguiente = false;
     
     private bool enIntroduccion = true;
-    private bool introReproducida = false; 
+    private bool introReproducida = false;
+    private bool _preparado = false;
 
     private class DatosPregunta
     {
@@ -58,18 +67,29 @@ public class GestorCuestionario : MonoBehaviour
 
     private DatosPregunta[] bancoPreguntas;
 
-    void Start()
+    // El lienzo del cuestionario arranca APAGADO en la escena y lo enciende la
+    // transicion del reto 1, de modo que Awake y Start no corren hasta entonces.
+    // Lo que se prepara una sola vez va en Awake; lo que tiene que volver a
+    // ocurrir cada vez que el lienzo se enciende va en OnEnable, porque Start no
+    // se repite al reactivar un objeto y el reinicio entre tandas lo apaga y lo
+    // vuelve a encender.
+    void Awake()
     {
         NarradorUnico.Registrar(reproductorAudio);
 
         if (botonA != null) colorOriginalBotones = botonA.image.color;
-        
+
         if (botonA != null) { botonA.onClick.RemoveAllListeners(); botonA.onClick.AddListener(() => ValidarRespuesta(0, botonA)); }
         if (botonB != null) { botonB.onClick.RemoveAllListeners(); botonB.onClick.AddListener(() => ValidarRespuesta(1, botonB)); }
         if (botonC != null) { botonC.onClick.RemoveAllListeners(); botonC.onClick.AddListener(() => ValidarRespuesta(2, botonC)); }
 
         LlenarBancoPreguntas();
-        ActualizarPantalla();
+        _preparado = true;
+    }
+
+    void OnEnable()
+    {
+        if (_preparado) ActualizarPantalla();
     }
 
     void LlenarBancoPreguntas()
@@ -190,45 +210,43 @@ public class GestorCuestionario : MonoBehaviour
         //
         // Se descuenta la duracion del fundido para que el negro termine de cerrarse
         // justo cuando acaba la locucion, en lugar de sumar 2 s de espera adicional.
-        float duracionFade = 2f;
+        float duracionFade = FundidoDePantalla.DuracionPorDefecto;
         const float margenLectura = 1f;   // minimo para alcanzar a leer el mensaje
         yield return new WaitForSeconds(Mathf.Max(margenLectura, duracionVO - duracionFade));
         
         Canvas miCanvas = GetComponent<Canvas>();
         if (miCanvas != null) miCanvas.enabled = false;
 
-        // --- TRANSICIÓN INMERSIVA CINEMATOGRÁFICA (Local para quien viaja) ---
-        GameObject canvasFadeObj = new GameObject("Canvas_FadeVirtual");
-        Canvas canvasFade = canvasFadeObj.AddComponent<Canvas>();
-        canvasFade.renderMode = RenderMode.WorldSpace;
-        canvasFade.sortingOrder = 999; 
-
-        Transform camaraVR = Camera.main.transform;
-        canvasFadeObj.transform.SetParent(camaraVR, false);
-        canvasFadeObj.transform.localPosition = new Vector3(0, 0, 0.5f); 
-        canvasFadeObj.transform.localRotation = Quaternion.identity;
-        canvasFadeObj.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
-
-        GameObject imgObj = new GameObject("Cuadro_Negro");
-        imgObj.transform.SetParent(canvasFadeObj.transform, false);
-        Image imagenNegra = imgObj.AddComponent<Image>();
-        imagenNegra.color = new Color(0, 0, 0, 0); 
-        imagenNegra.rectTransform.sizeDelta = new Vector2(5000, 5000); 
-        imagenNegra.raycastTarget = false; 
-
-        float tiempo = 0;
-
-        // FADE OUT
-        while (tiempo < duracionFade)
+        // --- CAMINO BUENO: el grupo avanza junto ---
+        // VIROO mueve a los dos participantes a la vez y conserva sus posiciones
+        // relativas, que es lo unico compatible con el aviso de proximidad. El
+        // fundido, la espera al companero y el encendido de la Escena 3 cuelgan
+        // de los eventos de AvanceEnGrupo, cableados en el Inspector.
+        if (avanceEnGrupo != null)
         {
-            tiempo += Time.deltaTime;
-            imagenNegra.color = new Color(0, 0, 0, Mathf.Lerp(0, 1, tiempo / duracionFade));
-            yield return null;
+            // Que no arranque el video encima de la locucion de cierre.
+            while (duracionVO > 0f && Time.time < instanteInicioVO + duracionVO)
+                yield return null;
+
+            avanceEnGrupo.AnunciarQueTermine();
+            yield break;
         }
 
-        // TELETRANSPORTE AL ENTORNO DE SIMULACIÓN
+        // --- CAMINO ANTIGUO ---
+        // Mueve solo a quien termina, asi que los dos visores acaban con mapeos
+        // distintos entre la sala y el mundo virtual y el aviso de proximidad deja
+        // de medir sobre posiciones reales. Se conserva unicamente para que la
+        // experiencia siga funcionando mientras AvanceEnGrupo no esta cableado.
+        Debug.LogWarning("[GestorCuestionario] Avance individual al reto 3: no hay AvanceEnGrupo " +
+                         "asignado. Con dos participantes en sala esto rompe la protección frente " +
+                         "a choques.", this);
+
+        var fundido = FundidoDePantalla.Instancia;
+        yield return fundido.Oscurecer(duracionFade);
+
         if (puntoDestinoEscena3 != null)
         {
+            Transform camaraVR = Camera.main.transform;
             Transform rootJugador = camaraVR.root;
             float diferenciaRotacion = puntoDestinoEscena3.eulerAngles.y - camaraVR.eulerAngles.y;
             rootJugador.Rotate(0, diferenciaRotacion, 0);
@@ -253,16 +271,39 @@ public class GestorCuestionario : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        // FADE IN
-        tiempo = 0;
-        while (tiempo < duracionFade)
-        {
-            tiempo += Time.deltaTime;
-            imagenNegra.color = new Color(0, 0, 0, Mathf.Lerp(1, 0, tiempo / duracionFade));
-            yield return null;
-        }
+        yield return fundido.Aclarar(duracionFade);
+    }
 
-        Destroy(canvasFadeObj);
+    // ================================================================
+    //  Reinicio entre tandas
+    // ================================================================
+
+    /// <summary>
+    /// Deja el cuestionario sin empezar. No pinta ni reproduce nada: el lienzo
+    /// esta apagado en este momento y OnEnable se encargara de la pantalla
+    /// cuando la tanda siguiente llegue al reto 2.
+    /// </summary>
+    public void ReiniciarAlInicio()
+    {
+        StopAllCoroutines();
+
+        preguntaActual = 0;
+        enIntroduccion = true;
+        introReproducida = false;
+        esperandoSiguiente = false;
+
+        if (reproductorAudio != null) reproductorAudio.Stop();
+
+        // FinalizarCuestionario los apaga al terminar, y sin devolverlos no habria
+        // con que responder en la pasada siguiente.
+        if (botonA != null) botonA.gameObject.SetActive(true);
+        if (botonB != null) botonB.gameObject.SetActive(true);
+        if (botonC != null) botonC.gameObject.SetActive(true);
+
+        Canvas miCanvas = GetComponent<Canvas>();
+        if (miCanvas != null) miCanvas.enabled = true;
+
+        ResetearColorBotones();
     }
 
     void ResetearColorBotones()

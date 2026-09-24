@@ -1,20 +1,36 @@
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events; // A�adido para eventos modulares
+using UnityEngine.Events;
 using System.Collections;
+using ViroLab.Multiusuario;
 
+/// <summary>
+/// Cierre del reto 1: espera, funde a negro y pasa al reto siguiente.
+///
+/// El fundido ya no se construye aquí. Estaba copiado palabra por palabra en
+/// este archivo y en GestorCuestionario, y si la transición se interrumpía a
+/// medias el lienzo negro quedaba huérfano colgado de la cámara. Ahora lo lleva
+/// FundidoDePantalla, que es uno solo para toda la experiencia.
+/// </summary>
 public class FadeOutVR : MonoBehaviour
 {
-    [Header("Configuraci�n de Teletransporte")]
+    [Header("Ritmo")]
     public float tiempoDeEspera = 4f;
     public float duracionFade = 2f;
 
-    [Tooltip("Arrastra aqu� el objeto hacia donde quieres teletransportar al jugador")]
+    [Header("Avance al reto siguiente")]
+    [Tooltip("Asigna aquí el AvanceEnGrupo del reto 1. Con él asignado, el salto " +
+             "lo hace VIROO moviendo a los dos participantes a la vez, que es lo " +
+             "único compatible con la protección frente a choques. Mientras esté " +
+             "vacío se mantiene el camino antiguo, que mueve solo a quien termina.")]
+    public AvanceEnGrupo avanceEnGrupo;
+
+    [Tooltip("SOLO para el camino antiguo, mientras no esté cableado el avance en " +
+             "grupo. Destino del teletransporte individual.")]
     public Transform puntoDeDestino;
 
     [Header("Eventos de Red (VIROO)")]
-    [Tooltip("Coloca aqu� los Canvas, Puertas y Audios usando los componentes de red de VIROO")]
-    public UnityEvent OnTeletransporteEjecutado; // Evento que lanzaremos a la red
+    [Tooltip("Coloca aquí los Canvas, Puertas y Audios usando los componentes de red de VIROO")]
+    public UnityEvent OnTeletransporteEjecutado;
 
     public void IniciarFadeOut()
     {
@@ -23,66 +39,49 @@ public class FadeOutVR : MonoBehaviour
 
     IEnumerator RutinaFadeYTeletransporte()
     {
-        // 1. Espera inicial
         yield return new WaitForSeconds(tiempoDeEspera);
 
-        // 2. Crear panel negro din�mico (L�gica Local - Solo afecta a quien viaja)
-        GameObject canvasObj = new GameObject("Canvas_FadeMagico");
-        Canvas canvas = canvasObj.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.WorldSpace;
-        canvas.sortingOrder = 999; 
-
-        Transform camaraVR = Camera.main.transform;
-        canvasObj.transform.SetParent(camaraVR);
-        canvasObj.transform.localPosition = new Vector3(0, 0, 0.5f); 
-        canvasObj.transform.localRotation = Quaternion.identity;
-        canvasObj.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
-
-        GameObject imgObj = new GameObject("Cuadro_Negro");
-        imgObj.transform.SetParent(canvasObj.transform, false);
-        Image imagenNegra = imgObj.AddComponent<Image>();
-        imagenNegra.color = new Color(0, 0, 0, 0); 
-        imagenNegra.rectTransform.sizeDelta = new Vector2(5000, 5000); 
-        imagenNegra.raycastTarget = false; 
-
-        // 3. OSCURECER (Fade Out Local)
-        float tiempo = 0;
-        while (tiempo < duracionFade)
+        // --- CAMINO BUENO: el grupo avanza junto ---
+        // El fundido y el encendido de lo que toque cuelgan de los eventos de
+        // AvanceEnGrupo, cableados en el Inspector, porque el salto no ocurre
+        // hasta que han terminado los dos participantes.
+        if (avanceEnGrupo != null)
         {
-            tiempo += Time.deltaTime;
-            imagenNegra.color = new Color(0, 0, 0, Mathf.Lerp(0, 1, tiempo / duracionFade));
-            yield return null;
+            avanceEnGrupo.AnunciarQueTermine();
+            yield break;
         }
 
-        // 4. TELETRANSPORTE (Local)
+        // --- CAMINO ANTIGUO ---
+        // Mueve solo a quien termina, así que los dos visores acaban con mapeos
+        // distintos entre la sala y el mundo virtual y el aviso de proximidad
+        // deja de medir sobre posiciones reales. Se conserva únicamente para que
+        // la experiencia siga funcionando mientras AvanceEnGrupo no está cableado.
+        Debug.LogWarning("[FadeOutVR] Avance individual: no hay AvanceEnGrupo asignado. " +
+                         "Con dos participantes en sala esto rompe la protección frente a " +
+                         "choques.", this);
+
+        var fundido = FundidoDePantalla.Instancia;
+        yield return fundido.Oscurecer(duracionFade);
+
         if (puntoDeDestino != null)
         {
+            Transform camaraVR = Camera.main.transform;
             Transform rootJugador = camaraVR.root;
 
             float diferenciaRotacion = puntoDeDestino.eulerAngles.y - camaraVR.eulerAngles.y;
             rootJugador.Rotate(0, diferenciaRotacion, 0);
 
             Vector3 diferenciaPosicion = puntoDeDestino.position - camaraVR.position;
-            diferenciaPosicion.y = 0; 
+            diferenciaPosicion.y = 0;
 
             rootJugador.position += diferenciaPosicion;
         }
 
-        // 5. INVOCAR CAMBIOS GLOBALES
-        // Aqu� delegamos los Canvas, la Puerta y el Audio al sistema de red de VIROO
+        // Los Canvas, la puerta y el audio se delegan al sistema de red de VIROO.
         OnTeletransporteEjecutado?.Invoke();
 
         yield return new WaitForSeconds(0.5f);
 
-        // 6. ACLARAR (Fade In Local)
-        tiempo = 0;
-        while (tiempo < duracionFade)
-        {
-            tiempo += Time.deltaTime;
-            imagenNegra.color = new Color(0, 0, 0, Mathf.Lerp(1, 0, tiempo / duracionFade));
-            yield return null;
-        }
-
-        Destroy(canvasObj);
+        yield return fundido.Aclarar(duracionFade);
     }
 }

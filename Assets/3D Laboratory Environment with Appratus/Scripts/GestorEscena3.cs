@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Video;
 
-public class GestorEscena3 : MonoBehaviour
+public class GestorEscena3 : MonoBehaviour, IReiniciable
 {
     // AJUSTE: Ya no necesitamos la referencia a 'canvasInicio' porque el GestorCuestionario lo apagará por sí solo
 
@@ -47,6 +47,20 @@ public class GestorEscena3 : MonoBehaviour
                 Debug.Log("<color=green>[GestorEscena3] Reproducción automática del video tutorial iniciada con éxito.</color>");
             }
         }
+    }
+
+    /// <summary>
+    /// Apaga el vídeo del reto 3 y lo rebobina. Sin rebobinar, la tanda
+    /// siguiente lo vería arrancar por donde lo dejó la anterior.
+    /// </summary>
+    public void ReiniciarAlInicio()
+    {
+        if (reproductorTutorial != null)
+        {
+            reproductorTutorial.Stop();
+            reproductorTutorial.frame = 0;
+        }
+        if (canvasVideo != null) canvasVideo.SetActive(false);
     }
 
     void OcultarVideo(VideoPlayer vp)

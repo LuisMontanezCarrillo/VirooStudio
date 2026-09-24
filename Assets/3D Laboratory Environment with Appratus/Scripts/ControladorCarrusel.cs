@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ControladorCarrusel : MonoBehaviour
+public class ControladorCarrusel : MonoBehaviour, IReiniciable
 {
     [Tooltip("Arrastra aquí el objeto Image 'Pantalla_Principal'")]
     public Image pantalla;
@@ -76,6 +76,19 @@ public class ControladorCarrusel : MonoBehaviour
             MostrarDiapositiva(indiceActual);
         }
 
+        ActualizarBotones();
+    }
+
+    /// <summary>
+    /// Vuelve a la primera lámina, en silencio. La tanda siguiente tiene que
+    /// encontrar el carrusel sin abrir, no por donde lo dejó la anterior.
+    /// </summary>
+    public void ReiniciarAlInicio()
+    {
+        DetenerAudio();
+        indiceActual = 0;
+        if (pantalla != null && diapositivas != null && diapositivas.Length > 0)
+            pantalla.sprite = diapositivas[0];
         ActualizarBotones();
     }
 

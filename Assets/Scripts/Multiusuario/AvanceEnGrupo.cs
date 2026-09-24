@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using Viroo.Interactions;
-using Viroo.Networking;
 
 namespace ViroLab.Multiusuario
 {
@@ -56,7 +53,7 @@ namespace ViroLab.Multiusuario
     /// este archivo.
     /// </summary>
     [AddComponentMenu("ViroLab/Multiusuario/Avance en grupo")]
-    public class AvanceEnGrupo : MonoBehaviour
+    public class AvanceEnGrupo : MonoBehaviour, IReiniciable
     {
         [Header("Acciones de VIROO")]
         [Tooltip("UnityEventAction (de difusión) cuyo evento debe llamar a " +
@@ -213,39 +210,30 @@ namespace ViroLab.Multiusuario
         //  Utilidades de sesión
         // ================================================================
 
-        /// Participantes conectados a la sesión. Sin sesión de VIROO (pruebas en
-        /// el editor) devuelve 1, de modo que el avance es inmediato.
-        private int ParticipantesConectados()
+        // El criterio de cuanta gente hay y de a quien le toca ejecutar vive en
+        // SesionViroo, porque el reinicio entre tandas necesita exactamente lo
+        // mismo. Dos copias del criterio es la forma de que un dia dejen de
+        // coincidir y la accion se dispare dos veces o ninguna.
+        private int ParticipantesConectados() => SesionViroo.ParticipantesConectados();
+        private bool SoyElClienteDesignado()  => SesionViroo.SoyElClienteDesignado();
+
+        // ================================================================
+        //  Reinicio entre tandas
+        // ================================================================
+
+        /// <summary>
+        /// Borra la cuenta de anuncios y el cierre del salto. Sin esto, la tanda
+        /// siguiente heredaria un _yaSalto en cierto y el grupo no avanzaria
+        /// nunca del reto donde quedo la anterior.
+        /// </summary>
+        public void ReiniciarAlInicio()
         {
-            var jugadores = FindObjectsByType<Player>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            int n = jugadores != null ? jugadores.Length : 0;
-            return Mathf.Max(1, n);
+            _anuncios = 0;
+            _yaAnuncie = false;
+            _yaSalto = false;
+            _instanteDelPrimerAnuncio = -1f;
         }
 
-        /// Cliente designado para ejecutar el salto: el de identificador menor.
-        /// El criterio es el mismo en todos los clientes, de modo que todos
-        /// coinciden en quién es.
-        private bool SoyElClienteDesignado()
-        {
-            var jugadores = FindObjectsByType<Player>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            if (jugadores == null || jugadores.Length == 0) return true;   // sin sesión, yo mismo
-
-            string menor = null;
-            string mio = null;
-
-            foreach (var p in jugadores)
-            {
-                if (p is not IPlayer ip) continue;
-                string id = Convert.ToString(ip.ClientId);
-                if (string.IsNullOrEmpty(id)) continue;
-
-                if (menor == null || string.CompareOrdinal(id, menor) < 0) menor = id;
-                if (ip.IsLocalPlayer == true) mio = id;
-            }
-
-            if (menor == null || mio == null) return true;   // sin datos, no bloquear
-            return mio == menor;
-        }
     }
 }
 

@@ -27,7 +27,7 @@ namespace ViroLab.Pasteurizador
     /// </summary>
     [AddComponentMenu("ViroLab/Pasteurizador/Gatillo como Select")]
     [DefaultExecutionOrder(-50)]
-    public class GatilloComoSelect : MonoBehaviour
+    public class GatilloComoSelect : MonoBehaviour, IReiniciable
     {
         [Tooltip("Segundos entre rastreos del rig. El rig de VIROO puede aparecer despues de cargar la escena, por eso se reintenta.")]
         public float retrySeconds = 1f;
@@ -51,6 +51,18 @@ namespace ViroLab.Pasteurizador
         private float _proximo;
         private float _limite;
         private int _reasignadas;
+
+        /// <summary>
+        /// Reabre la ventana de busqueda para la tanda siguiente. El componente
+        /// se apaga solo al agotarla, asi que sin esto los visores de la segunda
+        /// pareja del dia entrarian sin que nadie les reasignara el gatillo.
+        /// </summary>
+        public void ReiniciarAlInicio()
+        {
+            _limite = Time.unscaledTime + Mathf.Max(1f, segundosDeBusqueda);
+            _reasignadas = 0;
+            enabled = true;
+        }
 
         private void Start()
         {

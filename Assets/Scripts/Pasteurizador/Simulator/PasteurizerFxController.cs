@@ -14,7 +14,7 @@ namespace ViroLab.Pasteurizador.Simulator
     /// Crea sus propios AudioSource. Instalar con:
     ///   Viroo > Simulador > Instalar FX de sonido
     /// </summary>
-    public class PasteurizerFxController : MonoBehaviour
+    public class PasteurizerFxController : MonoBehaviour, IReiniciable
     {
         [Header("Referencias (auto si vacío)")]
         public PasteurizerSimEngine engine;
@@ -167,6 +167,9 @@ namespace ViroLab.Pasteurizador.Simulator
         /// lote ya estaba cerrado y la planta seguia en marcha, o si se reinicia
         /// dos veces seguidas, algun bucle se quedaba sonando.
         /// </summary>
+        /// <summary>Entre tandas: silencio en la planta.</summary>
+        public void ReiniciarAlInicio() { DetenerTodo(); }
+
         public void DetenerTodo()
         {
             StopAllLoops();

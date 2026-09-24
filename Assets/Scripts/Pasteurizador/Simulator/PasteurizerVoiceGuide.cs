@@ -14,7 +14,7 @@ namespace ViroLab.Pasteurizador.Simulator
     /// Instalar con:  Viroo > Simulador > Instalar guía por voz (SCADA)
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
-    public class PasteurizerVoiceGuide : MonoBehaviour
+    public class PasteurizerVoiceGuide : MonoBehaviour, IReiniciable
     {
         [Header("Referencias (se autocompletan si quedan vacías)")]
         public PasteurizerSimEngine engine;
@@ -177,6 +177,16 @@ namespace ViroLab.Pasteurizador.Simulator
             source.Stop();
             source.clip = c;
             source.Play();
+        }
+
+        /// <summary>
+        /// Entre tandas se borra el saludo dado y los flancos memorizados, para
+        /// que la pareja siguiente reciba la guia entera desde la bienvenida.
+        /// </summary>
+        public void ReiniciarAlInicio()
+        {
+            if (source != null) source.Stop();
+            ResetGuide();
         }
 
         [ContextMenu("Reiniciar guía")]

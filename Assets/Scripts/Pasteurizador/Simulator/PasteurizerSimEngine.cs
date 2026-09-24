@@ -8,7 +8,7 @@ namespace ViroLab.Pasteurizador.Simulator
     ///
     /// El estado es público para que el Dashboard UI lo lea cada frame.
     /// Los métodos Toggle* son los handlers de los botones de la UI.
-    public class PasteurizerSimEngine : MonoBehaviour
+    public class PasteurizerSimEngine : MonoBehaviour, IReiniciable
     {
         // ====================================================================
         //  Constantes de proceso (idénticas a app.js)
@@ -170,6 +170,12 @@ namespace ViroLab.Pasteurizador.Simulator
             pumpMilkOn = true;
             hint = "Bomba de producto activa. Esperando criterio de pasteurización...";
         }
+
+        /// <summary>
+        /// Entre tandas basta con lo mismo que hace el boton Reiniciar Lote:
+        /// deja el equipo en el estado de arranque completo.
+        /// </summary>
+        public void ReiniciarAlInicio() { ResetBatch(); }
 
         public void ResetBatch()
         {

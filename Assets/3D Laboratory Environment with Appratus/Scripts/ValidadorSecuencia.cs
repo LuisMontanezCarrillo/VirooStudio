@@ -1,23 +1,34 @@
 using UnityEngine;
 using UnityEngine.Events; // Vital para poder ver las listas en el Inspector
 
-public class ValidadorSecuencia : MonoBehaviour
+public class ValidadorSecuencia : MonoBehaviour, IReiniciable
 {
-    [Tooltip("øEl estudiante ya terminÛ el reto anterior?")]
+    [Tooltip("¬øEl estudiante ya termin√≥ el reto anterior?")]
     public bool permisoParaAvanzar = false;
 
-    [Tooltip("Coloca aquÌ lo que pasa si hace el orden CORRECTO")]
+    [Tooltip("Coloca aqu√≠ lo que pasa si hace el orden CORRECTO")]
     public UnityEvent AlTenerExito;
 
-    [Tooltip("Coloca aquÌ lo que pasa si se equivoca de orden")]
+    [Tooltip("Coloca aqu√≠ lo que pasa si se equivoca de orden")]
     public UnityEvent AlTenerError;
 
-    // Esta funciÛn la conectaremos al clic del l·ser
+    // Valor con el que arranca la experiencia, le√≠do del Inspector. Hay dos
+    // validadores en la escena (Maniqu√≠ y Lavamanos) y no tienen por qu√© empezar
+    // igual, as√≠ que el reinicio devuelve lo que cada uno tuviera en vez de
+    // imponer un falso a los dos.
+    private bool _permisoDePartida;
+
+    void Awake()
+    {
+        _permisoDePartida = permisoParaAvanzar;
+    }
+
+    // Esta funci√≥n la conectaremos al clic del l√°ser
     public void ValidarClic()
     {
         if (permisoParaAvanzar == true)
         {
-            AlTenerExito.Invoke(); // Ejecuta la lista de Èxito
+            AlTenerExito.Invoke(); // Ejecuta la lista de √©xito
         }
         else
         {
@@ -25,9 +36,18 @@ public class ValidadorSecuencia : MonoBehaviour
         }
     }
 
-    // Esta funciÛn la disparar· el Casillero para darle permiso al ManiquÌ
+    // Esta funci√≥n la disparar√° el Casillero para darle permiso al Maniqu√≠
     public void DarPermiso()
     {
         permisoParaAvanzar = true;
+    }
+
+    /// <summary>
+    /// Vuelve a cerrar el paso. Sin esto, la tanda siguiente encontrar√≠a el
+    /// maniqu√≠ ya desbloqueado por la anterior y se saltar√≠a el casillero.
+    /// </summary>
+    public void ReiniciarAlInicio()
+    {
+        permisoParaAvanzar = _permisoDePartida;
     }
 }

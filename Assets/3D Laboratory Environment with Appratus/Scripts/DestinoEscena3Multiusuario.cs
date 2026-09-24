@@ -20,7 +20,7 @@ using Viroo.Networking;
 /// el primer punto, que es el original. El resto de la transicion no cambia.
 /// </summary>
 [AddComponentMenu("ViroLab/Escena 3/Destino multiusuario")]
-public class DestinoEscena3Multiusuario : MonoBehaviour
+public class DestinoEscena3Multiusuario : MonoBehaviour, IReiniciable
 {
     [Tooltip("GestorCuestionario cuyo campo puntoDestinoEscena3 se actualiza. Si esta vacio se busca en la escena (incluye objetos inactivos).")]
     public GestorCuestionario gestor;
@@ -70,6 +70,21 @@ public class DestinoEscena3Multiusuario : MonoBehaviour
     }
 
     /// El usuario local ya viajó: el punto de llegada está decidido.
+    /// <summary>
+    /// Se vuelve a encender para la tanda siguiente. Este componente se apaga
+    /// solo al completarse la transicion, de modo que sin esto solo repartiria
+    /// destinos en la primera pasada del dia.
+    ///
+    /// Nota: este componente esta llamado a desaparecer. Repartir a cada
+    /// participante a un punto distinto es lo contrario de lo que exige una sala
+    /// compartida; se retira en cuanto AvanceEnGrupo este cableado y probado.
+    /// </summary>
+    public void ReiniciarAlInicio()
+    {
+        _suscrito = false;
+        enabled = true;
+    }
+
     private void Apagarse()
     {
         if (log) Debug.Log("[DestinoEscena3Multiusuario] Transición hecha; el componente se apaga.");

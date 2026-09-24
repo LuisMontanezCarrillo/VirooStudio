@@ -8,7 +8,7 @@ namespace ViroLab.Pasteurizador.Simulator
     /// Al pulsarlo: oculta la ventana y arranca la guía por voz (bienvenida).
     /// La construye el builder del dashboard.
     /// </summary>
-    public class PasteurizerStartOverlay : MonoBehaviour
+    public class PasteurizerStartOverlay : MonoBehaviour, IReiniciable
     {
         [Header("Referencias")]
         public GameObject panel;              // la ventana emergente
@@ -78,6 +78,12 @@ namespace ViroLab.Pasteurizador.Simulator
         /// si esta activado, la narracion lista para sonar desde la bienvenida.
         /// La llama el boton Reiniciar Lote del tablero.
         /// </summary>
+        /// <summary>
+        /// Devuelve el cartel de EMPEZAR delante del tablero. Sin esto, la tanda
+        /// siguiente encontraria el simulador ya arrancado.
+        /// </summary>
+        public void ReiniciarAlInicio() { ShowAgain(); }
+
         public void ShowAgain()
         {
             if (panel != null) panel.SetActive(true);
