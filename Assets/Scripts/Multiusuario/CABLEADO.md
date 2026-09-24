@@ -125,8 +125,19 @@ Con `Avance_Reto1` seleccionado, en el Inspector: **Add Component**, y en el bus
 > porque ahí no aparecen: se generan al compilar y solo salen escribiendo su nombre en el
 > buscador de Add Component.
 
-Déjela como viene. Sus campos son `Exposed Event` (lo rellenamos en 2.6) y `Delay` (déjelo en
-0).
+**No toque todavía el campo `Exposed Event`. Déjelo vacío.** Ese campo sirve para llamar a un
+método de algún componente de este objeto, y de momento no hay ninguno al que llamar. Si pulsa
+el **+** ahora, le saldrá una fila en la que el desplegable `Function` solo ofrece `GameObject`
+y `Transform`. Se rellena en el paso 2.6, cuando ya estén puestos los demás componentes.
+
+Del resto de campos que verá:
+
+| Campo | Qué poner | Por qué |
+|---|---|---|
+| `Menu Label` | **vacío** | Es el nombre con el que la acción aparecería en el menú de VIROO para dispararla a mano. Ésta la dispara el código |
+| `Starts Enabled` | **marcado** | Como viene |
+| `Persistence Type` | **None** | Con cualquier otro valor, VIROO recordaría que la acción ya se ejecutó y se la reproduciría a quien entrase tarde a la sesión. Con el reinicio entre tandas eso es justo lo contrario de lo que queremos |
+| `Delay` | **0** | El retardo lo lleva `AvanceEnGrupo` |
 
 ### 2.3 Añadirle la acción de teletransporte
 
@@ -168,6 +179,19 @@ Rellene así:
 > cliente.
 
 ### 2.6 Cerrar el circuito del aviso
+
+> **Antes de seguir, compruebe que `Avance_Reto1` tiene los cuatro componentes**, en este
+> orden o en cualquier otro:
+>
+> - `Transform`
+> - `UnityEventAction`
+> - `TeleportAllAction`
+> - `Avance en grupo`
+> - `Reunión en el centro`
+>
+> Si le falta alguno, el desplegable `Function` del paso siguiente no ofrecerá
+> `RegistrarAnuncio` y parecerá que el campo está roto. No lo está: es que no hay a qué
+> apuntar.
 
 Esto es lo que hace que los dos visores se enteren de que alguien terminó.
 
