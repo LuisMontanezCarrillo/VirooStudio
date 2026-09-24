@@ -170,9 +170,21 @@ Rellene así:
 |---|---|
 | **Marcas** | ponga `Size` a **2**, y arrastre `Marca_Reto1_A` al elemento 0 y `Marca_Reto1_B` al 1 |
 | **Radio** | 0.8 |
+| **Esperar A Que Termine** | arrastre **`Root/Planta_Piloto/Lavamanos/SND_Click_Lavamanos`** |
+| **Espera Adicional** | 0 |
+| **Espera Maxima Del Audio** | 30 |
 | **Avance** | arrastre el propio objeto `Avance_Reto1`; Unity coge su `AvanceEnGrupo`. Si lo deja vacío, el componente lo busca solo en este mismo objeto, pero es mejor dejarlo a la vista |
 | **Espera máxima** | 60 |
 | **Log** | marcado |
+
+> **Por qué hay que rellenar `Esperar A Que Termine`.** Al acertar en el lavamanos suena
+> `FX_Reto3Botas.ogg`, que dura **19 segundos**, y la puerta tarda **5 segundos** en abrirse
+> (`duracionApertura: 5` en `Bisagra_Puerta`). Los 25 segundos que esperaba el `FadeOutVR`
+> antiguo cubrían justo eso. Si deja este campo vacío, se convoca a la marca de inmediato,
+> cortando la locución y con la puerta a medio abrir.
+>
+> Se espera al audio, en lugar de volver a poner 25 segundos a mano, para que si algún día se
+> cambia esa locución por una más corta o más larga la pausa siga siendo la correcta.
 
 > El orden de las marcas importa poco, pero tiene que ser el mismo en todos los clientes, y lo
 > es porque las dos partes leen el mismo array. El reparto va por orden de identificador de
@@ -265,11 +277,9 @@ campo **`Al Tener Exito`**. Verá cinco entradas. La cuarta es:
 Las otras cuatro entradas (el sonido del clic, el `SetActive`, el `set_enabled` y el
 `AbrirPuerta`) **se quedan como están**.
 
-> **Una decisión que es suya.** Hoy `FadeOutVR` espera **25 segundos** antes de la transición,
-> y esa espera se pierde con el cambio: ahora se le pide al estudiante que vaya a su marca en
-> cuanto acierta. Si esos 25 segundos cubrían una locución de cierre que hay que oír entera,
-> dígamelo y le pongo una espera antes de convocar. Si no, ganamos 25 segundos por pasada, que
-> multiplicados por veinte tandas son más de ocho minutos de jornada.
+> **Los 25 segundos del `FadeOutVR` antiguo.** Ya está resuelto: los sustituye la espera al
+> audio que configuró en el paso 2.5, que es la misma pausa pero medida en vez de fijada a
+> mano.
 
 ### 2.10 Comprobación de esta parte
 
