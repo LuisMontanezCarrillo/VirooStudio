@@ -460,6 +460,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 42084869}
   m_CullTransparentMesh: 1
+--- !u!1 &42484018
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 42484019}
+  - component: {fileID: 42484020}
+  m_Layer: 0
+  m_Name: Fundido
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &42484019
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42484018}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3817571384722755373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &42484020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42484018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cf81c0d5668a4a45805e9a99319ecd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &47481819
 GameObject:
   m_ObjectHideFlags: 0
@@ -1034,6 +1078,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3817571384722755373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &69620964
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 69620965}
+  m_Layer: 0
+  m_Name: Marca_Reto2_A
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &69620965
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69620964}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.19, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1546685619}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &72049277
 GameObject:
@@ -7643,6 +7718,231 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 274790744}
   m_CullTransparentMesh: 1
+--- !u!1 &276652108
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 276652109}
+  - component: {fileID: 276652113}
+  - component: {fileID: 276652112}
+  - component: {fileID: 276652111}
+  - component: {fileID: 276652110}
+  m_Layer: 0
+  m_Name: Avance_Reto1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &276652109
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276652108}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3817571384722755373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &276652110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276652108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92b85c2dc0bd9d34595b9ad498270eee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  marcas:
+  - {fileID: 419730905}
+  - {fileID: 1644226261}
+  radio: 0.8
+  esperarAQueTermine: {fileID: 340130474}
+  esperaAdicional: 0
+  esperaMaximaDelAudio: 30
+  avance: {fileID: 276652111}
+  esperaMaxima: 60
+  AlConvocar:
+    m_PersistentCalls:
+      m_Calls: []
+  AlAsignarMarca:
+    m_PersistentCalls:
+      m_Calls: []
+  AlLlegarALaMarca:
+    m_PersistentCalls:
+      m_Calls: []
+  AlCambiarLaDistancia:
+    m_PersistentCalls:
+      m_Calls: []
+  log: 1
+--- !u!114 &276652111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276652108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 372c786bcad871f499c221c36b110e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anuncioDeFin: {fileID: 276652113}
+  saltoDeGrupo: {fileID: 276652112}
+  destino: {fileID: 1546685619}
+  esperarATodos: 1
+  esperaMaxima: 180
+  AlQuedarEnEspera:
+    m_PersistentCalls:
+      m_Calls: []
+  AlCambiarLaCuenta:
+    m_PersistentCalls:
+      m_Calls: []
+  AntesDelSalto:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 42484020}
+        m_TargetAssemblyTypeName: FundidoDePantalla, Assembly-CSharp
+        m_MethodName: OscurecerAhora
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  DespuesDelSalto:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 895087036}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 97840082}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2006931754}
+        m_TargetAssemblyTypeName: ControladorPuerta, Assembly-CSharp
+        m_MethodName: CerrarInstante
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 856857946}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 42484020}
+        m_TargetAssemblyTypeName: FundidoDePantalla, Assembly-CSharp
+        m_MethodName: AclararAhora
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  margenAntesDelSalto: 2
+  margenTrasElSalto: 0.35
+  log: 1
+--- !u!114 &276652112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276652108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f12c354cfeaa5764fa23ff786930440d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 65dd2011-504a-4c8e-96bc-9dd00feb626f
+  textId: 
+  startsEnabled: 1
+  persistenceType: 0
+  teleportPosition: {fileID: 0}
+--- !u!114 &276652113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276652108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d6d57a1916b2214aaed13c88c8a43f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 58d38601-212d-4d1d-bb38-0bd4fe6c1563
+  textId: 
+  startsEnabled: 1
+  persistenceType: 0
+  delay: 0
+  exposedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 276652111}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.AvanceEnGrupo, Assembly-CSharp
+        m_MethodName: RegistrarAnuncio
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onRestoreStateEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &280750588
 GameObject:
   m_ObjectHideFlags: 0
@@ -10545,8 +10845,20 @@ MonoBehaviour:
   colorBtnOff: {r: 0.16, g: 0.2, b: 0.25, a: 1}
   colorBtnDis: {r: 0.1, g: 0.12, b: 0.14, a: 1}
   minFontSize: 18
+  zonasConTamanoMinimo:
+  - PanelControl
+  - PanelMetrics
+  contornoEnRotulosDelDiagrama: 1
+  minFontSizeDiagrama: 18
+  separarRotulosQueChocan: 1
+  separacionMaxima: 26
+  zonaDelDiagrama: PlantArea
   rejillaDeUnaColumna: 1
   altoBotonUnaColumna: 50
+  numerarLosPasos: 1
+  duracionDelResalte: 2
+  colorResalteAviso: {r: 0.65, g: 0.45, b: 0.05, a: 0.9}
+  colorResalteTexto: {r: 1, g: 0.85, b: 0.35, a: 1}
   ocultarHastaElReto3: 1
   distanciaDeEncendido: 0
 --- !u!114 &374619247
@@ -11528,6 +11840,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 416397757}
   m_CullTransparentMesh: 1
+--- !u!1 &419730904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 419730905}
+  m_Layer: 0
+  m_Name: Marca_Reto1_A
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &419730905
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419730904}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.08, y: 0, z: -7.26}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3817571384722755373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &425171568
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21518,7 +21861,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 57b178571cdf0344fa1defd330e98f44, type: 3}
   m_Resource: {fileID: 8300000, guid: 57b178571cdf0344fa1defd330e98f44, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.02
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -21731,6 +22074,8 @@ MonoBehaviour:
   audioCierreReto2: {fileID: 8300000, guid: e2280f04324eaad468ec8a4d6e4044c0, type: 3}
   sonidoCorrecto: {fileID: 8300000, guid: 7f290dbd13a49ea4686a822a94a5e853, type: 3}
   sonidoIncorrecto: {fileID: 8300000, guid: 0f1de9a42c6c27b4c9004db022cfcc61, type: 3}
+  reunion: {fileID: 0}
+  avanceEnGrupo: {fileID: 0}
   puntoDestinoEscena3: {fileID: 141025963}
   OnTransitionComplete:
     m_PersistentCalls:
@@ -23353,6 +23698,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   retrySeconds: 1
+  segundosDeBusqueda: 25
+  soloElJugadorLocal: 1
   log: 1
 --- !u!1 &900005001
 GameObject:
@@ -32808,6 +33155,7 @@ MonoBehaviour:
   alarma: {fileID: 8300000, guid: 4c38412c0f51c8e4aa42501b00afe914, type: 3}
   tanqueLleno: {fileID: 8300000, guid: 41ea9ad387a93d644a65ac9017fb41cc, type: 3}
   finLote: {fileID: 8300000, guid: 4547dd47a8fca9243bc38c5227b46522, type: 3}
+  caducidadDeLasCorrecciones: 8
   faltaEnergia: {fileID: 8300000, guid: f165255155a555d46b234a30cc5f9414, type: 3}
   faltaIniciar: {fileID: 8300000, guid: 2d3b8f17bfaea454fb4ef4d7d47f26f4, type: 3}
   faltaTemp: {fileID: 8300000, guid: 85a011ebcd6a2924198be84d1b870739, type: 3}
@@ -38033,7 +38381,9 @@ Transform:
   m_LocalPosition: {x: -0.19, y: 0, z: 10.892}
   m_LocalScale: {x: 1.4285713, y: 1.4285713, z: 1.4285713}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 69620965}
+  - {fileID: 1554078734}
   m_Father: {fileID: 3571493831561879702}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1548960703
@@ -38073,6 +38423,37 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1554078733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1554078734}
+  m_Layer: 0
+  m_Name: Marca_Reto2_B
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1554078734
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554078733}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.81, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1546685619}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1559809169
 GameObject:
   m_ObjectHideFlags: 0
@@ -39879,6 +40260,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1638467798}
   m_CullTransparentMesh: 1
+--- !u!1 &1644226260
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1644226261}
+  m_Layer: 0
+  m_Name: Marca_Reto1_B
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1644226261
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644226260}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.08, y: 0, z: -7.26}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3817571384722755373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1645434041
 GameObject:
   m_ObjectHideFlags: 0
@@ -46128,9 +46540,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1905798744}
-        m_TargetAssemblyTypeName: FadeOutVR, Assembly-CSharp
-        m_MethodName: IniciarFadeOut
+      - m_Target: {fileID: 276652110}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.ReunionEnElCentro, Assembly-CSharp
+        m_MethodName: Convocar
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -46181,6 +46593,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tiempoDeEspera: 25
   duracionFade: 5
+  avanceEnGrupo: {fileID: 0}
   puntoDeDestino: {fileID: 1546685619}
   OnTeletransporteEjecutado:
     m_PersistentCalls:
@@ -73450,6 +73863,10 @@ Transform:
   - {fileID: 900004002}
   - {fileID: 900005012}
   - {fileID: 230073246}
+  - {fileID: 419730905}
+  - {fileID: 1644226261}
+  - {fileID: 276652109}
+  - {fileID: 42484019}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3834981708564198463
