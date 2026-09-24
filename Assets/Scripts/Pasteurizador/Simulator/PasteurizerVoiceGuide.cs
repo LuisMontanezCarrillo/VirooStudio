@@ -51,6 +51,12 @@ namespace ViroLab.Pasteurizador.Simulator
         public AudioClip finLote;
 
         [Header("Audios · corrección")]
+        [Tooltip("Segundos que una corrección sigue teniendo sentido. Si no " +
+                 "alcanza a sonar antes, se descarta: una corrección que llega " +
+                 "cuando el estudiante ya arregló lo que hacía mal confunde más " +
+                 "que ayuda. Cero para que nunca caduque.")]
+        public float caducidadDeLasCorrecciones = 8f;
+
         public AudioClip faltaEnergia;
         public AudioClip faltaIniciar;
         public AudioClip faltaTemp;
@@ -90,7 +96,7 @@ namespace ViroLab.Pasteurizador.Simulator
         public void StartGuide()
         {
             if (_greeted) return;
-            Play(bienvenida);
+            Play(bienvenida, NarradorUnico.Prioridad.Urgente, 0f, cedeLaPalabra: true);
             _greeted = true;
         }
 
@@ -98,13 +104,13 @@ namespace ViroLab.Pasteurizador.Simulator
         {
             if (_greeted) return;
             if (startMode == StartMode.BotonEmpezar) return; // arranca con el botón EMPEZAR, no por cercanía
-            if (greetOnStart) { Play(bienvenida); _greeted = true; return; }
+            if (greetOnStart) { Play(bienvenida, NarradorUnico.Prioridad.Urgente, 0f, cedeLaPalabra: true); _greeted = true; return; }
             if (Time.timeSinceLevelLoad < startupDelay) return; // ignora los primeros frames (cámara posicionándose)
             var cam = GetPlayerCamera();
             if (cam == null) return;
             float d = Vector3.Distance(cam.position, tablero.position);
             if (d > proximityDistance) { _armed = true; return; } // el jugador está lejos: se arma
-            if (_armed) { Play(bienvenida); _greeted = true; } // solo saluda si venía de lejos (se acercó al tablero)
+            if (_armed) { Play(bienvenida, NarradorUnico.Prioridad.Urgente, 0f, cedeLaPalabra: true); _greeted = true; } // solo saluda si venía de lejos (se acercó al tablero)
         }
 
         void HandleSequence()
@@ -130,7 +136,7 @@ namespace ViroLab.Pasteurizador.Simulator
             if (Edge(ref pAccum, accumulating)) Play(acumulando);
 
             if (Edge(ref pValid, engine.vProd)) Play(valido);
-            if (Edge(ref pAlarm, engine.alarm)) Play(alarma);
+            if (Edge(ref pAlarm, engine.alarm)) Play(alarma, NarradorUnico.Prioridad.Urgente);
 
             bool tankFull = engine.tankOutVol >= PasteurizerSimEngine.TANK_OUT_MAX - 0.5f;
             if (Edge(ref pTankFull, tankFull)) Play(tanqueLleno);
@@ -146,13 +152,13 @@ namespace ViroLab.Pasteurizador.Simulator
             string x = h.ToLower();
 
             if (x.Contains("primero encender energ") || x.Contains("energía debe estar") || x.Contains("energia debe estar"))
-                Play(faltaEnergia);
+                Play(faltaEnergia, NarradorUnico.Prioridad.Correccion, caducidadDeLasCorrecciones);
             else if (x.Contains("falta pulsar iniciar") || x.Contains("iniciar antes"))
-                Play(faltaIniciar);
+                Play(faltaIniciar, NarradorUnico.Prioridad.Correccion, caducidadDeLasCorrecciones);
             else if (x.Contains("esperar t calentamiento") || x.Contains("calefactor debe estar"))
-                Play(faltaTemp);
+                Play(faltaTemp, NarradorUnico.Prioridad.Correccion, caducidadDeLasCorrecciones);
             else if (x.Contains("nivel <"))
-                Play(faltaNivel);
+                Play(faltaNivel, NarradorUnico.Prioridad.Correccion, caducidadDeLasCorrecciones);
         }
 
         static bool Edge(ref bool prev, bool now) { bool e = now && !prev; prev = now; return e; }
@@ -168,15 +174,22 @@ namespace ViroLab.Pasteurizador.Simulator
             return null;
         }
 
-        void Play(AudioClip c)
+        /// <summary>
+        /// Pide turno para una locucion. Ya no se impone cortando la anterior.
+        ///
+        /// La guia no habla porque alguien la llame, sino porque el motor cambia
+        /// de estado, y los estados encadenan: en cuanto arranca la bomba de
+        /// producto el liquido alcanza la temperatura de retencion uno o dos
+        /// segundos despues. La locucion de la bomba dura 18,5 segundos y la
+        /// siguiente la cortaba a los dos. Ahora espera su turno.
+        /// </summary>
+        void Play(AudioClip c,
+                  NarradorUnico.Prioridad prioridad = NarradorUnico.Prioridad.Secuencia,
+                  float caducidad = 0f,
+                  bool cedeLaPalabra = false)
         {
             if (c == null || source == null) return;
-            // Manda el ultimo que habla: la guia calla al carrusel, al video y a
-            // cualquier otra narracion antes de arrancar la suya.
-            NarradorUnico.TomarLaPalabra(source);
-            source.Stop();
-            source.clip = c;
-            source.Play();
+            NarradorUnico.Pedir(source, c, prioridad, caducidad, cedeLaPalabra);
         }
 
         /// <summary>
