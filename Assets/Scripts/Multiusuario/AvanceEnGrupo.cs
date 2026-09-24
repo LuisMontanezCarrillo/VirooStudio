@@ -101,6 +101,13 @@ namespace ViroLab.Multiusuario
                  "desde el editor.")]
         public UnityEvent DespuesDelSalto;
 
+        [Tooltip("Segundos entre disparar «Antes del salto» y mover al grupo. Tiene " +
+                 "que dar tiempo a que el fundido llegue a negro: si el salto ocurre " +
+                 "en el mismo fotograma, el participante ve el teletransporte a plena " +
+                 "luz y el negro le llega después. 2 segundos es la duración por " +
+                 "defecto del fundido.")]
+        public float margenAntesDelSalto = 2f;
+
         [Tooltip("Segundos entre ejecutar el salto y disparar «Después del salto». " +
                  "Da margen a que VIROO haya colocado a los participantes.")]
         public float margenTrasElSalto = 0.35f;
@@ -219,36 +226,47 @@ namespace ViroLab.Multiusuario
             if (_yaSalto) return;
             _yaSalto = true;
 
-            AntesDelSalto?.Invoke();
-            StartCoroutine(AvisarDeLaLlegada());
-
-            // Un unico cliente ejecuta el salto. Si lo ejecutaran los cuatro, el
-            // grupo se teletransportaria cuatro veces seguidas.
-            if (!SoyElClienteDesignado())
-            {
-                if (log) Debug.Log($"[AvanceEnGrupo] Salto de grupo ({motivo}); lo ejecuta otro cliente.");
-                return;
-            }
-
-            if (saltoDeGrupo == null)
-            {
-                Debug.LogError("[AvanceEnGrupo] Falta el TeleportAllAction. El grupo no se " +
-                               "moverá. NO sustituyas esto moviendo el PlayerRoot a mano: " +
-                               "eso rompe la protección frente a choques.", this);
-                return;
-            }
-
-            if (destino != null) saltoDeGrupo.TeleportPosition = destino;
-
-            if (log) Debug.Log($"[AvanceEnGrupo] Ejecutando el salto de grupo ({motivo}).");
-            saltoDeGrupo.Execute();
+            StartCoroutine(RutinaDelSalto(motivo));
         }
 
-        /// Se dispara en TODOS los clientes, tambien en los que no ejecutaron el
-        /// salto, porque IntentarSaltar corre en todos y solo esta cerrado al
-        /// cliente designado el Execute del teletransporte.
-        private IEnumerator AvisarDeLaLlegada()
+        /// <summary>
+        /// El salto, en orden: se avisa, se deja que el fundido cierre, se mueve al
+        /// grupo y se avisa de la llegada.
+        ///
+        /// El primer margen no es decorativo. Antes se invocaba AntesDelSalto y se
+        /// ejecutaba el teletransporte en el mismo fotograma, de modo que el
+        /// participante veia el salto a plena luz y el fundido le llegaba despues.
+        /// </summary>
+        private IEnumerator RutinaDelSalto(string motivo)
         {
+            AntesDelSalto?.Invoke();
+
+            if (margenAntesDelSalto > 0f) yield return new WaitForSeconds(margenAntesDelSalto);
+
+            // Un unico cliente ejecuta el salto. Si lo ejecutaran los dos, el grupo
+            // se teletransportaria dos veces seguidas.
+            if (SoyElClienteDesignado())
+            {
+                if (saltoDeGrupo == null)
+                {
+                    Debug.LogError("[AvanceEnGrupo] Falta el TeleportAllAction. El grupo no se " +
+                                   "moverá. NO sustituyas esto moviendo el PlayerRoot a mano: " +
+                                   "eso rompe la protección frente a choques.", this);
+                }
+                else
+                {
+                    if (destino != null) saltoDeGrupo.TeleportPosition = destino;
+                    if (log) Debug.Log($"[AvanceEnGrupo] Ejecutando el salto de grupo ({motivo}).");
+                    saltoDeGrupo.Execute();
+                }
+            }
+            else if (log)
+            {
+                Debug.Log($"[AvanceEnGrupo] Salto de grupo ({motivo}); lo ejecuta otro cliente.");
+            }
+
+            // DespuesDelSalto se dispara en TODOS los clientes, tambien en los que no
+            // ejecutaron el teletransporte, porque esta rutina corre en todos.
             if (margenTrasElSalto > 0f) yield return new WaitForSeconds(margenTrasElSalto);
             DespuesDelSalto?.Invoke();
         }

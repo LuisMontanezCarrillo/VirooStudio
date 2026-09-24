@@ -159,6 +159,7 @@ Rellene así:
 | **Destino** | `Root/Planta_Piloto/Punto_Destino_Planta` |
 | **Esperar a todos** | marcado |
 | **Espera máxima** | 180 |
+| **Margen antes del salto** | 2 |
 | **Margen tras el salto** | 0.35 |
 | **Log** | marcado, por ahora |
 
@@ -234,6 +235,11 @@ Ahora, en el componente **`Avance en grupo`** de `Avance_Reto1`:
 | **Antes del salto** | `Fundido` | `FundidoDePantalla → OscurecerAhora ()` |
 | **Después del salto** | `Fundido` | `FundidoDePantalla → AclararAhora ()` |
 
+> **El `Margen antes del salto` de 2 segundos del paso anterior es lo que hace que esto se vea
+> bien.** El fundido tarda 2 segundos en llegar a negro; sin ese margen el teletransporte
+> ocurriría en el mismo fotograma en que empieza a oscurecer, y el participante vería el salto
+> a plena luz con el negro llegándole después.
+
 > **Por qué `Después del salto` y no el evento del teletransporte.** Esto me obligó a añadir
 > código después de escribir la primera versión de esta guía. El `TeleportAllAction` de VIROO
 > **no expone ningún evento en el Inspector**: tiene un `OnActionExecuted`, pero es un evento
@@ -257,8 +263,21 @@ Seleccione **`Root/Planta_Piloto/Lavamanos`** y mire el componente `FadeOutVR`, 
 | `RoomTone_PlantaPiloto` | `AudioSource.Play` | — |
 
 **Cópielas una por una** al campo **`Después del salto`** del `Avance en grupo` de
-`Avance_Reto1`, con los mismos objetos, las mismas funciones y los mismos argumentos. Quedarán
-cinco entradas contando el `AclararAhora` del paso anterior.
+`Avance_Reto1`, con los mismos objetos, las mismas funciones y los mismos argumentos.
+
+Quedarán cinco entradas, y **el orden importa**. Deje `AclararAhora` la última:
+
+| # | Object | Function | Argumento |
+|---|---|---|---|
+| 1 | `Canvas_Esc1` | `GameObject.SetActive` | **false** |
+| 2 | `Canvas _Esc2` | `GameObject.SetActive` | **true** |
+| 3 | `Bisagra_Puerta` | `ControladorPuerta.CerrarInstante` | — |
+| 4 | `RoomTone_PlantaPiloto` | `AudioSource.Play` | — |
+| 5 | `Fundido` | `FundidoDePantalla.AclararAhora` | — |
+
+Las entradas de un UnityEvent se ejecutan en el orden de la lista. Con `AclararAhora` al final,
+el cambio de lienzo y el cierre de la puerta ya han ocurrido cuando la pantalla empieza a
+aclarar, así que el participante no ve la puerta cerrarse de golpe delante de él.
 
 **No borre todavía las originales.** Se quedan donde están hasta la parte 7.
 
