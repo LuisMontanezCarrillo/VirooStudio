@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using Viroo.Interactions;
@@ -92,6 +93,18 @@ namespace ViroLab.Multiusuario
                  "Úsalo para el fundido a negro.")]
         public UnityEvent AntesDelSalto;
 
+        [Tooltip("Se dispara tras el salto, en todos los clientes. Úsalo para el " +
+                 "fundido de entrada y para encender lo que toque del reto nuevo. " +
+                 "Existe porque el TeleportAllAction de VIROO NO expone ningún evento " +
+                 "en el Inspector: su OnActionExecuted es un evento de C#, no un " +
+                 "UnityEvent serializado, así que no hay forma de engancharse a él " +
+                 "desde el editor.")]
+        public UnityEvent DespuesDelSalto;
+
+        [Tooltip("Segundos entre ejecutar el salto y disparar «Después del salto». " +
+                 "Da margen a que VIROO haya colocado a los participantes.")]
+        public float margenTrasElSalto = 0.35f;
+
         [Serializable] public class UnityEventInt : UnityEvent<int> { }
 
         [Header("Diagnóstico")]
@@ -172,6 +185,7 @@ namespace ViroLab.Multiusuario
             _yaSalto = true;
 
             AntesDelSalto?.Invoke();
+            StartCoroutine(AvisarDeLaLlegada());
 
             // Un unico cliente ejecuta el salto. Si lo ejecutaran los cuatro, el
             // grupo se teletransportaria cuatro veces seguidas.
@@ -193,6 +207,15 @@ namespace ViroLab.Multiusuario
 
             if (log) Debug.Log($"[AvanceEnGrupo] Ejecutando el salto de grupo ({motivo}).");
             saltoDeGrupo.Execute();
+        }
+
+        /// Se dispara en TODOS los clientes, tambien en los que no ejecutaron el
+        /// salto, porque IntentarSaltar corre en todos y solo esta cerrado al
+        /// cliente designado el Execute del teletransporte.
+        private IEnumerator AvisarDeLaLlegada()
+        {
+            if (margenTrasElSalto > 0f) yield return new WaitForSeconds(margenTrasElSalto);
+            DespuesDelSalto?.Invoke();
         }
 
         /// <summary>

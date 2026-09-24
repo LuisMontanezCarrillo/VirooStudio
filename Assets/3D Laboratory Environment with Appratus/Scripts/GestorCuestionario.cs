@@ -26,6 +26,12 @@ public class GestorCuestionario : MonoBehaviour, IReiniciable
     public AudioClip sonidoIncorrecto;
 
     [Header("Avance al reto 3")]
+    [Tooltip("Asigna aquí la ReunionEnElCentro del reto 2 si quieres que los " +
+             "participantes vayan a sus marcas antes de saltar. Durante el reto 2 " +
+             "recorren la planta y el carrusel, así que al terminar están " +
+             "dispersos. Tiene prioridad sobre el campo de abajo.")]
+    public ReunionEnElCentro reunion;
+
     [Tooltip("Asigna aquí el AvanceEnGrupo del reto 2. Con él asignado, el salto " +
              "lo hace VIROO moviendo a los dos participantes a la vez, que es lo " +
              "único compatible con la protección frente a choques. Mientras esté " +
@@ -222,13 +228,16 @@ public class GestorCuestionario : MonoBehaviour, IReiniciable
         // relativas, que es lo unico compatible con el aviso de proximidad. El
         // fundido, la espera al companero y el encendido de la Escena 3 cuelgan
         // de los eventos de AvanceEnGrupo, cableados en el Inspector.
-        if (avanceEnGrupo != null)
+        if (reunion != null || avanceEnGrupo != null)
         {
-            // Que no arranque el video encima de la locucion de cierre.
+            // Que no arranque nada encima de la locucion de cierre.
             while (duracionVO > 0f && Time.time < instanteInicioVO + duracionVO)
                 yield return null;
 
-            avanceEnGrupo.AnunciarQueTermine();
+            // Con reunion, los participantes van primero a sus marcas y es ella
+            // la que anuncia por ellos. Sin reunion, se anuncia directamente.
+            if (reunion != null) reunion.Convocar();
+            else                 avanceEnGrupo.AnunciarQueTermine();
             yield break;
         }
 
