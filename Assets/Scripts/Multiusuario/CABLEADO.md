@@ -170,7 +170,7 @@ Rellene así:
 |---|---|
 | **Marcas** | ponga `Size` a **2**, y arrastre `Marca_Reto1_A` al elemento 0 y `Marca_Reto1_B` al 1 |
 | **Radio** | 0.8 |
-| **Avance** | el `AvanceEnGrupo` del paso 2.4 |
+| **Avance** | arrastre el propio objeto `Avance_Reto1`; Unity coge su `AvanceEnGrupo`. Si lo deja vacío, el componente lo busca solo en este mismo objeto, pero es mejor dejarlo a la vista |
 | **Espera máxima** | 60 |
 | **Log** | marcado |
 
@@ -499,5 +499,7 @@ Leído del archivo de escena, no de memoria.
 | Tras el reinicio no se puede hacer clic en el lavamanos | Falta la `Foto de la escena`, o le falta alguna raíz, o `Incluir componentes` está desmarcado |
 | Tras el reinicio el tablero del simulador sigue encendido | Falta `_SimDashboard` en las raíces de la foto |
 | El aviso de reunión no espera a nada | Faltan las marcas, o el `Radio` es enorme |
+| «Falta el AvanceEnGrupo: el grupo no avanzará» | Está sin asignar el campo `Avance` de la `Reunión en el centro`, y tampoco hay un `AvanceEnGrupo` en ese objeto. **Si sale este error, lo demás funcionó**: la reunión convocó, asignó marca y detectó la llegada |
+| En el editor la marca se da por pisada al instante | Normal. Sin visor, la cámara arranca cerca del centro de la sala, que es donde están las marcas. La prueba de verdad es con los visores |
 
 Cualquier cosa que no encaje con esto, pásemela con la línea de consola y la miro.

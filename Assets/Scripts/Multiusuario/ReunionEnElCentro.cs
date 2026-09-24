@@ -45,7 +45,9 @@ namespace ViroLab.Multiusuario
         public float radio = 0.8f;
 
         [Header("Qué pasa después")]
-        [Tooltip("El AvanceEnGrupo al que se le anuncia el fin una vez reunidos.")]
+        [Tooltip("El AvanceEnGrupo al que se le anuncia el fin una vez reunidos. Si " +
+                 "se deja vacío se busca en este mismo objeto, que es donde suele " +
+                 "estar.")]
         public AvanceEnGrupo avance;
 
         [Tooltip("Segundos máximos esperando a que el participante pise su marca. " +
@@ -79,6 +81,29 @@ namespace ViroLab.Multiusuario
         private float _convocadoEn;
         private Transform _miMarca;
         private float _ultimaDistanciaAvisada = -1f;
+
+        // ================================================================
+        //  Puesta a punto
+        // ================================================================
+
+        /// Al anadir el componente desde el Inspector, deja el campo ya relleno si
+        /// el AvanceEnGrupo esta en el mismo objeto.
+        private void Reset()
+        {
+            if (avance == null) avance = GetComponent<AvanceEnGrupo>();
+        }
+
+        private void Awake()
+        {
+            // Red de seguridad: los dos componentes van siempre en el mismo objeto,
+            // y olvidar el arrastre no se nota hasta que el estudiante ya ha pisado
+            // su marca y el grupo no avanza.
+            if (avance == null) avance = GetComponent<AvanceEnGrupo>();
+
+            if (avance == null)
+                Debug.LogWarning("[ReunionEnElCentro] No hay AvanceEnGrupo asignado ni en este " +
+                                 "objeto. Asígnalo en el campo «Avance» o el grupo no avanzará.", this);
+        }
 
         // ================================================================
         //  Entrada
