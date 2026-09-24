@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Viroo.Networking;
 
@@ -29,6 +30,39 @@ namespace ViroLab.Multiusuario
         }
 
         /// <summary>
+        /// Puesto del participante local en la sala, contando desde cero, por
+        /// orden de identificador de cliente. El orden es el mismo en todos los
+        /// clientes, de modo que cada uno sabe cual es su sitio sin negociarlo.
+        ///
+        /// Devuelve 0 si no hay datos de sesion (pruebas en el editor).
+        /// </summary>
+        public static int IndiceDelJugadorLocal()
+        {
+            var jugadores = UnityEngine.Object.FindObjectsByType<Player>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            if (jugadores == null || jugadores.Length == 0) return 0;
+
+            string mio = null;
+            var ids = new List<string>();
+
+            foreach (var p in jugadores)
+            {
+                if (p is not IPlayer ip) continue;
+                string id = Convert.ToString(ip.ClientId);
+                if (string.IsNullOrEmpty(id)) continue;
+
+                ids.Add(id);
+                if (ip.IsLocalPlayer == true) mio = id;
+            }
+
+            if (mio == null || ids.Count == 0) return 0;
+
+            ids.Sort(string.CompareOrdinal);
+            int i = ids.IndexOf(mio);
+            return i < 0 ? 0 : i;
+        }
+
+        /// <summary>
         /// Cierto en UN SOLO cliente de la sala: el del identificador menor.
         /// El criterio se evalua igual en todos, de modo que todos coinciden en
         /// quien es sin necesidad de negociarlo.
@@ -38,25 +72,7 @@ namespace ViroLab.Multiusuario
         /// </summary>
         public static bool SoyElClienteDesignado()
         {
-            var jugadores = UnityEngine.Object.FindObjectsByType<Player>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            if (jugadores == null || jugadores.Length == 0) return true;
-
-            string menor = null;
-            string mio = null;
-
-            foreach (var p in jugadores)
-            {
-                if (p is not IPlayer ip) continue;
-                string id = Convert.ToString(ip.ClientId);
-                if (string.IsNullOrEmpty(id)) continue;
-
-                if (menor == null || string.CompareOrdinal(id, menor) < 0) menor = id;
-                if (ip.IsLocalPlayer == true) mio = id;
-            }
-
-            if (menor == null || mio == null) return true;
-            return mio == menor;
+            return IndiceDelJugadorLocal() == 0;
         }
     }
 }
