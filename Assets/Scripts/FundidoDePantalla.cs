@@ -25,6 +25,12 @@ public class FundidoDePantalla : MonoBehaviour
 {
     public const float DuracionPorDefecto = 2f;
 
+    [Tooltip("Segundos que tarda en oscurecer y en aclarar, para OscurecerAhora y " +
+             "AclararAhora. Los dos fundidos de una transición se pagan enteros: " +
+             "con 2 s son 4 s de cada salto, y con veinte tandas el día 29 eso se " +
+             "nota. 0,8 s sigue leyéndose como fundido y no como corte.")]
+    public float duracion = 0.8f;
+
     private static FundidoDePantalla _instancia;
 
     private Canvas _lienzo;
@@ -77,10 +83,10 @@ public class FundidoDePantalla : MonoBehaviour
     /// Version para cablear en un UnityEvent del Inspector, que no sabe esperar
     /// corrutinas. Oscurece con la duracion por defecto y devuelve el control.
     /// </summary>
-    public void OscurecerAhora() { StartCoroutine(Oscurecer()); }
+    public void OscurecerAhora() { StartCoroutine(Oscurecer(duracion)); }
 
     /// <summary>Lo mismo para aclarar. Ver OscurecerAhora.</summary>
-    public void AclararAhora() { StartCoroutine(Aclarar()); }
+    public void AclararAhora() { StartCoroutine(Aclarar(duracion)); }
 
     /// <summary>Negro inmediato, sin transicion.</summary>
     public void Negro()

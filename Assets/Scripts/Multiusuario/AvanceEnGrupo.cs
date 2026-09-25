@@ -200,7 +200,15 @@ namespace ViroLab.Multiusuario
             if (_instanteDelPrimerAnuncio < 0f) _instanteDelPrimerAnuncio = Time.unscaledTime;
 
             int total = ParticipantesConectados();
-            if (log) Debug.Log($"[AvanceEnGrupo] Han terminado {_anuncios} de {total}.");
+            if (log)
+            {
+                // El retrato de la sala va aqui a proposito: si la cuenta sale mas
+                // alta que el numero de estudiantes con visor, el grupo estaria
+                // esperando a alguien que nunca va a terminar un reto, y eso solo
+                // se ve mirando quien esta conectado.
+                Debug.Log($"[AvanceEnGrupo] Han terminado {_anuncios} de {total}. " +
+                          $"En la sala: {SesionViroo.Retrato()}");
+            }
             AlCambiarLaCuenta?.Invoke(_anuncios);
 
             if (!esperarATodos || _anuncios >= total) IntentarSaltar("están todos");

@@ -61,6 +61,14 @@ namespace ViroLab.Multiusuario
                  "impide que termine, se convoca igualmente.")]
         public float esperaMaximaDelAudio = 30f;
 
+        [Tooltip("Marcado: se convoca de inmediato y el participante camina hacia su " +
+                 "marca MIENTRAS suena la locución; el salto sigue esperando a que " +
+                 "termine. Ahorra el tiempo de caminar, que de otro modo se suma al " +
+                 "de la locución. " +
+                 "Sin marcar: primero se escucha entera y después se camina. Más " +
+                 "reposado, pero cada tanda cuesta lo que se tarde en llegar.")]
+        public bool caminarMientrasHabla = false;
+
         [Header("Qué pasa después")]
         [Tooltip("El AvanceEnGrupo al que se le anuncia el fin una vez reunidos. Si " +
                  "se deja vacío se busca en este mismo objeto, que es donde suele " +
@@ -94,6 +102,7 @@ namespace ViroLab.Multiusuario
         public bool log = true;
 
         private bool _pedido;
+        private bool _llego;
         private bool _convocado;
         private bool _yaAnuncie;
         private float _convocadoEn;
@@ -136,8 +145,14 @@ namespace ViroLab.Multiusuario
             if (_pedido || _convocado || _yaAnuncie) return;
             _pedido = true;
 
-            // Sin nada que esperar, se convoca en el acto.
-            if (esperarAQueTermine == null && esperaAdicional <= 0f) { ConvocarYa(); return; }
+            // Sin nada que esperar, o pudiendo caminar mientras habla, se convoca
+            // en el acto. En el segundo caso quien espera al audio es el anuncio,
+            // no la convocatoria.
+            if (caminarMientrasHabla || (esperarAQueTermine == null && esperaAdicional <= 0f))
+            {
+                ConvocarYa();
+                return;
+            }
 
             StartCoroutine(ConvocarCuandoToque());
         }
@@ -222,7 +237,16 @@ namespace ViroLab.Multiusuario
 
             if (d <= radio)
             {
-                AlLlegarALaMarca?.Invoke();
+                if (!_llego)
+                {
+                    _llego = true;
+                    AlLlegarALaMarca?.Invoke();
+                }
+
+                // Ya esta en su sitio, pero la locucion sigue: se espera a que
+                // termine antes de anunciar, para no cortarla con el fundido.
+                if (LaVozSigueHablando()) return;
+
                 Anunciar("ha pisado su marca");
                 return;
             }
@@ -233,6 +257,15 @@ namespace ViroLab.Multiusuario
                                  $"con el participante a {d:F1} m de su marca. Se avanza igualmente.", this);
                 Anunciar("se agotó la espera");
             }
+        }
+
+        /// Cierto mientras el audio de cierre siga sonando, con el mismo tope de
+        /// seguridad que usa la convocatoria diferida.
+        private bool LaVozSigueHablando()
+        {
+            if (!caminarMientrasHabla || esperarAQueTermine == null) return false;
+            if (Time.unscaledTime - _convocadoEn >= Mathf.Max(0f, esperaMaximaDelAudio)) return false;
+            return esperarAQueTermine.isPlaying;
         }
 
         private float DistanciaALaMarca()
@@ -285,6 +318,7 @@ namespace ViroLab.Multiusuario
             StopAllCoroutines();
             _pedido = false;
             _convocado = false;
+            _llego = false;
             _yaAnuncie = false;
             _convocadoEn = 0f;
             _miMarca = null;

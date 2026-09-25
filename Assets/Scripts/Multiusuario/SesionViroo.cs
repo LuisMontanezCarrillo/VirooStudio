@@ -30,6 +30,31 @@ namespace ViroLab.Multiusuario
         }
 
         /// <summary>
+        /// Lista quien hay conectado, con su identificador y su arena. Se usa al
+        /// contar participantes, para poder ver EN EL ENSAYO si la cuenta incluye
+        /// a alguien que no va a terminar ningun reto, como el cliente de
+        /// escritorio del moderador. Si eso pasara, el grupo esperaria a alguien
+        /// que nunca anuncia y solo avanzaria al agotarse la espera maxima.
+        /// </summary>
+        public static string Retrato()
+        {
+            var jugadores = UnityEngine.Object.FindObjectsByType<Player>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            if (jugadores == null || jugadores.Length == 0) return "sin sesión de VIROO";
+
+            var sb = new System.Text.StringBuilder();
+            foreach (var p in jugadores)
+            {
+                if (p is not IPlayer ip) continue;
+                sb.Append(sb.Length == 0 ? "" : " | ");
+                sb.Append(Convert.ToString(ip.ClientId));
+                sb.Append(ip.IsLocalPlayer == true ? " (yo)" : "");
+                sb.Append(" arena ").Append(Convert.ToString(ip.ArenaId));
+            }
+            return sb.Length == 0 ? "jugadores sin datos" : sb.ToString();
+        }
+
+        /// <summary>
         /// Puesto del participante local en la sala, contando desde cero, por
         /// orden de identificador de cliente. El orden es el mismo en todos los
         /// clientes, de modo que cada uno sabe cual es su sitio sin negociarlo.
