@@ -7772,6 +7772,7 @@ MonoBehaviour:
   esperarAQueTermine: {fileID: 340130474}
   esperaAdicional: 0
   esperaMaximaDelAudio: 30
+  caminarMientrasHabla: 1
   avance: {fileID: 276652111}
   esperaMaxima: 60
   AlConvocar:
