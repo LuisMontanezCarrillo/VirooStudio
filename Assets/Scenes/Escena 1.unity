@@ -33658,7 +33658,7 @@ MonoBehaviour:
   - {fileID: 69620965}
   - {fileID: 1554078734}
   radio: 0.8
-  mirarHacia: {fileID: 0}
+  mirarHacia: {fileID: 1079882289}
   toleranciaDeGiro: 35
   esperarAQueTermine: {fileID: 857495569}
   esperaAdicional: 0
