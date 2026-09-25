@@ -600,24 +600,107 @@ Y en la escena:
 El «14 componentes» de la consola es el número que debe salir: son los que saben reiniciarse
 solos. Si sale menos, algo no se está encontrando y conviene mirarlo antes del 29.
 
-## Parte 5 · El botón del moderador
+## Parte 5 · El mando del moderador
 
-El botón que usted va a pulsar veinte veces el día 29.
+Los controles que usted va a usar el 29: reiniciar para la tanda siguiente y desatascar un
+grupo que se quede parado.
 
-1. Póngalo **en el cliente de escritorio, fuera del alcance de los estudiantes**. El margen
-   antirrebote evita el doble clic, pero no evita un clic ajeno.
-2. En su `Button`, campo `On Click`, pulse **+**:
-   - Object: `Reinicio_Experiencia`
-   - Function: **`ReinicioDeExperiencia → PedirReinicio ()`**
+**Por teclado, no con un botón en la escena.** Son veinte tandas: un botón dentro del mundo
+virtual obliga a buscarlo, apuntarlo y pulsarlo veinte veces, y además queda al alcance de los
+estudiantes. Una combinación de teclas no está en ninguna parte del mundo virtual, no se puede
+pulsar por accidente desde un visor, y usted la tiene siempre disponible.
 
-> Hay otros dos botones de emergencia que conviene tener a mano el día de la prueba, por si una
-> pareja se atasca:
->
-> - **`AvanceEnGrupo → ForzarAvance ()`**: salta al reto siguiente sin esperar a nadie.
-> - **`ReunionEnElCentro → ForzarAnuncio ()`**: da por buena la reunión sin que nadie pise su
->   marca.
+Da igual desde qué cliente la pulse: **el reinicio se difunde por la red de VIROO** y llega a
+los dos visores.
 
----
+### 5.1 Crear el objeto
+
+Sobre `Root`: clic derecho → **Create Empty**. Nómbrelo **`Mando_Moderador`**.
+
+### 5.2 Añadirle el componente
+
+**Add Component** → **`ViroLab/Multiusuario/Mando del moderador`**.
+
+**No hace falta rellenar nada.** Los tres campos de arriba se buscan solos en la escena: el
+`ReinicioDeExperiencia`, todos los `AvanceEnGrupo` y todas las `ReunionEnElCentro`. Déjelos
+vacíos salvo que quiera limitar sobre cuáles actúa.
+
+Los valores por defecto son:
+
+| Campo | Valor | Qué hace |
+|---|---|---|
+| **Tecla De Reinicio** | `R` | Reinicia para la tanda siguiente |
+| **Tecla De Avance Forzado** | `F` | Hace avanzar al grupo sin esperar a nadie |
+| **Tecla De Reunion Forzada** | `G` | Da por buena la reunión sin pisar la marca |
+| **Exigir Ctrl Y Mayusculas** | marcado | **Déjelo así.** Sin eso, una tecla suelta reinicia la sesión |
+| **Confirmacion Doble** | marcado | El reinicio pide la combinación dos veces |
+| **Ventana De Confirmacion** | 4 | Segundos para confirmar |
+
+Los atajos quedan, entonces:
+
+| Atajo | Qué hace |
+|---|---|
+| **Ctrl + Mayús + R**, dos veces | Reinicia la experiencia |
+| **Ctrl + Mayús + F** | Avance forzado |
+| **Ctrl + Mayús + G** | Reunión dada por buena |
+
+### 5.3 Ver la confirmación en pantalla (opcional, pero recomendado)
+
+El reinicio pide la combinación **dos veces**, porque reiniciar por error a mitad de una tanda
+cuesta la tanda entera y con cuarenta estudiantes citados eso no se recupera. Entre la primera
+y la segunda pulsación tiene 4 segundos.
+
+Si quiere verlo sin mirar la consola, conecte los dos eventos del componente a un texto en su
+pantalla:
+
+| Evento | Para qué |
+|---|---|
+| **Al Pedir Confirmacion** | mostrar «pulsa otra vez para reiniciar» |
+| **Al Cancelarse** | ocultarlo |
+
+Si no conecta nada, el aviso sale igualmente en la consola:
+
+```
+[MandoDelModerador] ¿Reiniciar para la tanda siguiente? Repite la combinación en menos de 4 s.
+```
+
+### 5.4 Comprobación conjunta de las partes 4 y 5
+
+Al entrar en **Play**, lo primero que debe ver en la consola es el resumen de lo que el mando
+tiene bajo control:
+
+```
+[MandoDelModerador] Listo. 2 avance(s) y 2 reunión(es) bajo control.
+   Reinicio: Ctrl+Mayús+R · Avance forzado: Ctrl+Mayús+F · Reunión forzada: Ctrl+Mayús+G
+```
+
+Si dice **0 avance(s)**, es que no encuentra los `Avance_Reto1` y `Avance_Reto2`.
+
+Ahora avance hasta el reto 2 o el 3 y pulse **Ctrl+Mayús+R dos veces**. Debe salir:
+
+```
+[ReinicioDeExperiencia] Difundiendo la petición de reinicio.
+[ReinicioDeExperiencia] Devolviendo la experiencia al punto de partida.
+[FotoDeLaEscena] Estado devuelto: N cambios deshechos.
+[ReinicioDeExperiencia] 14 componentes devueltos a su estado inicial.
+[ReinicioDeExperiencia] Listo para la tanda siguiente.
+```
+
+Y en la escena:
+
+| Qué mirar | Cómo debe quedar |
+|---|---|
+| Lienzos | `Canvas_Esc1` encendido; `Canvas _Esc2`, `Canvas_Esc3`, `Canvas_Cuestionario` y `Canvas_VideoEsc3` apagados |
+| Casilleros | como al empezar |
+| **Lavamanos y maniquí** | **vuelven a responder al clic** |
+| Cuestionario | otra vez en la bienvenida, sin preguntas respondidas |
+| **Tablero del simulador 2D** | **apagado**, con el cartel de EMPEZAR delante |
+| Sonido | silencio |
+| Puerta | cerrada |
+
+Las dos filas en negrita son las que fallarían sin este trabajo: el lavamanos y el maniquí se
+desactivan solos al usarse, y el tablero se oculta en `Start`, que corre después de que la foto
+guarde el estado.
 
 ## Parte 6 · La prueba, con dos visores
 
