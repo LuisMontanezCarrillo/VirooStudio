@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using ViroLab.Multiusuario;
 
 namespace ViroLab.Pasteurizador.Simulator
 {
@@ -11,7 +12,7 @@ namespace ViroLab.Pasteurizador.Simulator
     /// El builder Editor (PasteurizerSimDashboardBuilder) crea el Canvas y
     /// asigna automáticamente las referencias de este componente.
     [RequireComponent(typeof(Canvas))]
-    public class PasteurizerSimDashboard : MonoBehaviour
+    public class PasteurizerSimDashboard : MonoBehaviour, IReiniciable
     {
         [Header("Motor")]
         public PasteurizerSimEngine engine;
@@ -274,13 +275,51 @@ namespace ViroLab.Pasteurizador.Simulator
 
             FijarVisible(false);
 
-            // El aviso de que el estudiante entro al reto 3 lo emite
-            // GestorCuestionario al terminar su transicion. El listener se
-            // agrega en codigo y es LOCAL: solo enciende el tablero de quien
-            // viajo, no el de los demas.
+            // Hay que enterarse de que el estudiante ha entrado al reto 3. Los
+            // listeners se agregan en codigo y son LOCALES: encienden el tablero
+            // de quien viajo, no el de los demas.
             var gestor = FindFirstObjectByType<GestorCuestionario>(FindObjectsInactive.Include);
-            if (gestor != null && gestor.OnTransitionComplete != null)
+            if (gestor == null)
+            {
+                Debug.LogWarning("[SimDashboard] No encuentro el GestorCuestionario: el tablero " +
+                                 "se queda oculto y no hay quien lo encienda.", this);
+                return;
+            }
+
+            // Camino antiguo: el cuestionario teletransportaba el mismo y avisaba
+            // al terminar su transicion.
+            if (gestor.OnTransitionComplete != null)
                 gestor.OnTransitionComplete.AddListener(MostrarTablero);
+
+            // Camino nuevo: avanza el grupo, y el cuestionario sale por yield break
+            // sin llegar a invocar OnTransitionComplete. El aviso util pasa a ser
+            // la LLEGADA al reto 3, que es justo lo que significa DespuesDelSalto.
+            var avance = gestor.avanceEnGrupo;
+            if (avance == null && gestor.reunion != null) avance = gestor.reunion.avance;
+
+            if (avance != null && avance.DespuesDelSalto != null)
+                avance.DespuesDelSalto.AddListener(MostrarTablero);
+            else if (gestor.reunion != null || gestor.avanceEnGrupo != null)
+                Debug.LogWarning("[SimDashboard] El cuestionario avanza en grupo pero no llego a " +
+                                 "su AvanceEnGrupo, asi que nadie va a encender el tablero en el " +
+                                 "reto 3. Revisa los campos Reunion y Avance En Grupo.", this);
+        }
+
+        /// <summary>
+        /// Vuelve a ocultar el tablero para la tanda siguiente.
+        ///
+        /// La foto de la escena no basta aqui. FotoDeLaEscena guarda el estado en
+        /// Awake y este tablero se oculta a si mismo en Start, que va despues: lo
+        /// que quedo fotografiado es el lienzo ENCENDIDO, tal como esta guardado en
+        /// la escena. Restaurar la foto lo dejaria visible desde el reto 1, que es
+        /// justo lo que los docentes reportaron.
+        ///
+        /// El reinicio aplica la foto primero y los reinicios propios despues, de
+        /// modo que esto manda sobre ella.
+        /// </summary>
+        public void ReiniciarAlInicio()
+        {
+            if (ocultarHastaElReto3) FijarVisible(false);
         }
 
         /// Enciende el tablero. La llama la transicion al reto 3 y la red de
