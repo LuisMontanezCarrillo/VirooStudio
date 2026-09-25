@@ -504,6 +504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cf81c0d5668a4a45805e9a99319ecd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duracion: 0.8
 --- !u!1 &47481819
 GameObject:
   m_ObjectHideFlags: 0
@@ -7769,6 +7770,8 @@ MonoBehaviour:
   - {fileID: 419730905}
   - {fileID: 1644226261}
   radio: 0.8
+  mirarHacia: {fileID: 0}
+  toleranciaDeGiro: 35
   esperarAQueTermine: {fileID: 340130474}
   esperaAdicional: 0
   esperaMaximaDelAudio: 30
@@ -7785,6 +7788,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   AlCambiarLaDistancia:
+    m_PersistentCalls:
+      m_Calls: []
+  AlCambiarElGiro:
     m_PersistentCalls:
       m_Calls: []
   log: 1
@@ -22075,8 +22081,8 @@ MonoBehaviour:
   audioCierreReto2: {fileID: 8300000, guid: e2280f04324eaad468ec8a4d6e4044c0, type: 3}
   sonidoCorrecto: {fileID: 8300000, guid: 7f290dbd13a49ea4686a822a94a5e853, type: 3}
   sonidoIncorrecto: {fileID: 8300000, guid: 0f1de9a42c6c27b4c9004db022cfcc61, type: 3}
-  reunion: {fileID: 0}
-  avanceEnGrupo: {fileID: 0}
+  reunion: {fileID: 1347875380}
+  avanceEnGrupo: {fileID: 1347875381}
   puntoDestinoEscena3: {fileID: 141025963}
   OnTransitionComplete:
     m_PersistentCalls:
@@ -33601,6 +33607,201 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1343104044}
   m_CullTransparentMesh: 1
+--- !u!1 &1347875378
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1347875379}
+  - component: {fileID: 1347875383}
+  - component: {fileID: 1347875382}
+  - component: {fileID: 1347875381}
+  - component: {fileID: 1347875380}
+  m_Layer: 0
+  m_Name: Avance_Reto2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1347875379
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347875378}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3817571384722755373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1347875380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347875378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92b85c2dc0bd9d34595b9ad498270eee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  marcas:
+  - {fileID: 69620965}
+  - {fileID: 1554078734}
+  radio: 0.8
+  mirarHacia: {fileID: 0}
+  toleranciaDeGiro: 35
+  esperarAQueTermine: {fileID: 857495569}
+  esperaAdicional: 0
+  esperaMaximaDelAudio: 30
+  caminarMientrasHabla: 1
+  avance: {fileID: 1347875381}
+  esperaMaxima: 60
+  AlConvocar:
+    m_PersistentCalls:
+      m_Calls: []
+  AlAsignarMarca:
+    m_PersistentCalls:
+      m_Calls: []
+  AlLlegarALaMarca:
+    m_PersistentCalls:
+      m_Calls: []
+  AlCambiarLaDistancia:
+    m_PersistentCalls:
+      m_Calls: []
+  AlCambiarElGiro:
+    m_PersistentCalls:
+      m_Calls: []
+  log: 1
+--- !u!114 &1347875381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347875378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 372c786bcad871f499c221c36b110e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anuncioDeFin: {fileID: 1347875383}
+  saltoDeGrupo: {fileID: 1347875382}
+  destino: {fileID: 141025963}
+  esperarATodos: 1
+  esperaMaxima: 180
+  AlQuedarEnEspera:
+    m_PersistentCalls:
+      m_Calls: []
+  AlCambiarLaCuenta:
+    m_PersistentCalls:
+      m_Calls: []
+  AntesDelSalto:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 42484020}
+        m_TargetAssemblyTypeName: FundidoDePantalla, Assembly-CSharp
+        m_MethodName: OscurecerAhora
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  DespuesDelSalto:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1079882288}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 42484020}
+        m_TargetAssemblyTypeName: FundidoDePantalla, Assembly-CSharp
+        m_MethodName: AclararAhora
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  margenAntesDelSalto: 2
+  margenTrasElSalto: 0.35
+  log: 1
+--- !u!114 &1347875382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347875378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f12c354cfeaa5764fa23ff786930440d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: ecc87205-513b-4c5c-808e-eef29cb2977f
+  textId: 
+  startsEnabled: 1
+  persistenceType: 0
+  teleportPosition: {fileID: 0}
+--- !u!114 &1347875383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347875378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d6d57a1916b2214aaed13c88c8a43f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 5bdfb78c-f56e-4246-b3f8-a47a79162c78
+  textId: 
+  startsEnabled: 1
+  persistenceType: 0
+  delay: 0
+  exposedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1347875381}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.AvanceEnGrupo, Assembly-CSharp
+        m_MethodName: RegistrarAnuncio
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onRestoreStateEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1352553684
 GameObject:
   m_ObjectHideFlags: 0
@@ -44338,6 +44539,134 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1acc6957f1749f9449324468a75cad02, type: 3}
+--- !u!1 &1782916814
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1782916815}
+  - component: {fileID: 1782916819}
+  - component: {fileID: 1782916818}
+  - component: {fileID: 1782916817}
+  - component: {fileID: 1782916816}
+  m_Layer: 0
+  m_Name: Reinicio_Experiencia
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1782916815
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782916814}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3817571384722755373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1782916816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782916814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bbef53610b21e64ab60d7a4b7287aa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  avisoDeReinicio: {fileID: 1782916819}
+  saltoAlInicio: {fileID: 1782916818}
+  puntoDeInicio: {fileID: 6208567811401578806}
+  duracionFundido: 0.8
+  margenTrasElSalto: 0.5
+  margenAntirrebote: 3
+  AlEmpezarElReinicio:
+    m_PersistentCalls:
+      m_Calls: []
+  AlTerminarElReinicio:
+    m_PersistentCalls:
+      m_Calls: []
+  log: 1
+--- !u!114 &1782916817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782916814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44ea607a2d8ca30408f4fce10d6b8f92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raices:
+  - {fileID: 3817571384722755373}
+  incluirComponentes: 1
+  log: 1
+--- !u!114 &1782916818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782916814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f12c354cfeaa5764fa23ff786930440d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: facb3577-79d0-41f6-b611-3ba54125e92e
+  textId: 
+  startsEnabled: 1
+  persistenceType: 0
+  teleportPosition: {fileID: 0}
+--- !u!114 &1782916819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782916814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d6d57a1916b2214aaed13c88c8a43f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 02043d6d-5d30-4267-84b5-a32dc439f011
+  textId: 
+  startsEnabled: 1
+  persistenceType: 0
+  delay: 0
+  exposedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1782916816}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.ReinicioDeExperiencia, Assembly-CSharp
+        m_MethodName: ReiniciarAqui
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onRestoreStateEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1784911263
 GameObject:
   m_ObjectHideFlags: 0
@@ -73868,6 +74197,8 @@ Transform:
   - {fileID: 1644226261}
   - {fileID: 276652109}
   - {fileID: 42484019}
+  - {fileID: 1347875379}
+  - {fileID: 1782916815}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3834981708564198463
