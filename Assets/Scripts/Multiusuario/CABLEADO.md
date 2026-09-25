@@ -437,6 +437,49 @@ Entre en **Play** y llegue hasta el final del cuestionario. La consola debe most
 La segunda línea no debe aparecer hasta que la locución de cierre haya terminado, aunque usted
 ya esté sobre la marca.
 
+### 3.9 Hacia dónde miran al llegar
+
+**El salto de VIROO traslada pero no gira a nadie.** Su `TeleportAllAction` no tiene el campo
+`Apply Rotation` que sí tiene el componente `TeleportPoint`, y es coherente: girar a una persona
+sin girar la sala rompería la correspondencia entre su posición física y la virtual, que es
+justo la protección frente a choques. El código antiguo sí les giraba, con
+`rootJugador.Rotate`, y por eso antes aparecían mirando al sitio correcto.
+
+Como el salto es una traslación pura, **el ángulo al que miran sobre la marca es exactamente el
+que tendrán al llegar**. Así que se resuelve en la marca.
+
+En el componente **`Reunión en el centro`** de `Avance_Reto2`:
+
+| Campo | Valor |
+|---|---|
+| **Mirar Hacia** | arrastre **`Root/Planta_Piloto/Canvas_Esc3`** |
+| **Tolerancia De Giro** | 35 |
+
+Con eso no se anuncia el fin hasta que el participante esté sobre su marca **y** mirando hacia
+donde va a estar el splash. El ángulo objetivo se mide desde el **destino del salto**, no desde
+la marca, porque es desde allí desde donde van a ver el splash.
+
+**Seleccione el componente y mire la vista de escena:** sobre cada marca aparece ahora una
+flecha verde con la dirección exigida. Si apunta a un sitio raro, revise que `Destino` del
+`Avance en grupo` y `Mirar Hacia` son los correctos.
+
+**Póngale al participante algo que seguir.** El componente dispara `AlCambiarElGiro` con los
+grados que le faltan, positivo hacia la derecha. Conéctelo a una flecha o a un texto en el
+cartel de la marca. Sin nada visible, la persona no sabe que se le está pidiendo girar y se
+quedará quieta hasta que salte la espera máxima.
+
+En la consola, mientras esté mal orientado, verá una vez:
+
+```
+[ReunionEnElCentro] En la marca, pero mirando a 112° de lo que toca (tolerancia 35°).
+```
+
+> Lo mismo aplica al reto 1 si quiere controlar hacia dónde llegan a la planta piloto: asigne
+> `Mirar Hacia` en el `Avance_Reto1`. Ahí no lo ha reportado como problema, así que puede
+> dejarlo vacío y el giro no se comprueba.
+
+---
+
 ## Parte 4 · El reinicio entre tandas
 
 Esta es la parte que decide si el día 29 sale. Hoy, para dejar la experiencia lista para la

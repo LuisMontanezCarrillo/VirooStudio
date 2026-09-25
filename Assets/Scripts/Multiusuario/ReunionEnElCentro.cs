@@ -45,6 +45,20 @@ namespace ViroLab.Multiusuario
         [Tooltip("Radio, en metros, dentro del cual se da por pisada la marca.")]
         public float radio = 0.8f;
 
+        [Header("Hacia dónde deben mirar")]
+        [Tooltip("OPCIONAL. Lo que el participante debe tener delante AL LLEGAR al reto " +
+                 "siguiente; normalmente el splash. Si se asigna, no se anuncia hasta " +
+                 "que esté sobre su marca Y mirando hacia ahí. " +
+                 "El salto de VIROO traslada pero NO gira a nadie (su TeleportAllAction " +
+                 "no tiene el campo Apply Rotation que sí tiene TeleportPoint), de modo " +
+                 "que el ángulo al que miran en la marca es exactamente el que tendrán " +
+                 "al llegar. Por eso se controla aquí y no allí.")]
+        public Transform mirarHacia;
+
+        [Tooltip("Cuántos grados de desvío se toleran. 35 es holgado y no obliga a " +
+                 "afinar; por debajo de 20 se vuelve incómodo con el visor puesto.")]
+        public float toleranciaDeGiro = 35f;
+
         [Header("Cuándo convocar")]
         [Tooltip("OPCIONAL. Si se asigna, no se convoca a nadie hasta que este " +
                  "audio termine. Es para no cortar la locución de cierre del reto. " +
@@ -95,6 +109,10 @@ namespace ViroLab.Multiusuario
                  "Úsalo si quieres mostrarla.")]
         public UnityEventFloat AlCambiarLaDistancia;
 
+        [Tooltip("Grados que le faltan por girar, ya sobre la marca. Positivo: tiene " +
+                 "que girar a la derecha. Úsalo para mover una flecha.")]
+        public UnityEventFloat AlCambiarElGiro;
+
         [Serializable] public class UnityEventTransform : UnityEvent<Transform> { }
         [Serializable] public class UnityEventFloat : UnityEvent<float> { }
 
@@ -108,6 +126,8 @@ namespace ViroLab.Multiusuario
         private float _convocadoEn;
         private Transform _miMarca;
         private float _ultimaDistanciaAvisada = -1f;
+        private float _ultimoGiroAvisado = -999f;
+        private bool _avisadoDelGiro;
 
         // ================================================================
         //  Puesta a punto
@@ -225,6 +245,17 @@ namespace ViroLab.Multiusuario
         {
             if (!_convocado || _yaAnuncie || _miMarca == null) return;
 
+            // El tope va PRIMERO. Estando sobre la marca pero mal orientado se sale
+            // antes de llegar aqui, y si el tope se comprobara al final una persona
+            // que no entienda el giro dejaria la sesion colgada para siempre.
+            if (esperaMaxima > 0f && Time.unscaledTime - _convocadoEn >= esperaMaxima)
+            {
+                Debug.LogWarning($"[ReunionEnElCentro] Se agotaron los {esperaMaxima:F0} s de espera " +
+                                 $"a {DistanciaALaMarca():F1} m de la marca. Se avanza igualmente.", this);
+                Anunciar("se agotó la espera");
+                return;
+            }
+
             float d = DistanciaALaMarca();
 
             // Solo se avisa al cambiar de decimetro: si no, es un evento por
@@ -235,28 +266,70 @@ namespace ViroLab.Multiusuario
                 AlCambiarLaDistancia?.Invoke(d);
             }
 
-            if (d <= radio)
+            if (d > radio) return;
+
+            if (!_llego)
             {
-                if (!_llego)
+                _llego = true;
+                AlLlegarALaMarca?.Invoke();
+            }
+
+            // Ya esta en su sitio; falta que mire a donde toca.
+            if (mirarHacia != null)
+            {
+                float giro = ErrorDeGiro();
+
+                if (Mathf.Abs(giro - _ultimoGiroAvisado) >= 2f)
                 {
-                    _llego = true;
-                    AlLlegarALaMarca?.Invoke();
+                    _ultimoGiroAvisado = giro;
+                    AlCambiarElGiro?.Invoke(giro);
                 }
 
-                // Ya esta en su sitio, pero la locucion sigue: se espera a que
-                // termine antes de anunciar, para no cortarla con el fundido.
-                if (LaVozSigueHablando()) return;
-
-                Anunciar("ha pisado su marca");
-                return;
+                if (Mathf.Abs(giro) > Mathf.Max(1f, toleranciaDeGiro))
+                {
+                    if (log && !_avisadoDelGiro)
+                    {
+                        _avisadoDelGiro = true;
+                        Debug.Log($"[ReunionEnElCentro] En la marca, pero mirando a " +
+                                  $"{giro:F0}° de lo que toca (tolerancia {toleranciaDeGiro:F0}°).");
+                    }
+                    return;
+                }
             }
 
-            if (esperaMaxima > 0f && Time.unscaledTime - _convocadoEn >= esperaMaxima)
-            {
-                Debug.LogWarning($"[ReunionEnElCentro] Se agotaron los {esperaMaxima:F0} s de espera " +
-                                 $"con el participante a {d:F1} m de su marca. Se avanza igualmente.", this);
-                Anunciar("se agotó la espera");
-            }
+            // Ya esta colocado, pero la locucion sigue: se espera a que termine
+            // antes de anunciar, para no cortarla con el fundido.
+            if (LaVozSigueHablando()) return;
+
+            Anunciar("está en su marca y bien orientado");
+        }
+
+        /// <summary>
+        /// Grados que le faltan por girar. Positivo, a la derecha.
+        ///
+        /// El objetivo NO se mide desde donde esta ahora, sino desde donde va a
+        /// aterrizar: el salto es una traslacion pura, asi que el angulo hacia el
+        /// splash hay que tomarlo desde el destino del avance. Medirlo desde la
+        /// marca daria un angulo distinto y los dejaria mirando a cualquier parte.
+        /// </summary>
+        private float ErrorDeGiro()
+        {
+            var cabeza = Camera.main != null ? Camera.main.transform : null;
+            if (cabeza == null || mirarHacia == null) return 0f;
+
+            Vector3 desde = (avance != null && avance.destino != null)
+                          ? avance.destino.position    // desde donde aterrizan
+                          : _miMarca.position;         // sin destino, lo mejor que hay
+
+            Vector3 objetivo = mirarHacia.position - desde;
+            objetivo.y = 0f;
+            if (objetivo.sqrMagnitude < 0.0001f) return 0f;
+
+            Vector3 mirada = cabeza.forward;
+            mirada.y = 0f;
+            if (mirada.sqrMagnitude < 0.0001f) return 0f;
+
+            return Vector3.SignedAngle(mirada, objetivo, Vector3.up);
         }
 
         /// Cierto mientras el audio de cierre siga sonando, con el mismo tope de
@@ -323,6 +396,8 @@ namespace ViroLab.Multiusuario
             _convocadoEn = 0f;
             _miMarca = null;
             _ultimaDistanciaAvisada = -1f;
+            _ultimoGiroAvisado = -999f;
+            _avisadoDelGiro = false;
         }
 
         // ================================================================
@@ -338,6 +413,36 @@ namespace ViroLab.Multiusuario
                 if (m == null) continue;
                 Gizmos.color = new Color(0.2f, 0.8f, 1f, 0.9f);
                 Gizmos.DrawWireSphere(m.position, radio);
+            }
+
+            // La direccion en la que tienen que mirar, dibujada sobre cada marca.
+            // Es la misma para las dos, porque se mide desde el destino del salto.
+            if (mirarHacia != null)
+            {
+                Vector3 desde = (avance != null && avance.destino != null)
+                              ? avance.destino.position
+                              : (marcas.Length > 0 && marcas[0] != null ? marcas[0].position : Vector3.zero);
+
+                Vector3 dir = mirarHacia.position - desde;
+                dir.y = 0f;
+
+                if (dir.sqrMagnitude > 0.0001f)
+                {
+                    dir.Normalize();
+                    Gizmos.color = new Color(0.3f, 1f, 0.3f, 0.9f);
+                    foreach (var m in marcas)
+                    {
+                        if (m == null) continue;
+                        Vector3 a = m.position + Vector3.up * 0.05f;
+                        Vector3 b = a + dir * 1.5f;
+                        Gizmos.DrawLine(a, b);
+                        // punta de flecha
+                        Vector3 izq = Quaternion.Euler(0, 150f, 0) * dir;
+                        Vector3 der = Quaternion.Euler(0, -150f, 0) * dir;
+                        Gizmos.DrawLine(b, b + izq * 0.35f);
+                        Gizmos.DrawLine(b, b + der * 0.35f);
+                    }
+                }
             }
 
             // La separacion entre marcas es la que tendran los participantes al
