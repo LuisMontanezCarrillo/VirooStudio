@@ -228,16 +228,27 @@ public class GestorCuestionario : MonoBehaviour, IReiniciable
         // relativas, que es lo unico compatible con el aviso de proximidad. El
         // fundido, la espera al companero y el encendido de la Escena 3 cuelgan
         // de los eventos de AvanceEnGrupo, cableados en el Inspector.
-        if (reunion != null || avanceEnGrupo != null)
+        if (reunion != null)
         {
-            // Que no arranque nada encima de la locucion de cierre.
+            // Se convoca YA, sin esperar a que acabe la locucion de cierre. Quien
+            // espera al audio es la reunion, antes de anunciar: asi el participante
+            // camina hacia su marca mientras escucha, en vez de escuchar quieto y
+            // caminar despues. La locucion no se corta, solo deja de ser tiempo
+            // muerto. Para que funcione, el campo «Esperar A Que Termine» de la
+            // reunion tiene que apuntar a este mismo AudioSource y «Caminar
+            // Mientras Habla» estar marcado.
+            reunion.Convocar();
+            yield break;
+        }
+
+        if (avanceEnGrupo != null)
+        {
+            // Sin reunion no hay nadie que sostenga el anuncio, asi que la espera
+            // a la locucion se hace aqui.
             while (duracionVO > 0f && Time.time < instanteInicioVO + duracionVO)
                 yield return null;
 
-            // Con reunion, los participantes van primero a sus marcas y es ella
-            // la que anuncia por ellos. Sin reunion, se anuncia directamente.
-            if (reunion != null) reunion.Convocar();
-            else                 avanceEnGrupo.AnunciarQueTermine();
+            avanceEnGrupo.AnunciarQueTermine();
             yield break;
         }
 

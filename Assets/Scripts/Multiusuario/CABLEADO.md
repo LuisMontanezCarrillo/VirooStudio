@@ -319,52 +319,123 @@ aparece sola y de inmediato, revise que asignó las marcas en el paso 2.5.
 
 ## Parte 3 · Avance del reto 2 al reto 3
 
-Es lo mismo, con otros nombres. Va más rápido.
+Misma estructura que la parte 2, con otros nombres. Va escrita entera para que no tenga que
+volver atrás.
 
-### 3.1 a 3.7
+Lo que cambia respecto al reto 1: aquí la locución de cierre (`Cierre_Reto2.ogg`, 18 segundos)
+la reproduce el propio cuestionario, no un objeto de la escena, así que el `AudioSource` al que
+hay que esperar está en otro sitio. Y el objeto `Fundido` ya existe: no se crea otro.
 
-Repita la parte 2 entera, cambiando:
+### 3.1 Crear el objeto
 
-| En la parte 2 | Aquí |
-|---|---|
-| Objeto `Avance_Reto1` | **`Avance_Reto2`** |
-| Marcas `Marca_Reto1_A/B` | **`Marca_Reto2_A/B`** |
-| Destino `Punto_Destino_Planta` | **`Root/Planta_Piloto/Punto_Inicio_Escena3`** |
+Sobre `Root`: clic derecho → **Create Empty**. Nómbrelo **`Avance_Reto2`**.
 
-El objeto `Fundido` del paso 2.7 **ya está creado**: aquí solo hay que volver a arrastrarlo a
-los dos eventos. Y sáltese el paso 2.9, que es propio del reto 1; su equivalente es el 3.9.
+### 3.2 Añadirle las dos acciones de VIROO
 
-### 3.8 Mover lo que enciende el reto 3
+Con `Avance_Reto2` seleccionado, **Add Component** y escriba en el buscador:
 
-Seleccione **`Root/Planta_Piloto/Canvas_Cuestionario`** (está apagado; para verlo en la
-jerarquía tendrá que desplegar `Planta_Piloto`). En el componente `GestorCuestionario`, campo
-**`On Transition Complete`**, hay una sola entrada:
+1. **`UnityEventAction`** — dejar `Exposed Event` vacío por ahora, `Menu Label` vacío,
+   `Persistence Type` en **None**, `Delay` en 0.
+2. **`TeleportAllAction`** — dejar `Teleport Position` **vacío**.
 
-| Object | Function | Argumento |
-|---|---|---|
-| `Canvas_Esc3` | `GameObject.SetActive` | **true** |
+### 3.3 Añadirle el avance en grupo
 
-Cópiela al **`Después del salto`** del `Avance en grupo` de `Avance_Reto2`.
-
-### 3.9 Apuntar la salida del reto 2
-
-Seleccione **`Root/Planta_Piloto/Canvas_Cuestionario`** y, en su componente
-`GestorCuestionario`, rellene los dos campos nuevos:
+**Add Component** → **`ViroLab/Multiusuario/Avance en grupo`**.
 
 | Campo | Valor |
 |---|---|
-| **Reunion** | arrastre `Avance_Reto2` (coge su `ReunionEnElCentro`) |
-| **Avance En Grupo** | arrastre `Avance_Reto2` (coge su `AvanceEnGrupo`) |
+| **Anuncio de fin** | arrastre el propio `Avance_Reto2`; Unity coge su `UnityEventAction` |
+| **Salto de grupo** | arrastre otra vez `Avance_Reto2`; coge su `TeleportAllAction` |
+| **Destino** | **`Root/Planta_Piloto/Punto_Inicio_Escena3`** |
+| **Esperar a todos** | marcado |
+| **Espera máxima** | 180 |
+| **Margen antes del salto** | 2 |
+| **Margen tras el salto** | 0.35 |
+| **Log** | marcado |
 
-Con `Reunion` relleno, al terminar el cuestionario se pide a cada participante que vaya a su
-marca y es la reunión la que anuncia por ellos. **Sí hace falta aquí**: durante el reto 2 los
-dos recorren la planta y el carrusel, así que al terminar están dispersos.
+> El `Margen antes del salto` puede bajarlo a **1** si deja el `Fundido` en 0,8 s. Tiene que ser
+> mayor o igual que la duración del fundido; por debajo, el salto ocurre antes de que la
+> pantalla esté negra.
 
-Si rellena solo `Avance En Grupo` y deja `Reunion` vacío, el grupo salta en cuanto los dos
-terminan, sin reunirse. Funciona, pero llegan al reto 3 con la separación que tuvieran.
+### 3.4 Añadirle la reunión
+
+**Add Component** → **`ViroLab/Multiusuario/Reunión en el centro`**.
+
+| Campo | Valor |
+|---|---|
+| **Marcas** | `Size` = **2**. Elemento 0: `Marca_Reto2_A`. Elemento 1: `Marca_Reto2_B` |
+| **Radio** | 0.8 |
+| **Esperar A Que Termine** | el `AudioSource` de **`Root/Planta_Piloto/Canvas_Cuestionario`** |
+| **Espera Adicional** | 0 |
+| **Espera Maxima Del Audio** | 30 |
+| **Caminar Mientras Habla** | **marcado** |
+| **Avance** | arrastre `Avance_Reto2` |
+| **Espera máxima** | 60 |
+| **Log** | marcado |
+
+> **Ojo con `Esperar A Que Termine`.** Aquí no es un objeto de sonido propio como en el reto 1:
+> es el `AudioSource` que está en el mismo objeto que el cuestionario,
+> `Root/Planta_Piloto/Canvas_Cuestionario`. Ese objeto arranca **apagado**, así que para verlo
+> en la jerarquía hay que desplegar `Planta_Piloto`. Es el que reproduce `Cierre_Reto2.ogg`.
+
+### 3.5 Cerrar el circuito del aviso
+
+> Compruebe antes que `Avance_Reto2` tiene los cinco componentes: `Transform`,
+> `UnityEventAction`, `TeleportAllAction`, `Avance en grupo` y `Reunión en el centro`. Si falta
+> alguno, el desplegable del paso siguiente no ofrecerá lo que busca.
+
+En el **`UnityEventAction`** de `Avance_Reto2`, campo **`Exposed Event`**, pulse **+**:
+
+- **Object**: arrastre `Avance_Reto2`.
+- **Function**: **`AvanceEnGrupo → RegistrarAnuncio ()`**.
+- Desplegable izquierdo en **Runtime Only**.
+
+### 3.6 El fundido y lo que se enciende al llegar
+
+En el componente **`Avance en grupo`** de `Avance_Reto2`:
+
+| Campo | Orden | Object | Function | Argumento |
+|---|---|---|---|---|
+| **Antes del salto** | — | `Fundido` | `FundidoDePantalla.OscurecerAhora` | — |
+| **Después del salto** | 1 | `Canvas_Esc3` | `GameObject.SetActive` | **true** |
+| **Después del salto** | 2 | `Fundido` | `FundidoDePantalla.AclararAhora` | — |
+
+`AclararAhora` va la última, por lo mismo que en el reto 1: las entradas se ejecutan en orden y
+conviene que el lienzo ya esté encendido cuando la pantalla empiece a aclarar.
+
+La entrada de `Canvas_Esc3` la copia del `On Transition Complete` del `GestorCuestionario`,
+donde está hoy. **No la borre de allí todavía**: eso es la parte 7.
+
+### 3.7 Apuntar la salida del reto 2
+
+Seleccione **`Root/Planta_Piloto/Canvas_Cuestionario`** y, en su componente
+`GestorCuestionario`, rellene los dos campos:
+
+| Campo | Valor |
+|---|---|
+| **Reunion** | arrastre `Avance_Reto2` |
+| **Avance En Grupo** | arrastre `Avance_Reto2` |
+
+Con `Reunion` relleno, al terminar el cuestionario se convoca de inmediato y el participante
+camina hacia su marca mientras suena la locución de cierre; el salto espera a que termine.
 
 Mientras los dos campos estén vacíos, el cuestionario sigue teletransportando por su cuenta
 como hoy y avisa por consola cada vez.
+
+### 3.8 Comprobación
+
+Entre en **Play** y llegue hasta el final del cuestionario. La consola debe mostrar:
+
+```
+[ReunionEnElCentro] Convocado al puesto 0: marca Marca_Reto2_A.
+[ReunionEnElCentro] Anunciando el fin (ha pisado su marca).
+[AvanceEnGrupo] Anunciando fin de reto al resto de la sala.
+[AvanceEnGrupo] Han terminado 1 de 1. En la sala: ...
+[AvanceEnGrupo] Ejecutando el salto de grupo (están todos).
+```
+
+La segunda línea no debe aparecer hasta que la locución de cierre haya terminado, aunque usted
+ya esté sobre la marca.
 
 ## Parte 4 · El reinicio entre tandas
 
