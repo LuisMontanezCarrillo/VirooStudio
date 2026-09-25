@@ -482,17 +482,27 @@ En la consola, mientras esté mal orientado, verá una vez:
 
 ## Parte 4 · El reinicio entre tandas
 
-Esta es la parte que decide si el día 29 sale. Hoy, para dejar la experiencia lista para la
-pareja siguiente, hay que cerrar la aplicación y relanzarla desde el Room Player. Veinte veces.
+Esta es la parte que decide si el 29 sale. Hoy, para dejar la experiencia lista para la pareja
+siguiente, hay que cerrar la aplicación y relanzarla desde el Room Player. Veinte veces, cada
+una con su carga de escena, su emparejamiento de visores y su calibración.
+
+Al terminar esta parte, el reinicio será un botón.
 
 ### 4.1 Crear el objeto
 
-Sobre `Root`: **Create Empty**, nómbrelo **`Reinicio_Experiencia`**.
+Sobre `Root`: clic derecho → **Create Empty**. Nómbrelo **`Reinicio_Experiencia`**.
 
 ### 4.2 Las dos acciones de VIROO
 
-**Add Component** → **`UnityEventAction`**.
-**Add Component** → **`TeleportAllAction`** (con `Teleport Position` vacío).
+Con `Reinicio_Experiencia` seleccionado, **Add Component** y escriba en el buscador:
+
+1. **`UnityEventAction`** — `Exposed Event` vacío por ahora, `Menu Label` vacío,
+   `Persistence Type` en **None**, `Delay` en 0.
+2. **`TeleportAllAction`** — `Teleport Position` **vacío**.
+
+> `Persistence Type` en **None** importa aquí más que en ningún otro sitio. Con otro valor,
+> VIROO recordaría que el reinicio se ejecutó y se lo reproduciría a quien entrase después a la
+> sesión: la pareja siguiente se reiniciaría sola a mitad del reto 1.
 
 ### 4.3 La foto de la escena
 
@@ -500,23 +510,29 @@ Sobre `Root`: **Create Empty**, nómbrelo **`Reinicio_Experiencia`**.
 
 | Campo | Valor |
 |---|---|
-| **Raíces** | `Size` = **2**. Elemento 0: arrastre **`Root`**. Elemento 1: arrastre **`_SimDashboard`** |
+| **Raíces** | `Size` = **1**. Elemento 0: arrastre **`Root`** |
 | **Incluir componentes** | **marcado** |
 | **Log** | marcado |
 
-**Por qué esto existe y por qué importa.** Inspeccionando la escena encontré tres componentes
-que se desactivan a sí mismos cuando se usan: el lavamanos, el maniquí y el casillero
-`locker room (3)` llaman a `set_enabled(false)` sobre su propio componente de interacción al
-completarse. Sin devolverlos, **la segunda pareja del día entraría y no podría hacer clic en
-nada**.
+> **Con `Root` basta.** Comprobé la escena: es el único objeto en la raíz y lleva 688 objetos
+> dentro, incluido `_SimDashboard`, que no está suelto sino colgando de
+> `Root/Planta_Piloto/`, dentro del televisor. Si en una versión anterior de esta guía leyó que
+> había que añadir `_SimDashboard` aparte, era un error mío: añadirlo no rompe nada, pero
+> sobra.
 
-Podría haberle pedido que enumerara a mano esos tres componentes y los siete lienzos que
-cambian de estado. Serían diez entradas que hay que mantener al día cada vez que se toque la
-escena, y la que se olvide es un fallo que no aparece hasta la tanda siguiente. En vez de eso,
-este componente fotografía el estado de todo al arrancar y lo devuelve entero.
+**Por qué este componente existe.** Inspeccionando la escena encontré tres componentes que se
+desactivan a sí mismos al usarse: el lavamanos, el maniquí y el casillero `locker room (3)`
+llaman a `set_enabled(false)` sobre su propio componente de interacción al completarse. Sin
+devolverlos, **la segunda pareja del día entraría y no podría hacer clic en nada**.
 
-**`_SimDashboard` está en la raíz de la escena, no dentro de `Root`.** Por eso hay que
-arrastrarlo aparte. Si se le olvida, el tablero del simulador no se reiniciará.
+La alternativa era que usted enumerase a mano esos tres componentes más los siete lienzos que
+cambian de estado: diez entradas que hay que mantener al día cada vez que se toque la escena, y
+la que se olvide es un fallo que no aparece hasta la tanda siguiente. En vez de eso, el
+componente fotografía el estado de todo en `Awake` y lo devuelve al reiniciar.
+
+Es seguro porque guarda referencias a los objetos que existían en ese momento, que son los que
+trae la escena guardada. **Los jugadores de VIROO se instancian después**, así que nunca entran
+en la foto ni se tocan al restaurar.
 
 ### 4.4 El orquestador
 
@@ -524,18 +540,21 @@ arrastrarlo aparte. Si se le olvida, el tablero del simulador no se reiniciará.
 
 | Campo | Valor |
 |---|---|
-| **Aviso de reinicio** | el `UnityEventAction` de 4.2 |
-| **Salto al inicio** | el `TeleportAllAction` de 4.2 |
+| **Aviso de reinicio** | arrastre el propio `Reinicio_Experiencia`; coge su `UnityEventAction` |
+| **Salto al inicio** | arrastre otra vez; coge su `TeleportAllAction` |
 | **Punto de inicio** | **`Root/RoomCenterStart`** |
-| **Duración fundido** | 1.5 |
+| **Duración fundido** | 0.8 |
 | **Margen tras el salto** | 0.5 |
 | **Margen antirrebote** | 3 |
-| **Al empezar el reinicio** | **déjelo vacío** |
-| **Al terminar el reinicio** | **déjelo vacío** |
+| **Al empezar el reinicio** | **vacío** |
+| **Al terminar el reinicio** | **vacío** |
 | **Log** | marcado |
 
-Los dos eventos se quedan vacíos a propósito. De los lienzos y los componentes ya se encarga la
-foto del paso anterior; están ahí solo por si algún día hace falta algo más.
+Los dos eventos se quedan vacíos a propósito: de los lienzos y los componentes ya se encarga la
+foto. Están ahí solo por si algún día hace falta algo más.
+
+`Punto de inicio` es `RoomCenterStart` porque ahí es donde cae el centro de la sala física al
+arrancar la experiencia. Devolver el grupo a ese punto es devolverlo al principio.
 
 ### 4.5 Cerrar el circuito
 
@@ -545,7 +564,41 @@ En el **`UnityEventAction`** de `Reinicio_Experiencia`, campo **`Exposed Event`*
 - **Function**: **`ReinicioDeExperiencia → ReiniciarAqui ()`**.
 - Desplegable izquierdo en **Runtime Only**.
 
----
+> Igual que en las partes 2 y 3: si `ReiniciarAqui` no aparece en el desplegable, es que falta
+> añadir el componente `Reinicio de la experiencia` del paso anterior.
+
+### 4.6 Comprobación
+
+Entre en **Play**, avance hasta el reto 2 o el 3, y con el juego corriendo seleccione
+`Reinicio_Experiencia` en la jerarquía. En el Inspector, en el menú de tres puntos del
+componente `Reinicio de la experiencia`, no hay botón: para probarlo sin haber montado aún el
+botón del moderador, lo más rápido es dejar esta comprobación para la parte 5 y probar las dos
+a la vez.
+
+Cuando lo dispare, la consola debe mostrar:
+
+```
+[ReinicioDeExperiencia] Difundiendo la petición de reinicio.
+[ReinicioDeExperiencia] Devolviendo la experiencia al punto de partida.
+[FotoDeLaEscena] Estado devuelto: N cambios deshechos.
+[ReinicioDeExperiencia] 13 componentes devueltos a su estado inicial.
+[ReinicioDeExperiencia] Listo para la tanda siguiente.
+```
+
+Y en la escena:
+
+| Qué mirar | Cómo debe quedar |
+|---|---|
+| Lienzos | `Canvas_Esc1` encendido; `Canvas _Esc2`, `Canvas_Esc3`, `Canvas_Cuestionario` y `Canvas_VideoEsc3` apagados |
+| Casilleros | como al empezar |
+| Lavamanos y maniquí | **vuelven a responder al clic** |
+| Cuestionario | otra vez en la pantalla de bienvenida, sin preguntas respondidas |
+| Simulador 2D | apagado, con el cartel de EMPEZAR delante |
+| Sonido | silencio; ninguna locución ni efecto del recorrido anterior |
+| Puerta | cerrada |
+
+El «13 componentes» de la consola es el número que debe salir: son los que saben reiniciarse
+solos. Si sale menos, algo no se está encontrando y conviene mirarlo antes del 29.
 
 ## Parte 5 · El botón del moderador
 
