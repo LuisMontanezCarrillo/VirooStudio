@@ -76,9 +76,12 @@ namespace ViroLab.Multiusuario
         public bool esperarATodos = true;
 
         [Tooltip("Segundos máximos de espera. Pasados, el grupo avanza igualmente y " +
-                 "se deja constancia en la consola. Evita que una sesión se quede " +
-                 "bloqueada si alguien abandona. Pon 0 para esperar sin límite.")]
-        public float esperaMaxima = 180f;
+                 "se deja constancia en la consola. Es la red de seguridad para el " +
+                 "caso en que la cuenta de participantes incluya a alguien que nunca " +
+                 "va a terminar un reto, como el cliente de escritorio de quien " +
+                 "modera: entonces esto es lo único que desbloquea la sesión, así que " +
+                 "conviene que no sea largo. Pon 0 para esperar sin límite.")]
+        public float esperaMaxima = 45f;
 
         [Header("Avisos para la interfaz")]
         [Tooltip("Se dispara en el cliente de quien acaba de terminar, mientras " +
@@ -121,6 +124,7 @@ namespace ViroLab.Multiusuario
         private bool _yaAnuncie;
         private bool _yaSalto;
         private float _instanteDelPrimerAnuncio = -1f;
+        private float _ultimaRevision;
 
 
         // ================================================================
@@ -216,11 +220,30 @@ namespace ViroLab.Multiusuario
 
         private void Update()
         {
-            if (_yaSalto || esperaMaxima <= 0f || _instanteDelPrimerAnuncio < 0f) return;
+            if (_yaSalto || _instanteDelPrimerAnuncio < 0f) return;
+
+            // Se vuelve a mirar la cuenta, no solo al anunciar. Si alguien
+            // abandona la sesion mientras el resto espera, el numero de
+            // participantes baja y puede que ya esten todos los que quedan. Sin
+            // esto, el grupo seguiria esperando a quien ya no esta hasta agotar
+            // la espera maxima.
+            if (esperarATodos && Time.unscaledTime - _ultimaRevision >= 0.5f)
+            {
+                _ultimaRevision = Time.unscaledTime;
+                int total = ParticipantesConectados();
+                if (_anuncios >= total)
+                {
+                    IntentarSaltar("ya están todos los que quedan");
+                    return;
+                }
+            }
+
+            if (esperaMaxima <= 0f) return;
             if (Time.unscaledTime - _instanteDelPrimerAnuncio < esperaMaxima) return;
 
             Debug.LogWarning($"[AvanceEnGrupo] Se agotó la espera de {esperaMaxima:F0} s con " +
                              $"{_anuncios} de {ParticipantesConectados()} participantes. " +
+                             $"En la sala: {SesionViroo.Retrato()}. " +
                              "El grupo avanza igualmente para no quedarse bloqueado.", this);
             IntentarSaltar("se agotó la espera");
         }
@@ -316,6 +339,7 @@ namespace ViroLab.Multiusuario
             _yaAnuncie = false;
             _yaSalto = false;
             _instanteDelPrimerAnuncio = -1f;
+            _ultimaRevision = 0f;
         }
 
     }
