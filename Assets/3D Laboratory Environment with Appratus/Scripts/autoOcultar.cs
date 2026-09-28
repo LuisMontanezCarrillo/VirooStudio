@@ -3,10 +3,10 @@ using System.Collections;
 
 public class AutoOcultar : MonoBehaviour
 {
-    // Tiempo en segundos que el pop-up estará visible (ajústalo según lo que dure tu VOff)
+    // Tiempo en segundos que el pop-up estarÃ¡ visible (ajÃºstalo segÃºn lo que dure tu VOff)
     public float tiempoVisible = 18f; 
 
-    // Cada vez que el objeto se encienda (cuando el estudiante le dé clic al robot)
+    // Cada vez que el objeto se encienda (cuando el estudiante le dÃ© clic al robot)
     void OnEnable()
     {
         StartCoroutine(OcultarDespuesDeTiempo());

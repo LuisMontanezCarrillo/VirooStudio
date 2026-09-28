@@ -581,7 +581,7 @@ Cuando lo dispare, la consola debe mostrar:
 [ReinicioDeExperiencia] Difundiendo la petición de reinicio.
 [ReinicioDeExperiencia] Devolviendo la experiencia al punto de partida.
 [FotoDeLaEscena] Estado devuelto: N cambios deshechos.
-[ReinicioDeExperiencia] 15 componentes devueltos a su estado inicial.
+[ReinicioDeExperiencia] 17 componentes devueltos a su estado inicial.
 [ReinicioDeExperiencia] Listo para la tanda siguiente.
 ```
 
@@ -597,7 +597,7 @@ Y en la escena:
 | Sonido | silencio; ninguna locución ni efecto del recorrido anterior |
 | Puerta | cerrada |
 
-El «15 componentes» de la consola es el número que debe salir: son los que saben reiniciarse
+El «17 componentes» de la consola es el número que debe salir: son los que saben reiniciarse
 solos. Si sale menos, algo no se está encontrando y conviene mirarlo antes del 29.
 
 ## Parte 5 · El mando del moderador
@@ -682,7 +682,7 @@ Ahora avance hasta el reto 2 o el 3 y pulse **Ctrl+Mayús+R dos veces**. Debe sa
 [ReinicioDeExperiencia] Difundiendo la petición de reinicio.
 [ReinicioDeExperiencia] Devolviendo la experiencia al punto de partida.
 [FotoDeLaEscena] Estado devuelto: N cambios deshechos.
-[ReinicioDeExperiencia] 15 componentes devueltos a su estado inicial.
+[ReinicioDeExperiencia] 17 componentes devueltos a su estado inicial.
 [ReinicioDeExperiencia] Listo para la tanda siguiente.
 ```
 

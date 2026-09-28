@@ -6,7 +6,7 @@ namespace ViroLab.Pasteurizador
     // Vista explosionada: cada subsistema se desplaza hacia afuera de su centroide
     // en el plano horizontal local. Interpolacion con SmoothStep en Update.
     [DisallowMultipleComponent]
-    public class PasteurizerExplodedView : MonoBehaviour
+    public class PasteurizerExplodedView : MonoBehaviour, IReiniciable
     {
         [Header("Refs")]
         public PasteurizerPartsRegistry registry;
@@ -96,6 +96,15 @@ namespace ViroLab.Pasteurizador
                 }
             }
             _initialized = true;
+        }
+
+        /// <summary>
+        /// Recompone el modelo para la tanda siguiente. Mueve transformaciones,
+        /// que es justo lo que la foto de la escena no guarda.
+        /// </summary>
+        public void ReiniciarAlInicio()
+        {
+            if (_exploded) SetExploded(false);
         }
 
         public void Toggle() => SetExploded(!_exploded);
