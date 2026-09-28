@@ -23,11 +23,11 @@ namespace ViroLab.Multiusuario
     /// </summary>
     public class GuiaDeLaMarca : MonoBehaviour
     {
-        // Opacos a proposito: la transparencia depende del modo de mezcla del
-        // material, y el de la primitiva es opaco. Un aro solido se ve igual de
-        // bien y no depende de nada.
-        private static readonly Color Lejos = new Color(1f, 0.72f, 0.15f);
-        private static readonly Color Encima = new Color(0.25f, 0.9f, 0.4f);
+        // Tonos suaves y translucidos, del orden de los resaltes del reto 1. Un
+        // amarillo saturado y opaco sobre el suelo de la planta se comia la
+        // escena y no se leia como una marca, sino como una mancha.
+        private static readonly Color Lejos  = new Color(0.98f, 0.80f, 0.30f, 0.34f);
+        private static readonly Color Encima = new Color(0.36f, 0.86f, 0.52f, 0.34f);
 
         private Transform _aro;
         private Renderer _aroPintura;
@@ -63,6 +63,7 @@ namespace ViroLab.Multiusuario
                 _aroPintura = disco.GetComponent<Renderer>();
                 if (_aroPintura != null)
                 {
+                    HacerTransparente(_aroPintura.material);
                     // Se conserva el material que trae la primitiva y solo se le
                     // cambia el color. Buscar un shader por nombre con Shader.Find
                     // funciona en el editor pero devuelve nulo en una compilacion
@@ -183,10 +184,56 @@ namespace ViroLab.Multiusuario
 
         private void Pintar(Color c)
         {
-            if (_aroPintura != null && _aroPintura.material != null)
-                _aroPintura.material.color = c;
-            if (_centroPintura != null && _centroPintura.material != null)
-                _centroPintura.material.color = c * 0.45f;
+            if (_aroPintura != null) Tenir(_aroPintura.material, c);
+
+            // El centro, mas oscuro pero con la MISMA transparencia: multiplicar
+            // el color entero rebajaba tambien el alfa y el disco interior
+            // desaparecia.
+            if (_centroPintura != null)
+                Tenir(_centroPintura.material, new Color(c.r * 0.55f, c.g * 0.55f, c.b * 0.55f, c.a));
+        }
+
+        /// Pone el color en la propiedad que corresponda. URP usa _BaseColor y el
+        /// pipeline integrado _Color; se escriben las dos que existan en vez de
+        /// dar por hecho cual es.
+        private static void Tenir(Material m, Color c)
+        {
+            if (m == null) return;
+            if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", c);
+            if (m.HasProperty("_Color")) m.SetColor("_Color", c);
+        }
+
+        /// <summary>
+        /// Pasa un material a mezcla alfa.
+        ///
+        /// Este proyecto renderiza con URP (Desktop Universal Render Pipeline
+        /// Asset), de modo que las primitivas nacen con URP/Lit y no con el
+        /// Standard del pipeline integrado. Se escriben las propiedades de los
+        /// dos, comprobando antes que existan, para no depender de cual este
+        /// activo ni de buscar ningun shader por nombre.
+        /// </summary>
+        private static void HacerTransparente(Material m)
+        {
+            if (m == null) return;
+
+            // URP
+            if (m.HasProperty("_Surface")) m.SetFloat("_Surface", 1f);   // 1 = Transparent
+            if (m.HasProperty("_Blend")) m.SetFloat("_Blend", 0f);       // 0 = Alpha
+            // Pipeline integrado
+            if (m.HasProperty("_Mode")) m.SetFloat("_Mode", 3f);         // 3 = Transparent
+
+            if (m.HasProperty("_SrcBlend"))
+                m.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            if (m.HasProperty("_DstBlend"))
+                m.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            if (m.HasProperty("_ZWrite")) m.SetFloat("_ZWrite", 0f);
+
+            m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            m.EnableKeyword("_ALPHABLEND_ON");
+            m.DisableKeyword("_ALPHATEST_ON");
+            m.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+
+            m.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
         }
 
         /// <summary>Apaga la guía. Se llama al anunciar y al reiniciar.</summary>
