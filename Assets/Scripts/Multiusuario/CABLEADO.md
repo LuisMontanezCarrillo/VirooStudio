@@ -143,8 +143,12 @@ Del resto de campos que verá:
 
 **Add Component** → escriba **`TeleportAllAction`**.
 
-**Deje el campo `Teleport Position` VACÍO.** Lo rellena el código justo antes de ejecutarlo. Si
-le pone algo, se sobrescribe igualmente.
+**Asigne `Teleport Position` al mismo destino** que va a poner en el `Avance en grupo`, o sea
+`Root/Planta_Piloto/Punto_Destino_Planta`.
+
+> El código lo sobrescribe justo antes de cada salto, así que el valor que ponga aquí no cambia
+> el comportamiento. Se asigna por dos razones: la validación de VIROO Studio avisa si el campo
+> está vacío, y deja un destino correcto por si ese código no llegara a ejecutarse.
 
 ### 2.4 Añadirle el avance en grupo
 
@@ -336,7 +340,8 @@ Con `Avance_Reto2` seleccionado, **Add Component** y escriba en el buscador:
 
 1. **`UnityEventAction`** — dejar `Exposed Event` vacío por ahora, `Menu Label` vacío,
    `Persistence Type` en **None**, `Delay` en 0.
-2. **`TeleportAllAction`** — dejar `Teleport Position` **vacío**.
+2. **`TeleportAllAction`** — asignar `Teleport Position` a
+   **`Root/Planta_Piloto/Punto_Inicio_Escena3`**, el mismo destino del avance.
 
 ### 3.3 Añadirle el avance en grupo
 
@@ -498,7 +503,8 @@ Con `Reinicio_Experiencia` seleccionado, **Add Component** y escriba en el busca
 
 1. **`UnityEventAction`** — `Exposed Event` vacío por ahora, `Menu Label` vacío,
    `Persistence Type` en **None**, `Delay` en 0.
-2. **`TeleportAllAction`** — `Teleport Position` **vacío**.
+2. **`TeleportAllAction`** — asignar `Teleport Position` a **`Root/RoomCenterStart`**, el
+   mismo punto de inicio del reinicio.
 
 > `Persistence Type` en **None** importa aquí más que en ningún otro sitio. Con otro valor,
 > VIROO recordaría que el reinicio se ejecutó y se lo reproduciría a quien entrase después a la
