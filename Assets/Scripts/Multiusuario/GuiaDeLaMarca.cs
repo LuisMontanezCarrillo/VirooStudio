@@ -31,8 +31,8 @@ namespace ViroLab.Multiusuario
 
         private Transform _aro;
         private Renderer _aroPintura;
-        private Transform _haz;
-        private Renderer _hazPintura;
+        private Transform _centro;
+        private Renderer _centroPintura;
         private Canvas _lienzo;
         private TextMeshProUGUI _texto;
 
@@ -79,32 +79,6 @@ namespace ViroLab.Multiusuario
             // sin multiplicar y el 0,015 de grosor (3 cm de disco).
             _aro.localScale = new Vector3(radio * 2f, 0.015f, radio * 2f);
 
-            // Un disco de tres centimetros en el suelo, a un metro de distancia,
-            // queda por debajo del campo de vision de quien mira al frente. En la
-            // primera prueba real el participante camino guiado solo por el
-            // cartel y no llego a ver la marca. Asi que ademas del disco se
-            // levanta un haz vertical, que se ve de pie y desde lejos.
-            if (_haz == null)
-            {
-                var columna = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                columna.name = "Haz_Marca";
-                columna.hideFlags = HideFlags.DontSave;
-
-                var colh = columna.GetComponent<Collider>();
-                if (colh != null) Destroy(colh);
-
-                _hazPintura = columna.GetComponent<Renderer>();
-                if (_hazPintura != null)
-                {
-                    _hazPintura.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                    _hazPintura.receiveShadows = false;
-                }
-                _haz = columna.transform;
-            }
-
-            // Delgado y de metro y medio: se ve a la altura de los ojos sin
-            // taparle a nadie lo que tiene delante.
-            _haz.localScale = new Vector3(0.10f, 0.75f, 0.10f);
         }
 
         // ================================================================
@@ -164,11 +138,10 @@ namespace ViroLab.Multiusuario
             _aro.position = marca.position + Vector3.up * 0.03f;
             _aro.gameObject.SetActive(true);
 
-            // El cilindro se mide desde su centro, de ahi la mitad de la altura.
-            if (_haz != null)
+            if (_centro != null)
             {
-                _haz.position = marca.position + Vector3.up * 0.75f;
-                _haz.gameObject.SetActive(true);
+                _centro.position = marca.position + Vector3.up * 0.031f;
+                _centro.gameObject.SetActive(true);
             }
 
             _lienzo.gameObject.SetActive(true);
@@ -208,22 +181,22 @@ namespace ViroLab.Multiusuario
         {
             if (_aroPintura != null && _aroPintura.material != null)
                 _aroPintura.material.color = c;
-            if (_hazPintura != null && _hazPintura.material != null)
-                _hazPintura.material.color = c;
+            if (_centroPintura != null && _centroPintura.material != null)
+                _centroPintura.material.color = c * 0.45f;
         }
 
         /// <summary>Apaga la guía. Se llama al anunciar y al reiniciar.</summary>
         public void Ocultar()
         {
             if (_aro != null) _aro.gameObject.SetActive(false);
-            if (_haz != null) _haz.gameObject.SetActive(false);
+            if (_centro != null) _centro.gameObject.SetActive(false);
             if (_lienzo != null) _lienzo.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
             if (_aro != null) Destroy(_aro.gameObject);
-            if (_haz != null) Destroy(_haz.gameObject);
+            if (_centro != null) Destroy(_centro.gameObject);
             if (_lienzo != null) Destroy(_lienzo.gameObject);
         }
     }

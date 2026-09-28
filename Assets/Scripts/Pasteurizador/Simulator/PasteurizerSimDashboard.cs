@@ -503,6 +503,42 @@ namespace ViroLab.Pasteurizador.Simulator
                 }
             }
 
+            // Los paneles de lectura del diagrama (nivel del tanque, producto
+            // final, tiempo de retencion) no se llaman Lbl_ y por eso se
+            // quedaban fuera de esta pasada, a 11 pt. Son justo los numeros que
+            // el estudiante tiene que leer para saber si ya lleva los 10 litros.
+            //
+            // No basta con subir la letra: el recuadro se construyo a la medida
+            // de 11 pt y el texto se saldria. Se agranda en la misma proporcion,
+            // conservando el centro.
+            int paneles = 0;
+            foreach (var panel in zona.GetComponentsInChildren<RectTransform>(true))
+            {
+                if (panel.name != "DispPanel") continue;
+
+                float mayor = 0f;
+                foreach (var t in panel.GetComponentsInChildren<TMP_Text>(true))
+                {
+                    if (t == null || t.enableAutoSizing) continue;
+                    if (t.fontSize >= minFontSizeDiagrama) continue;
+                    mayor = Mathf.Max(mayor, minFontSizeDiagrama / Mathf.Max(1f, t.fontSize));
+                    t.fontSize = minFontSizeDiagrama;
+                }
+
+                if (mayor <= 1f) continue;
+
+                panel.sizeDelta = new Vector2(panel.sizeDelta.x * mayor,
+                                              panel.sizeDelta.y * mayor);
+                foreach (var t in panel.GetComponentsInChildren<RectTransform>(true))
+                    if (t != panel) t.sizeDelta = panel.sizeDelta;
+
+                paneles++;
+            }
+
+            if (paneles > 0)
+                Debug.Log($"[SimDashboard] Diagrama: {paneles} panel(es) de lectura agrandados " +
+                          $"para que quepan {minFontSizeDiagrama} pt.");
+
             if (subidos > 0)
                 Debug.Log($"[SimDashboard] Diagrama: {subidos} rótulos subidos a {minFontSizeDiagrama} pt.");
 
