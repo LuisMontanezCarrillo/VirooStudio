@@ -75,6 +75,13 @@ namespace ViroLab.Multiusuario
                  "Sin marcar: el primero que termina hace avanzar al grupo.")]
         public bool esperarATodos = true;
 
+        [Tooltip("Cuántos participantes se espera que terminen. Cero significa " +
+                 "contarlos automáticamente, descartando a quien no esté en una " +
+                 "sala VR. Ponlo a mano SOLO si en el ensayo la cuenta automática " +
+                 "no coincide con el número de estudiantes con visor: es una " +
+                 "válvula de seguridad, no la forma normal de configurarlo.")]
+        public int participantesEsperados = 0;
+
         [Tooltip("Segundos máximos de espera. Pasados, el grupo avanza igualmente y " +
                  "se deja constancia en la consola. Es la red de seguridad para el " +
                  "caso en que la cuenta de participantes incluya a alguien que nunca " +
@@ -321,7 +328,15 @@ namespace ViroLab.Multiusuario
         // SesionViroo, porque el reinicio entre tandas necesita exactamente lo
         // mismo. Dos copias del criterio es la forma de que un dia dejen de
         // coincidir y la accion se dispare dos veces o ninguna.
-        private int ParticipantesConectados() => SesionViroo.ParticipantesConectados();
+        private int ParticipantesConectados()
+        {
+            // El valor a mano manda, si lo hay. Existe porque quien modera se
+            // conecta desde PC y VIROO lo cuenta como participante; si el filtro
+            // por arena no bastara en la sala real, esto lo deja determinista sin
+            // tocar codigo el dia de la prueba.
+            if (participantesEsperados > 0) return participantesEsperados;
+            return SesionViroo.ParticipantesConectados();
+        }
         private bool SoyElClienteDesignado()  => SesionViroo.SoyElClienteDesignado();
 
         // ================================================================

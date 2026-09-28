@@ -7810,7 +7810,7 @@ MonoBehaviour:
   saltoDeGrupo: {fileID: 276652112}
   destino: {fileID: 1546685619}
   esperarATodos: 1
-  esperaMaxima: 180
+  esperaMaxima: 45
   AlQuedarEnEspera:
     m_PersistentCalls:
       m_Calls: []
@@ -7895,7 +7895,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  margenAntesDelSalto: 2
+  margenAntesDelSalto: 1
   margenTrasElSalto: 0.35
   log: 1
 --- !u!114 &276652112
@@ -31329,6 +31329,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1249545553}
   m_CullTransparentMesh: 1
+--- !u!1 &1260335688
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1260335689}
+  - component: {fileID: 1260335690}
+  m_Layer: 0
+  m_Name: Mando_Moderador
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1260335689
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1260335688}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3817571384722755373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1260335690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1260335688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 484ae4dc35d43bf4d857d4e8615e71cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reinicio: {fileID: 0}
+  avances: []
+  reuniones: []
+  teclaDeReinicio: 32
+  teclaDeAvanceForzado: 20
+  teclaDeReunionForzada: 21
+  exigirCtrlYMayusculas: 1
+  confirmacionDoble: 1
+  ventanaDeConfirmacion: 4
+  AlPedirConfirmacion:
+    m_PersistentCalls:
+      m_Calls: []
+  AlCancelarse:
+    m_PersistentCalls:
+      m_Calls: []
+  log: 1
 --- !u!1 &1262165692
 GameObject:
   m_ObjectHideFlags: 0
@@ -33698,7 +33758,7 @@ MonoBehaviour:
   saltoDeGrupo: {fileID: 1347875382}
   destino: {fileID: 141025963}
   esperarATodos: 1
-  esperaMaxima: 180
+  esperaMaxima: 45
   AlQuedarEnEspera:
     m_PersistentCalls:
       m_Calls: []
@@ -33747,7 +33807,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  margenAntesDelSalto: 2
+  margenAntesDelSalto: 1
   margenTrasElSalto: 0.35
   log: 1
 --- !u!114 &1347875382
@@ -74199,6 +74259,7 @@ Transform:
   - {fileID: 42484019}
   - {fileID: 1347875379}
   - {fileID: 1782916815}
+  - {fileID: 1260335689}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3834981708564198463
