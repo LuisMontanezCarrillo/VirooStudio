@@ -94,6 +94,14 @@ namespace ViroLab.Multiusuario
                  "una sesión atascada. Pon 0 para esperar sin límite.")]
         public float esperaMaxima = 60f;
 
+        [Header("Lo que ve el participante")]
+        [Tooltip("Marcado: se dibuja solo un aro en el suelo sobre la marca y un " +
+                 "cartel con lo que falta. Las marcas son objetos vacíos, o sea " +
+                 "invisibles: sin esto el participante no tiene forma de saber que " +
+                 "se le está pidiendo ir a ningún sitio, y se queda quieto hasta " +
+                 "que salta la espera máxima.")]
+        public bool guiaAutomatica = true;
+
         [Header("Avisos para la interfaz")]
         [Tooltip("Al convocar. Úsalo para encender el cartel de «ve a tu marca».")]
         public UnityEvent AlConvocar;
@@ -128,6 +136,7 @@ namespace ViroLab.Multiusuario
         private float _ultimaDistanciaAvisada = -1f;
         private float _ultimoGiroAvisado = -999f;
         private bool _avisadoDelGiro;
+        private GuiaDeLaMarca _guia;
 
         // ================================================================
         //  Puesta a punto
@@ -221,6 +230,12 @@ namespace ViroLab.Multiusuario
             AlConvocar?.Invoke();
             AlAsignarMarca?.Invoke(_miMarca);
 
+            if (guiaAutomatica && _miMarca != null)
+            {
+                if (_guia == null) _guia = GuiaDeLaMarca.Crear();
+                _guia.Mostrar(_miMarca, radio);
+            }
+
             // Sin marcas configuradas no hay nada que esperar: se anuncia y ya.
             if (_miMarca == null)
             {
@@ -266,6 +281,9 @@ namespace ViroLab.Multiusuario
                 AlCambiarLaDistancia?.Invoke(d);
             }
 
+            if (_guia != null && d > radio)
+                _guia.Actualizar(d, false, false, 0f, toleranciaDeGiro);
+
             if (d > radio) return;
 
             if (!_llego)
@@ -278,6 +296,8 @@ namespace ViroLab.Multiusuario
             if (mirarHacia != null)
             {
                 float giro = ErrorDeGiro();
+
+                if (_guia != null) _guia.Actualizar(d, true, true, giro, toleranciaDeGiro);
 
                 if (Mathf.Abs(giro - _ultimoGiroAvisado) >= 2f)
                 {
@@ -296,6 +316,9 @@ namespace ViroLab.Multiusuario
                     return;
                 }
             }
+
+            if (_guia != null && mirarHacia == null)
+                _guia.Actualizar(d, true, false, 0f, toleranciaDeGiro);
 
             // Ya esta colocado, pero la locucion sigue: se espera a que termine
             // antes de anunciar, para no cortarla con el fundido.
@@ -372,6 +395,8 @@ namespace ViroLab.Multiusuario
             if (_yaAnuncie) return;
             _yaAnuncie = true;
 
+            if (_guia != null) _guia.Ocultar();
+
             if (avance == null)
             {
                 Debug.LogError("[ReunionEnElCentro] Falta el AvanceEnGrupo: el grupo no avanzará.", this);
@@ -395,6 +420,7 @@ namespace ViroLab.Multiusuario
             _yaAnuncie = false;
             _convocadoEn = 0f;
             _miMarca = null;
+            if (_guia != null) _guia.Ocultar();
             _ultimaDistanciaAvisada = -1f;
             _ultimoGiroAvisado = -999f;
             _avisadoDelGiro = false;
