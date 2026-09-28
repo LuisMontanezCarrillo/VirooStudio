@@ -135,12 +135,16 @@ namespace ViroLab.Multiusuario
             PrepararAro(radio);
             PrepararCartel();
 
-            _aro.position = marca.position + Vector3.up * 0.03f;
+            // 12 cm de alzada. Las marcas estan a y=0 y el suelo de la planta
+            // no lo esta: con el disco a 3 cm quedaba enterrado y no se veia,
+            // mientras que el haz de metro y medio si asomaba. De ahi que
+            // pareciera que el disco no se creaba.
+            _aro.position = marca.position + Vector3.up * 0.12f;
             _aro.gameObject.SetActive(true);
 
             if (_centro != null)
             {
-                _centro.position = marca.position + Vector3.up * 0.031f;
+                _centro.position = marca.position + Vector3.up * 0.125f;
                 _centro.gameObject.SetActive(true);
             }
 

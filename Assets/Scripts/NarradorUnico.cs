@@ -87,6 +87,9 @@ public static class NarradorUnico
         _hablando = null;
         _turnoActual = default;
         _turnero = null;
+        _vigiladas.Clear();
+        _sonaban.Clear();
+        _ultimaBusqueda = -999f;
     }
 
     // ================================================================
@@ -296,6 +299,15 @@ public static class NarradorUnico
 
     private static Turnero _turnero;
 
+    /// El turnero hace dos cosas: avanzar la cola y vigilar a las voces que no
+    /// piden turno. Lo segundo tiene que estar en marcha desde el principio,
+    /// porque en el reto 1 nadie pide turno: las narraciones se disparan con un
+    /// AudioSource.Play cableado en el Inspector. Si se esperara a la primera
+    /// peticion, el turnero no existiria durante todo el reto 1 y las voces se
+    /// seguirian pisando.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    private static void ArrancarElTurnero() { AsegurarTurnero(); }
+
     /// La cola necesita que alguien la mire cada fotograma, y una clase estatica
     /// no tiene Update. Se crea un objeto oculto la primera vez que hace falta.
     private static void AsegurarTurnero()
@@ -310,6 +322,82 @@ public static class NarradorUnico
 
     private class Turnero : MonoBehaviour
     {
-        private void Update() { Avanzar(); }
+        private void Update() { Avanzar(); Vigilar(); }
+    }
+
+    // ================================================================
+    //  Vigilancia de las voces que no piden turno
+    // ================================================================
+
+    /// Duracion minima y maxima, en segundos, para considerar que un clip es una
+    /// narracion. Por debajo son efectos (clics, golpes); por encima, musica y
+    /// ambientes largos.
+    private const float NarracionMin = 4f;
+    private const float NarracionMax = 40f;
+
+    private const float CadaCuantoSeBusca = 2f;
+
+    private static readonly List<AudioSource> _vigiladas = new List<AudioSource>();
+    private static readonly List<bool> _sonaban = new List<bool>();
+    private static float _ultimaBusqueda = -999f;
+
+    /// <summary>
+    /// Hace cumplir la regla incluso a quien no pide turno.
+    ///
+    /// Las narraciones del reto 1 (casillero, ropa, botas) se disparan con un
+    /// AudioSource.Play cableado en un UnityEvent del Inspector, sin pasar por
+    /// aqui. Por eso se solapaban por mucho que el resto de la experiencia
+    /// respetara el arbitro: nadie les habia dicho que existiera.
+    ///
+    /// En vez de pedir que se cablee cada una, se vigilan todas: cuando una
+    /// empieza a sonar por su cuenta, se le da la palabra y se calla al resto.
+    /// Solo se consideran narraciones los clips que no son bucles y duran entre
+    /// cuatro y cuarenta segundos, de modo que los clics y la musica de fondo
+    /// quedan fuera.
+    /// </summary>
+    private static void Vigilar()
+    {
+        if (Time.unscaledTime - _ultimaBusqueda >= CadaCuantoSeBusca)
+        {
+            _ultimaBusqueda = Time.unscaledTime;
+            RefrescarVigiladas();
+        }
+
+        for (int i = _vigiladas.Count - 1; i >= 0; i--)
+        {
+            var v = _vigiladas[i];
+            if (v == null) { _vigiladas.RemoveAt(i); _sonaban.RemoveAt(i); continue; }
+
+            bool ahora = v.isPlaying;
+            bool antes = _sonaban[i];
+            _sonaban[i] = ahora;
+
+            if (!ahora || antes) continue;                  // solo el flanco de subida
+            if (ReferenceEquals(v, _hablando)) continue;    // la arranco el propio arbitro
+            if (!EsNarracion(v)) continue;
+
+            TomarLaPalabra(v);
+        }
+    }
+
+    private static bool EsNarracion(AudioSource v)
+    {
+        if (v.loop || v.clip == null) return false;
+        float d = v.clip.length;
+        return d >= NarracionMin && d <= NarracionMax;
+    }
+
+    private static void RefrescarVigiladas()
+    {
+        var todas = Object.FindObjectsByType<AudioSource>(
+            FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        if (todas == null) return;
+
+        foreach (var a in todas)
+        {
+            if (a == null || _vigiladas.Contains(a)) continue;
+            _vigiladas.Add(a);
+            _sonaban.Add(a.isPlaying);   // lo que ya sonaba no cuenta como flanco
+        }
     }
 }

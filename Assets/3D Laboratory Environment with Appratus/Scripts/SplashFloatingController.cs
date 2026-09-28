@@ -4,7 +4,7 @@ using UnityEngine.Video;
 using TMPro;
 using System.Collections;
 
-public class SplashFloatingController : MonoBehaviour
+public class SplashFloatingController : MonoBehaviour, IReiniciable
 {
     [Header("Referencias")]
     public VideoPlayer vidPlayer;
@@ -21,14 +21,31 @@ public class SplashFloatingController : MonoBehaviour
              "arrancar el video explicativo de la Escena 3).")]
     public UnityEvent OnSplashTerminado;
 
-    void Start()
+    // Todo esto vivia en Start, y Start NO se vuelve a ejecutar cuando un objeto
+    // se reactiva. Como el splash termina con SetActive(false) sobre si mismo, al
+    // reiniciar entre tandas la foto de la escena lo devolvia encendido pero con
+    // el lienzo a alfa 0, el video parado y sin volver a disparar
+    // OnSplashTerminado, que es lo que encadena el video del reto 3. De ahi que
+    // tras el reinicio no apareciera ningun splash ni el video.
+    //
+    // En OnEnable se ejecuta en cada encendido, que es lo que hace falta.
+    void OnEnable()
     {
-        // Configuración inicial de visibilidad
+        Arrancar();
+    }
+
+    void OnDisable()
+    {
+        if (vidPlayer != null) vidPlayer.loopPointReached -= IniciarCierre;
+    }
+
+    private void Arrancar()
+    {
         if (canvasGroup != null) canvasGroup.alpha = 1;
         if (textoTitulo != null) textoTitulo.canvasRenderer.SetAlpha(0);
 
         // Sin reproductor no hay splash que reproducir. Antes se accedia sin
-        // comprobar y lanzaba NullReferenceException, abortando el Start entero.
+        // comprobar y lanzaba NullReferenceException, abortando el arranque entero.
         if (vidPlayer == null)
         {
             Debug.LogWarning($"[SplashFloatingController] '{name}' no tiene vidPlayer " +
@@ -36,13 +53,40 @@ public class SplashFloatingController : MonoBehaviour
             return;
         }
 
-        // Suscribirse al evento de finalización del video
+        // Quitar antes de poner: si no, cada reactivacion sumaria una suscripcion
+        // mas y el cierre se dispararia varias veces.
+        vidPlayer.loopPointReached -= IniciarCierre;
         vidPlayer.loopPointReached += IniciarCierre;
 
         NarradorUnico.Registrar(vidPlayer);
         NarradorUnico.TomarLaPalabra(vidPlayer);
+
+        vidPlayer.frame = 0;
         vidPlayer.Play();
         StartCoroutine(AparecerTexto());
+    }
+
+    /// <summary>
+    /// Deja el splash listo para volver a verse en la tanda siguiente.
+    ///
+    /// Si su objeto esta encendido (el del reto 1), arranca ya. Si esta apagado
+    /// (los de los retos 2 y 3), solo se rebobina: ya lo arrancara OnEnable
+    /// cuando la experiencia llegue a ese reto.
+    /// </summary>
+    public void ReiniciarAlInicio()
+    {
+        StopAllCoroutines();
+
+        if (canvasGroup != null) canvasGroup.alpha = 1;
+        if (textoTitulo != null) textoTitulo.canvasRenderer.SetAlpha(0);
+
+        if (vidPlayer != null)
+        {
+            vidPlayer.Stop();
+            vidPlayer.frame = 0;
+        }
+
+        if (gameObject.activeInHierarchy) Arrancar();
     }
 
     IEnumerator AparecerTexto()
