@@ -7778,6 +7778,7 @@ MonoBehaviour:
   caminarMientrasHabla: 1
   avance: {fileID: 276652111}
   esperaMaxima: 60
+  guiaAutomatica: 1
   AlConvocar:
     m_PersistentCalls:
       m_Calls: []
@@ -7810,6 +7811,7 @@ MonoBehaviour:
   saltoDeGrupo: {fileID: 276652112}
   destino: {fileID: 1546685619}
   esperarATodos: 1
+  participantesEsperados: 0
   esperaMaxima: 45
   AlQuedarEnEspera:
     m_PersistentCalls:
@@ -7914,7 +7916,7 @@ MonoBehaviour:
   textId: 
   startsEnabled: 1
   persistenceType: 0
-  teleportPosition: {fileID: 0}
+  teleportPosition: {fileID: 1546685619}
 --- !u!114 &276652113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33726,6 +33728,7 @@ MonoBehaviour:
   caminarMientrasHabla: 1
   avance: {fileID: 1347875381}
   esperaMaxima: 60
+  guiaAutomatica: 1
   AlConvocar:
     m_PersistentCalls:
       m_Calls: []
@@ -33758,6 +33761,7 @@ MonoBehaviour:
   saltoDeGrupo: {fileID: 1347875382}
   destino: {fileID: 141025963}
   esperarATodos: 1
+  participantesEsperados: 0
   esperaMaxima: 45
   AlQuedarEnEspera:
     m_PersistentCalls:
@@ -33826,7 +33830,7 @@ MonoBehaviour:
   textId: 
   startsEnabled: 1
   persistenceType: 0
-  teleportPosition: {fileID: 0}
+  teleportPosition: {fileID: 141025963}
 --- !u!114 &1347875383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44691,7 +44695,7 @@ MonoBehaviour:
   textId: 
   startsEnabled: 1
   persistenceType: 0
-  teleportPosition: {fileID: 0}
+  teleportPosition: {fileID: 6208567811401578806}
 --- !u!114 &1782916819
 MonoBehaviour:
   m_ObjectHideFlags: 0
