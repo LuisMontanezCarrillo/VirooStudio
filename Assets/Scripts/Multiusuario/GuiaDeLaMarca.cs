@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 namespace ViroLab.Multiusuario
@@ -18,8 +19,34 @@ namespace ViroLab.Multiusuario
     /// Un mecanismo que depende de que alguien se acuerde de cablear su parte
     /// visible falla en silencio. Asi que la parte visible se crea sola.
     ///
-    /// Se construye con primitivas y con el TextMeshPro que ya usa el proyecto,
-    /// sin depender de ningun material ni prefab que haya que preparar antes.
+    /// POR QUE EL ARO SE DIBUJA COMO INTERFAZ Y NO COMO GEOMETRIA
+    /// ---------------------------------------------------------
+    /// En las pruebas del 29 de septiembre de 2026, con las gafas puestas, el
+    /// cartel SI se veia y el aro NO. O sea que el componente corria: lo que
+    /// fallaba era solo como se dibujaba el disco.
+    ///
+    /// El disco era un cilindro primitivo al que se le modificaba el material en
+    /// tiempo de ejecucion, encendiendo keywords a mano para volverlo
+    /// translucido. Eso expone dos riesgos que la vista del editor no tiene:
+    ///
+    ///   1. El proyecto renderiza en Single Pass Instanced (m_renderMode: 1 en
+    ///      Assets/XR/Settings/Open XR Package Settings.asset). En ese modo el
+    ///      material tiene que saber dibujarse en los dos ojos en una sola
+    ///      pasada. Un material manipulado por codigo es justo lo que se ve bien
+    ///      en la vista mono del editor y falla en estereo instanciado.
+    ///   2. Las variantes de shader que solo se piden en tiempo de ejecucion se
+    ///      pueden eliminar al compilar, porque ningun material del proyecto las
+    ///      declara.
+    ///
+    /// El cartel no sufre ninguno de los dos problemas porque es un lienzo de
+    /// interfaz, y de ese camino tenemos constancia directa de que funciona en el
+    /// visor. Asi que el aro se construye igual: un Canvas en espacio de mundo
+    /// tendido en el suelo, con una textura generada por codigo.
+    ///
+    /// Generar una TEXTURA es seguro; manipular un MATERIAL no lo es. Una textura
+    /// son datos, no una variante de shader: no se puede eliminar al compilar y
+    /// no depende del modo estereo. Y el shader de interfaz de Unity siempre
+    /// viaja en la compilacion.
     /// </summary>
     public class GuiaDeLaMarca : MonoBehaviour
     {
@@ -29,10 +56,14 @@ namespace ViroLab.Multiusuario
         private static readonly Color Lejos  = new Color(0.98f, 0.80f, 0.30f, 0.34f);
         private static readonly Color Encima = new Color(0.36f, 0.86f, 0.52f, 0.34f);
 
-        private Transform _aro;
-        private Renderer _aroPintura;
-        private Transform _centro;
-        private Renderer _centroPintura;
+        // Lado de la textura del aro, en pixeles. 256 basta: el aro se mira desde
+        // arriba y de cerca, y la imagen se suaviza con el filtrado bilineal.
+        private const int LadoTextura = 256;
+
+        private Canvas _aroLienzo;
+        private RawImage _aroPintura;
+        private Texture2D _aroTextura;
+
         private Canvas _lienzo;
         private TextMeshProUGUI _texto;
 
@@ -47,39 +78,97 @@ namespace ViroLab.Multiusuario
         //  Aro en el suelo
         // ================================================================
 
-        private void PrepararAro(float radio)
+        /// <summary>
+        /// Dibuja la marca en una textura: un aro grueso en el borde y un relleno
+        /// muy tenue por dentro, para que se lea como un sitio donde ponerse y no
+        /// como una mancha.
+        ///
+        /// El color va entero en blanco y lo que varia es el alfa. Asi el tinte
+        /// se aplica despues sobre la imagen, y cambiar de amarillo a verde no
+        /// obliga a volver a generar la textura.
+        /// </summary>
+        private static Texture2D DibujarAro()
         {
-            if (_aro == null)
+            var tex = new Texture2D(LadoTextura, LadoTextura, TextureFormat.RGBA32, false)
             {
-                var disco = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                disco.name = "Aro_Marca";
-                disco.hideFlags = HideFlags.DontSave;
+                name = "Aro_Marca_Textura",
+                hideFlags = HideFlags.DontSave,
+                wrapMode = TextureWrapMode.Clamp,
+                filterMode = FilterMode.Bilinear
+            };
 
-                // Sin esto el disco bloquea el rayo de teletransporte y el propio
-                // paso del participante.
-                var col = disco.GetComponent<Collider>();
-                if (col != null) Destroy(col);
+            var pixeles = new Color32[LadoTextura * LadoTextura];
+            float centro = (LadoTextura - 1) * 0.5f;
 
-                _aroPintura = disco.GetComponent<Renderer>();
-                if (_aroPintura != null)
+            // Radios en fraccion del radio total. El aro ocupa del 78 % al 98 %,
+            // y el 2 % que queda libre por fuera evita que el borde se corte
+            // contra el filo de la textura y aparezca dentado.
+            const float bordeExterior = 0.98f;
+            const float bordeInterior = 0.78f;
+            // Ancho del degradado de los bordes, para que no se vean escalonados.
+            const float suavizado = 0.03f;
+            // Lo de dentro del aro se insinua, no se pinta.
+            const float alfaRelleno = 0.22f;
+
+            for (int y = 0; y < LadoTextura; y++)
+            {
+                for (int x = 0; x < LadoTextura; x++)
                 {
-                    HacerTransparente(_aroPintura.material);
-                    // Se conserva el material que trae la primitiva y solo se le
-                    // cambia el color. Buscar un shader por nombre con Shader.Find
-                    // funciona en el editor pero devuelve nulo en una compilacion
-                    // si ese shader no esta en Always Included Shaders, y el aro
-                    // saldria rosa justo el dia de la prueba.
-                    _aroPintura.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                    _aroPintura.receiveShadows = false;
-                }
+                    float dx = (x - centro) / centro;
+                    float dy = (y - centro) / centro;
+                    float r = Mathf.Sqrt(dx * dx + dy * dy);
 
-                _aro = disco.transform;
+                    // Pertenencia al aro: sube al entrar por el borde interior y
+                    // baja al salir por el exterior.
+                    float dentro = Mathf.SmoothStep(0f, 1f, (r - (bordeInterior - suavizado)) / suavizado);
+                    float fuera  = 1f - Mathf.SmoothStep(0f, 1f, (r - (bordeExterior - suavizado)) / suavizado);
+                    float aro = Mathf.Clamp01(Mathf.Min(dentro, fuera));
+
+                    // Relleno: todo lo que queda por dentro del borde interior.
+                    float relleno = (1f - Mathf.SmoothStep(0f, 1f,
+                                        (r - (bordeInterior - suavizado)) / suavizado)) * alfaRelleno;
+
+                    float alfa = Mathf.Clamp01(Mathf.Max(aro, relleno));
+                    pixeles[y * LadoTextura + x] = new Color32(255, 255, 255, (byte)(alfa * 255f));
+                }
             }
 
-            // El cilindro de Unity mide 2 de alto y 1 de diametro, de ahi el radio
-            // sin multiplicar y el 0,015 de grosor (3 cm de disco).
-            _aro.localScale = new Vector3(radio * 2f, 0.015f, radio * 2f);
+            tex.SetPixels32(pixeles);
+            tex.Apply(false, false);
+            return tex;
+        }
 
+        private void PrepararAro(float radio)
+        {
+            if (_aroLienzo == null)
+            {
+                var obj = new GameObject("Aro_Marca");
+                obj.hideFlags = HideFlags.DontSave;
+
+                _aroLienzo = obj.AddComponent<Canvas>();
+                _aroLienzo.renderMode = RenderMode.WorldSpace;
+                // Por debajo del cartel, que tiene 500: si alguna vez se cruzan
+                // en pantalla, manda el texto.
+                _aroLienzo.sortingOrder = 400;
+
+                var img = new GameObject("Disco");
+                img.transform.SetParent(obj.transform, false);
+                _aroTextura = DibujarAro();
+                _aroPintura = img.AddComponent<RawImage>();
+                _aroPintura.texture = _aroTextura;
+                // Que no se coma el rayo del puntero ni el teletransporte. El
+                // disco antiguo tenia este mismo problema y se resolvia
+                // quitandole el collider.
+                _aroPintura.raycastTarget = false;
+                _aroPintura.rectTransform.sizeDelta = new Vector2(LadoTextura, LadoTextura);
+            }
+
+            // El lienzo mide LadoTextura unidades de lado, asi que la escala que
+            // lo deja del diametro pedido es (2 * radio) / LadoTextura.
+            _aroLienzo.transform.localScale = Vector3.one * ((radio * 2f) / LadoTextura);
+            // Tendido boca arriba. Un Canvas mira hacia +Z, de modo que girarlo
+            // 90 grados sobre X lo deja mirando al cielo.
+            _aroLienzo.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         }
 
         // ================================================================
@@ -140,14 +229,8 @@ namespace ViroLab.Multiusuario
             // no lo esta: con el disco a 3 cm quedaba enterrado y no se veia,
             // mientras que el haz de metro y medio si asomaba. De ahi que
             // pareciera que el disco no se creaba.
-            _aro.position = marca.position + Vector3.up * 0.12f;
-            _aro.gameObject.SetActive(true);
-
-            if (_centro != null)
-            {
-                _centro.position = marca.position + Vector3.up * 0.125f;
-                _centro.gameObject.SetActive(true);
-            }
+            _aroLienzo.transform.position = marca.position + Vector3.up * 0.12f;
+            _aroLienzo.gameObject.SetActive(true);
 
             _lienzo.gameObject.SetActive(true);
 
@@ -182,73 +265,26 @@ namespace ViroLab.Multiusuario
             _texto.text = "Quédate aquí\n<size=70%>esperando al resto</size>";
         }
 
+        /// El tinte va sobre la imagen, no sobre un material: la transparencia la
+        /// resuelve el alfa que ya trae la textura por el shader de interfaz, que
+        /// siempre viaja en la compilacion y funciona en estereo instanciado.
         private void Pintar(Color c)
         {
-            if (_aroPintura != null) Tenir(_aroPintura.material, c);
-
-            // El centro, mas oscuro pero con la MISMA transparencia: multiplicar
-            // el color entero rebajaba tambien el alfa y el disco interior
-            // desaparecia.
-            if (_centroPintura != null)
-                Tenir(_centroPintura.material, new Color(c.r * 0.55f, c.g * 0.55f, c.b * 0.55f, c.a));
-        }
-
-        /// Pone el color en la propiedad que corresponda. URP usa _BaseColor y el
-        /// pipeline integrado _Color; se escriben las dos que existan en vez de
-        /// dar por hecho cual es.
-        private static void Tenir(Material m, Color c)
-        {
-            if (m == null) return;
-            if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", c);
-            if (m.HasProperty("_Color")) m.SetColor("_Color", c);
-        }
-
-        /// <summary>
-        /// Pasa un material a mezcla alfa.
-        ///
-        /// Este proyecto renderiza con URP (Desktop Universal Render Pipeline
-        /// Asset), de modo que las primitivas nacen con URP/Lit y no con el
-        /// Standard del pipeline integrado. Se escriben las propiedades de los
-        /// dos, comprobando antes que existan, para no depender de cual este
-        /// activo ni de buscar ningun shader por nombre.
-        /// </summary>
-        private static void HacerTransparente(Material m)
-        {
-            if (m == null) return;
-
-            // URP
-            if (m.HasProperty("_Surface")) m.SetFloat("_Surface", 1f);   // 1 = Transparent
-            if (m.HasProperty("_Blend")) m.SetFloat("_Blend", 0f);       // 0 = Alpha
-            // Pipeline integrado
-            if (m.HasProperty("_Mode")) m.SetFloat("_Mode", 3f);         // 3 = Transparent
-
-            if (m.HasProperty("_SrcBlend"))
-                m.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            if (m.HasProperty("_DstBlend"))
-                m.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            if (m.HasProperty("_ZWrite")) m.SetFloat("_ZWrite", 0f);
-
-            m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-            m.EnableKeyword("_ALPHABLEND_ON");
-            m.DisableKeyword("_ALPHATEST_ON");
-            m.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-
-            m.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+            if (_aroPintura != null) _aroPintura.color = c;
         }
 
         /// <summary>Apaga la guía. Se llama al anunciar y al reiniciar.</summary>
         public void Ocultar()
         {
-            if (_aro != null) _aro.gameObject.SetActive(false);
-            if (_centro != null) _centro.gameObject.SetActive(false);
+            if (_aroLienzo != null) _aroLienzo.gameObject.SetActive(false);
             if (_lienzo != null) _lienzo.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
-            if (_aro != null) Destroy(_aro.gameObject);
-            if (_centro != null) Destroy(_centro.gameObject);
+            if (_aroLienzo != null) Destroy(_aroLienzo.gameObject);
             if (_lienzo != null) Destroy(_lienzo.gameObject);
+            if (_aroTextura != null) Destroy(_aroTextura);
         }
     }
 }

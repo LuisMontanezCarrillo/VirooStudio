@@ -94,6 +94,17 @@ namespace ViroLab.Multiusuario
                  "una sesión atascada. Pon 0 para esperar sin límite.")]
         public float esperaMaxima = 60f;
 
+        [Tooltip("Marcado: esta reunión NO hace saltar a nadie. Solo pide a cada uno " +
+                 "que vaya a su marca y, cuando llega, dispara «Al Terminar La " +
+                 "Reunión». El campo «Avance» se deja vacío.\n\n" +
+                 "Para qué sirve: el salto de VIROO conserva las posiciones " +
+                 "relativas, de modo que si alguien saltó lejos de su marca llega " +
+                 "lejos de su punto, y esa desviación se suma reto tras reto. Una " +
+                 "reunión de este tipo colocada en el destino, enganchada al evento " +
+                 "«Después Del Salto» del AvanceEnGrupo, devuelve a cada uno a su " +
+                 "sitio nada más aterrizar y corta la acumulación.")]
+        public bool soloReunir = false;
+
         [Header("Lo que ve el participante")]
         [Tooltip("Marcado: se dibuja solo un aro en el suelo sobre la marca y un " +
                  "cartel con lo que falta. Las marcas son objetos vacíos, o sea " +
@@ -112,6 +123,11 @@ namespace ViroLab.Multiusuario
 
         [Tooltip("Al pisar la marca. Úsalo para apagar el cartel.")]
         public UnityEvent AlLlegarALaMarca;
+
+        [Tooltip("Cuando la reunión da por terminado su trabajo, tanto si hace saltar " +
+                 "al grupo como si solo reúne. Con «Solo Reunir» marcado, es aquí " +
+                 "donde se engancha lo que deba empezar el reto.")]
+        public UnityEvent AlTerminarLaReunion;
 
         [Tooltip("Distancia que falta, en metros, mientras el participante camina. " +
                  "Úsalo si quieres mostrarla.")]
@@ -156,7 +172,8 @@ namespace ViroLab.Multiusuario
             // su marca y el grupo no avanza.
             if (avance == null) avance = GetComponent<AvanceEnGrupo>();
 
-            if (avance == null)
+            // Con «Solo Reunir» no hay salto que dar, de modo que no falta nada.
+            if (avance == null && !soloReunir)
                 Debug.LogWarning("[ReunionEnElCentro] No hay AvanceEnGrupo asignado ni en este " +
                                  "objeto. Asígnalo en el campo «Avance» o el grupo no avanzará.", this);
         }
@@ -397,6 +414,14 @@ namespace ViroLab.Multiusuario
 
             if (_guia != null) _guia.Ocultar();
 
+            if (soloReunir)
+            {
+                if (log) Debug.Log($"[ReunionEnElCentro] Reunidos en el destino ({motivo}). " +
+                                   "No hay salto: solo se recoloca a cada uno en su marca.");
+                if (AlTerminarLaReunion != null) AlTerminarLaReunion.Invoke();
+                return;
+            }
+
             if (avance == null)
             {
                 Debug.LogError("[ReunionEnElCentro] Falta el AvanceEnGrupo: el grupo no avanzará.", this);
@@ -405,6 +430,7 @@ namespace ViroLab.Multiusuario
 
             if (log) Debug.Log($"[ReunionEnElCentro] Anunciando el fin ({motivo}).");
             avance.AnunciarQueTermine();
+            if (AlTerminarLaReunion != null) AlTerminarLaReunion.Invoke();
         }
 
         // ================================================================
