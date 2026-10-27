@@ -7777,7 +7777,8 @@ MonoBehaviour:
   esperaMaximaDelAudio: 30
   caminarMientrasHabla: 1
   avance: {fileID: 276652111}
-  esperaMaxima: 60
+  esperaMaxima: 45
+  soloReunir: 0
   guiaAutomatica: 1
   AlConvocar:
     m_PersistentCalls:
@@ -7786,6 +7787,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   AlLlegarALaMarca:
+    m_PersistentCalls:
+      m_Calls: []
+  AlTerminarLaReunion:
     m_PersistentCalls:
       m_Calls: []
   AlCambiarLaDistancia:
@@ -23707,7 +23711,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   retrySeconds: 1
-  segundosDeBusqueda: 25
   soloElJugadorLocal: 1
   log: 1
 --- !u!1 &900005001
@@ -33701,7 +33704,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1560839893}
   m_Father: {fileID: 3817571384722755373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1347875380
@@ -33727,7 +33731,8 @@ MonoBehaviour:
   esperaMaximaDelAudio: 30
   caminarMientrasHabla: 1
   avance: {fileID: 1347875381}
-  esperaMaxima: 60
+  esperaMaxima: 45
+  soloReunir: 0
   guiaAutomatica: 1
   AlConvocar:
     m_PersistentCalls:
@@ -33736,6 +33741,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   AlLlegarALaMarca:
+    m_PersistentCalls:
+      m_Calls: []
+  AlTerminarLaReunion:
     m_PersistentCalls:
       m_Calls: []
   AlCambiarLaDistancia:
@@ -33802,6 +33810,18 @@ MonoBehaviour:
       - m_Target: {fileID: 42484020}
         m_TargetAssemblyTypeName: FundidoDePantalla, Assembly-CSharp
         m_MethodName: AclararAhora
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1560839894}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.ReunionEnElCentro, Assembly-CSharp
+        m_MethodName: Convocar
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -38877,6 +38897,85 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1559809169}
   m_CullTransparentMesh: 1
+--- !u!1 &1560839892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1560839893}
+  - component: {fileID: 1560839894}
+  m_Layer: 0
+  m_Name: Reunion_Llegada_Reto3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1560839893
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1560839892}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1347875379}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1560839894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1560839892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92b85c2dc0bd9d34595b9ad498270eee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  marcas:
+  - {fileID: 900005002}
+  - {fileID: 900005004}
+  - {fileID: 141025963}
+  - {fileID: 900005006}
+  radio: 0.8
+  mirarHacia: {fileID: 0}
+  toleranciaDeGiro: 35
+  esperarAQueTermine: {fileID: 0}
+  esperaAdicional: 0
+  esperaMaximaDelAudio: 30
+  caminarMientrasHabla: 0
+  avance: {fileID: 0}
+  esperaMaxima: 20
+  soloReunir: 1
+  guiaAutomatica: 1
+  AlConvocar:
+    m_PersistentCalls:
+      m_Calls: []
+  AlAsignarMarca:
+    m_PersistentCalls:
+      m_Calls: []
+  AlLlegarALaMarca:
+    m_PersistentCalls:
+      m_Calls: []
+  AlTerminarLaReunion:
+    m_PersistentCalls:
+      m_Calls: []
+  AlCambiarLaDistancia:
+    m_PersistentCalls:
+      m_Calls: []
+  AlCambiarElGiro:
+    m_PersistentCalls:
+      m_Calls: []
+  log: 1
 --- !u!1 &1565537490
 GameObject:
   m_ObjectHideFlags: 0
