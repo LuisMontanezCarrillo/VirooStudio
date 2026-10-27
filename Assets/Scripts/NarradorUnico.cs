@@ -158,6 +158,16 @@ public static class NarradorUnico
         _hablando = null;
     }
 
+    /// <summary>
+    /// Si hay una narracion sonando ahora mismo.
+    ///
+    /// Lo pregunta el mezclador para agachar la planta mientras alguien habla.
+    /// La regla de quien tiene la palabra ya se decide aqui, incluida la de las
+    /// narraciones que arrancan por su cuenta desde un UnityEvent; duplicarla en
+    /// otro componente seria tener dos verdades que acabarian discrepando.
+    /// </summary>
+    public static bool HayAlguienHablando() { return AlguienHablando(); }
+
     // ================================================================
     //  Turnos
     // ================================================================
