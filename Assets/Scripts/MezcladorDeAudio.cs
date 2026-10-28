@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Video;
+using ViroLab.Pasteurizador.Simulator;
 
 /// <summary>
 /// Reparte todo el sonido en tres buses y agacha la planta mientras alguien
@@ -153,7 +154,7 @@ public class MezcladorDeAudio : MonoBehaviour, IReiniciable
     private const float NarracionMax = 40f;
 
     private readonly HashSet<AudioSource> _repartidas = new HashSet<AudioSource>();
-    private readonly HashSet<AudioSource> _deVideo = new HashSet<AudioSource>();
+    private readonly HashSet<AudioSource> _vocesConocidas = new HashSet<AudioSource>();
     private readonly List<AudioSource> _planta = new List<AudioSource>();
     private readonly Dictionary<AudioSource, float> _volumenSinAgachar =
         new Dictionary<AudioSource, float>();
@@ -217,7 +218,7 @@ public class MezcladorDeAudio : MonoBehaviour, IReiniciable
 
     private void Rastrear()
     {
-        RefrescarLasDeVideo();
+        RefrescarLasVoces();
 
         var todas = Object.FindObjectsByType<AudioSource>(
             FindObjectsInactive.Include, FindObjectsSortMode.None);
@@ -273,14 +274,11 @@ public class MezcladorDeAudio : MonoBehaviour, IReiniciable
         if (Contiene(siemprePlanta, a))   return Destino.Planta;
         if (Contiene(siempreInterfaz, a)) return Destino.Interfaz;
 
-        // La salida de un VideoPlayer es voz. El clip no se ve venir, porque lo
-        // pone el video al arrancar, y el nombre del objeto es el del televisor,
-        // no el de nadie hablando: por ahi no hay forma de acertar.
-        //
-        // Que sea voz no es una suposicion. NarradorUnico ya trata los videos
-        // como voz desde antes que este componente existiera: cuando alguien
-        // toma la palabra, PAUSA los videos igual que PARA las narraciones.
-        if (_deVideo.Contains(a)) return Destino.Voz;
+        // Las fuentes que alguien usa PARA HABLAR, preguntando a quien las usa.
+        // Ni el clip ni el nombre sirven con ellas: el clip se pone en ejecucion
+        // y el nombre es el del mueble ("Smart led TV", "Simulador"), no el de
+        // nadie hablando.
+        if (_vocesConocidas.Contains(a)) return Destino.Voz;
 
         string n = a.name;
 
@@ -319,35 +317,54 @@ public class MezcladorDeAudio : MonoBehaviour, IReiniciable
     }
 
     /// <summary>
-    /// Apunta que AudioSource son la salida de un VideoPlayer.
+    /// Apunta que AudioSource son voz, preguntando a QUIEN LOS USA en vez de
+    /// mirar el objeto.
     ///
-    /// Se rehace en cada rastreo porque un VideoPlayer puede cambiar de fuente
-    /// en ejecucion, y porque los televisores de la escena viven dentro de
-    /// prefabs que no siempre estan activos desde el principio.
+    /// Las dos primeras avisos que salieron en la sala eran de este tipo:
+    /// 'Smart led TV' y 'Simulador'. Las dos tienen el mismo problema de fondo,
+    /// y no se arregla con reglas de nombre. Un AudioSource sin clip asignado y
+    /// con el nombre del mueble no dice nada por si mismo; lo que lo define es
+    /// el componente que lo tiene cogido para hablar por el.
+    ///
+    /// Se rehace en cada rastreo: un VideoPlayer puede cambiar de fuente en
+    /// ejecucion, y estos objetos viven dentro de prefabs que no siempre estan
+    /// activos desde el principio.
     /// </summary>
-    private void RefrescarLasDeVideo()
+    private void RefrescarLasVoces()
     {
-        _deVideo.Clear();
+        _vocesConocidas.Clear();
 
+        // 1. La salida de los videos. No es una suposicion: NarradorUnico ya
+        //    trata los videos como voz desde antes de que este componente
+        //    existiera, porque cuando alguien toma la palabra PAUSA los videos
+        //    igual que PARA las narraciones.
         var videos = Object.FindObjectsByType<VideoPlayer>(
             FindObjectsInactive.Include, FindObjectsSortMode.None);
-        if (videos == null) return;
-
-        foreach (var v in videos)
-        {
-            if (v == null) continue;
-
-            // En modo Direct el video no pasa por ningun AudioSource y no hay
-            // nada que enrutar; el volumen de esos lo lleva el propio video.
-            if (v.audioOutputMode != VideoAudioOutputMode.AudioSource) continue;
-
-            ushort pistas = v.controlledAudioTrackCount;
-            for (ushort i = 0; i < pistas; i++)
+        if (videos != null)
+            foreach (var v in videos)
             {
-                var a = v.GetTargetAudioSource(i);
-                if (a != null) _deVideo.Add(a);
+                if (v == null) continue;
+
+                // En modo Direct el video no pasa por ningun AudioSource y no
+                // hay nada que enrutar: ese volumen lo lleva el propio video.
+                if (v.audioOutputMode != VideoAudioOutputMode.AudioSource) continue;
+
+                ushort pistas = v.controlledAudioTrackCount;
+                for (ushort i = 0; i < pistas; i++)
+                {
+                    var a = v.GetTargetAudioSource(i);
+                    if (a != null) _vocesConocidas.Add(a);
+                }
             }
-        }
+
+        // 2. La guia por voz del tablero. Su fuente vive en el mismo objeto que
+        //    PasteurizerFxController, que es la planta, asi que no vale mirar
+        //    que componentes hay al lado: hay que mirar el campo.
+        var guias = Object.FindObjectsByType<PasteurizerVoiceGuide>(
+            FindObjectsInactive.Include, FindObjectsSortMode.None);
+        if (guias != null)
+            foreach (var g in guias)
+                if (g != null && g.source != null) _vocesConocidas.Add(g.source);
     }
 
     // ================================================================
