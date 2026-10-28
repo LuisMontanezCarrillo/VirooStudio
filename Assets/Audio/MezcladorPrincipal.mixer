@@ -96,6 +96,12 @@ AudioMixerController:
   m_EnableSuspend: 1
   m_UpdateMode: 0
   m_ExposedParameters:
+  - guid: 258f3343ef10d3143a7a71516693b8ae
+    name: VolumenGeneral
+  - guid: 6d6b8ca35b5ff734392d39e81d58ad56
+    name: VolumenVoz
+  - guid: 7ecb2b52f2821264bb2de67552a9c4fe
+    name: VolumenPlanta
   - guid: 42d1c967d37a8204fa6cff8c4bc649a5
     name: VolumenInterfaz
   m_AudioMixerGroupViews:
