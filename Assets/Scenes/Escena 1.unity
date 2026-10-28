@@ -8699,6 +8699,74 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 303099667}
   m_CullTransparentMesh: 1
+--- !u!1 &308927730
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 308927731}
+  - component: {fileID: 308927732}
+  m_Layer: 0
+  m_Name: Mezclador_Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &308927731
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308927730}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3817571384722755373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &308927732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308927730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c31d81a6f9d3d54b882f9e7ca88ab10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mezclador: {fileID: 24100000, guid: 87299343bae74b849b618f5a7fe33429, type: 2}
+  grupoVoz: {fileID: -1201757088661712958, guid: 87299343bae74b849b618f5a7fe33429,
+    type: 2}
+  grupoPlanta: {fileID: -1545126497486963273, guid: 87299343bae74b849b618f5a7fe33429,
+    type: 2}
+  grupoInterfaz: {fileID: 7285543039823707590, guid: 87299343bae74b849b618f5a7fe33429,
+    type: 2}
+  paramGeneral: VolumenGeneral
+  paramVoz: VolumenVoz
+  paramPlanta: VolumenPlanta
+  paramInterfaz: VolumenInterfaz
+  nivelGeneral: 0
+  nivelVoz: 2
+  nivelPlanta: -6
+  nivelInterfaz: -3
+  agache: 9
+  segundosDeBajada: 0.15
+  segundosDeSubida: 0.7
+  segundosEntreRastreos: 2
+  siempreVoz: []
+  siemprePlanta: []
+  siempreInterfaz: []
+  reasignarSiempre: 0
+  log: 1
 --- !u!1 &310057158
 GameObject:
   m_ObjectHideFlags: 0
@@ -74363,6 +74431,7 @@ Transform:
   - {fileID: 1347875379}
   - {fileID: 1782916815}
   - {fileID: 1260335689}
+  - {fileID: 308927731}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3834981708564198463
