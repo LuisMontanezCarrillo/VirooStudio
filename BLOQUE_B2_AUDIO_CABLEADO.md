@@ -208,12 +208,17 @@ desde el Audio Mixer**:
 - **No** hay que añadirlo a la lista del reinicio entre tandas: `ReinicioDeExperiencia`
   busca por su cuenta todo lo que sepa reiniciarse.
 
-### Paso 6 · Lo mismo en la Escena 2
+### La Escena 2 no hace falta
 
-La `Escena 2` tiene siete `AudioSource` propios, incluido `Sonido_Ambiente_lobby`.
-Repita **solo el paso 5** en esa escena: objeto vacío `Mezclador_Audio`, componente,
-y los mismos cuatro campos apuntando al **mismo** `MezcladorPrincipal`. Un único
-mezclador para las dos escenas.
+La `Escena 2` tiene siete `AudioSource` propios, incluido `Sonido_Ambiente_lobby`, y
+una versión anterior de esta guía pedía repetir el paso 5 allí. **No hace falta.**
+
+`ProjectSettings/EditorBuildSettings.asset` la tiene **desactivada** (`enabled: 0`), y
+todas las llamadas a `SceneManager` del proyecto están en scripts de Editor: ninguna
+en ejecución. Nadie la carga, así que sus fuentes de sonido nunca suenan en la sesión.
+
+Si algún día entra en el build, entonces sí: objeto vacío `Mezclador_Audio`,
+componente, y los mismos cuatro campos apuntando al mismo `MezcladorPrincipal`.
 
 ---
 
@@ -318,7 +323,7 @@ dígamelo y preparo el componente y la lista de equipos.
 | Código del mezclador y del agache | hecho, compila | — |
 | Crear el `.mixer` y los tres grupos | usted | 2 min |
 | Exponer los cuatro parámetros | usted | 2 min |
-| Poner el componente en las dos escenas | usted | 3 min |
+| Poner el componente en la Escena 1 | usted | 2 min |
 | Comprobar en Play con la consola | usted | 2 min |
 | Compresor en el bus de voz | opcional | 1 min |
 | Sonido 3D por máquina | propuesto, no hecho | — |

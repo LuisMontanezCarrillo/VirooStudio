@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Video;
 
 /// <summary>
 /// Reparte todo el sonido en tres buses y agacha la planta mientras alguien
@@ -152,6 +153,7 @@ public class MezcladorDeAudio : MonoBehaviour, IReiniciable
     private const float NarracionMax = 40f;
 
     private readonly HashSet<AudioSource> _repartidas = new HashSet<AudioSource>();
+    private readonly HashSet<AudioSource> _deVideo = new HashSet<AudioSource>();
     private readonly List<AudioSource> _planta = new List<AudioSource>();
     private readonly Dictionary<AudioSource, float> _volumenSinAgachar =
         new Dictionary<AudioSource, float>();
@@ -215,6 +217,8 @@ public class MezcladorDeAudio : MonoBehaviour, IReiniciable
 
     private void Rastrear()
     {
+        RefrescarLasDeVideo();
+
         var todas = Object.FindObjectsByType<AudioSource>(
             FindObjectsInactive.Include, FindObjectsSortMode.None);
         if (todas == null) return;
@@ -269,6 +273,15 @@ public class MezcladorDeAudio : MonoBehaviour, IReiniciable
         if (Contiene(siemprePlanta, a))   return Destino.Planta;
         if (Contiene(siempreInterfaz, a)) return Destino.Interfaz;
 
+        // La salida de un VideoPlayer es voz. El clip no se ve venir, porque lo
+        // pone el video al arrancar, y el nombre del objeto es el del televisor,
+        // no el de nadie hablando: por ahi no hay forma de acertar.
+        //
+        // Que sea voz no es una suposicion. NarradorUnico ya trata los videos
+        // como voz desde antes que este componente existiera: cuando alguien
+        // toma la palabra, PAUSA los videos igual que PARA las narraciones.
+        if (_deVideo.Contains(a)) return Destino.Voz;
+
         string n = a.name;
 
         // Las siete que crea PasteurizerFxController en ejecucion, mas los
@@ -303,6 +316,38 @@ public class MezcladorDeAudio : MonoBehaviour, IReiniciable
                              "no dice a que bus va. Se manda a Interfaz. Si es una voz o " +
                              "una maquina, anadala a la lista que corresponda.");
         return Destino.Interfaz;
+    }
+
+    /// <summary>
+    /// Apunta que AudioSource son la salida de un VideoPlayer.
+    ///
+    /// Se rehace en cada rastreo porque un VideoPlayer puede cambiar de fuente
+    /// en ejecucion, y porque los televisores de la escena viven dentro de
+    /// prefabs que no siempre estan activos desde el principio.
+    /// </summary>
+    private void RefrescarLasDeVideo()
+    {
+        _deVideo.Clear();
+
+        var videos = Object.FindObjectsByType<VideoPlayer>(
+            FindObjectsInactive.Include, FindObjectsSortMode.None);
+        if (videos == null) return;
+
+        foreach (var v in videos)
+        {
+            if (v == null) continue;
+
+            // En modo Direct el video no pasa por ningun AudioSource y no hay
+            // nada que enrutar; el volumen de esos lo lleva el propio video.
+            if (v.audioOutputMode != VideoAudioOutputMode.AudioSource) continue;
+
+            ushort pistas = v.controlledAudioTrackCount;
+            for (ushort i = 0; i < pistas; i++)
+            {
+                var a = v.GetTargetAudioSource(i);
+                if (a != null) _deVideo.Add(a);
+            }
+        }
     }
 
     // ================================================================
