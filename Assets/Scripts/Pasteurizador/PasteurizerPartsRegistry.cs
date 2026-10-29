@@ -9,10 +9,15 @@ namespace ViroLab.Pasteurizador
     public class PasteurizerPartsRegistry : MonoBehaviour
     {
         [SerializeField] private PasteurizerSubsystemDatabase database;
-        [Tooltip("Agrega MeshCollider convex a cada parte para Raycast.")]
+        [Tooltip("Agrega un MeshCollider a cada parte para el Raycast.")]
         public bool addCollidersOnAwake = true;
-        [Tooltip("Si true los colliders son convex (mas barato pero menos preciso).")]
-        public bool convexColliders = true;
+        // Convex se deja apagado: el unico consumidor de estos colliders es el
+        // Physics.Raycast de PasteurizerHoverHandler, y para un rayo la malla sin
+        // convex es exacta. Con convex, PhysX no admite mas de 256 poligonos y
+        // devolvia un casco parcial en Tanque_Calota, Tanque_Manway_Knob y
+        // _07_Valvula_FDV_Diversion_Actuador_Domo: el clic no caia donde se veia.
+        [Tooltip("Si true los colliders son convex: mas barato, pero PhysX recorta la forma a 256 poligonos.")]
+        public bool convexColliders = false;
 
         public PasteurizerSubsystemDatabase Database => database;
 

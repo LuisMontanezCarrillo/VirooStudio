@@ -99,7 +99,7 @@ namespace ViroLab.Pasteurizador.EditorTools
                 var registry = root.AddComponent<PasteurizerPartsRegistry>();
                 registry.SetDatabase(db);
                 registry.addCollidersOnAwake = true;
-                registry.convexColliders = true;
+                registry.convexColliders = false;
 
                 var assigner = root.AddComponent<PasteurizerMaterialAssigner>();
                 assigner.palette = palette;
