@@ -21,21 +21,20 @@ Una locución es un mensaje que se emite. Una lista es un mensaje que se queda.
 
 ## Paso 0 — Antes de tocar nada, dos comprobaciones
 
-### 0.1 ¿Se ven las gafas RV?
+### 0.1 Las gafas RV — comprobado, se ven
 
 El objeto **`Logo Simulador VR`** apunta a un prefab que **no existe en el
 proyecto** (`f599cdf4f1433fa4a8c2135edd24a7b3`). Lo encontré al mapear la
-escena.
+escena y temí que el paso 2 pidiera acercarse a algo invisible.
 
-Conserva su propio `CapsuleCollider` y su `XRSimpleInteractable`, así que el
-clic debería seguir funcionando; lo que se perdió al desaparecer el prefab es la
-parte visible.
+**No es el caso.** Las gafas se ven: la geometría la pone el prefab padre
+`Logo proyecto 3D`, que es un FBX que sí está en el proyecto
+(`Assets/3D Laboratory Environment with Appratus/Tripo-Meshy/Meshy Logo 3D/`).
+El prefab que falta solo aportaba el objeto hijo que lleva el collider y el
+interactable, y esos dos sobrevivieron serializados en la escena.
 
-**Dé Play y mire si las gafas se ven en la zona de alistamiento.**
-
-- Si se ven → no hay nada que hacer, siga.
-- Si no se ven → el paso 2 de su lista pide acercarse a algo invisible, y eso
-  hay que resolverlo antes que el indicador. Dígamelo y lo vemos.
+Queda como deuda menor, no como bloqueo: la escena arrastra una referencia rota
+que Unity avisa en cada apertura.
 
 ### 0.2 ¿Se leen las dos marcas?
 
@@ -143,10 +142,16 @@ pero añada siempre al final para no desordenar lo que ya hay.
 | **Cómo saber que es el correcto** | esa lista ya tiene dos entradas: `VozOff2.Play()` y `Canvas.SetActive()` |
 | **Añadir** | `Guion_Reto1` → `GuionDePasos.Cumplir` → **`1`** |
 
-> **Cuidado: hay dos objetos con este nombre.** El otro cuelga de
-> `Root/Planta_Piloto/Logo proyecto 3D (Esc2)` y tiene el componente
-> **desmarcado** (`m_Enabled: 0`). Ese no es. El bueno es el que tiene el
-> `XR Simple Interactable` **activo**.
+> **Cuidado: hay dos objetos con este nombre, y un tercero parecido.**
+>
+> | Objeto | Qué hace | ¿Es este? |
+> |---|---|---|
+> | `Logo proyecto 3D` → hijo `Logo Simulador VR` | `VozOff2.Play()` + `Canvas.SetActive()`, interactable **activo** | **sí** |
+> | `Logo proyecto 3D (Esc2)` → hijo `Logo Simulador VR` | lo mismo, pero interactable **desmarcado** (`m_Enabled: 0`) | no |
+> | `Logo proyecto 3D (Esc2)` | `Canvas_Cuestionario.SetActive()` | no, ese es el cuestionario |
+>
+> El bueno es el que cuelga de `Logo proyecto 3D` **sin** el `(Esc2)`, y es el
+> único de los dos cuyo `XR Simple Interactable` está marcado.
 
 ### 4.3 · Paso 2 — El casillero
 
@@ -269,3 +274,17 @@ solo.
   `Mostrar()` del siguiente, para que el panel de la zona nueva aparezca solo.
 - **El prefab perdido.** `f599cdf4f1433fa4a8c2135edd24a7b3` sigue sin estar en el
   proyecto, lo arregle o no el indicador.
+
+- **El cuestionario, abierto desde el minuto uno.** `Logo proyecto 3D (Esc2)`
+  arranca con `m_IsActive: 1`, tiene `MeshRenderer` y `BoxCollider`, y su
+  `XR Simple Interactable` está marcado. O sea que se ve, se puede apuntar y,
+  al hacer clic, enciende `Canvas_Cuestionario` — en cualquier momento de la
+  sesión, incluido antes de empezar el reto 1.
+
+  Puede ser deliberado. Pero si el cuestionario es el cierre de la experiencia,
+  tenerlo accesible desde el principio es un accidente esperando: cuarenta
+  estudiantes en veinte tandas, y basta que uno apunte ahí por curiosidad.
+
+  No lo toco porque no sé si es intencionado. Si no lo es, la solución es de una
+  línea: desmarcar el `XR Simple Interactable` en el Inspector y añadir
+  `set_enabled(true)` sobre él en el evento que cierre el último reto.
