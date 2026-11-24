@@ -7901,6 +7901,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 766416693}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Mostrar
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8982099037702095309}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   margenAntesDelSalto: 1
   margenTrasElSalto: 0.35
   log: 1
@@ -12264,6 +12288,46 @@ PrefabInstance:
       propertyPath: alsoUseMouse
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4785070134163023978, guid: f49ee90b201487a4990f125443e18689,
+        type: 3}
+      propertyPath: AlExplorarLoSuficiente.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4785070134163023978, guid: f49ee90b201487a4990f125443e18689,
+        type: 3}
+      propertyPath: AlExplorarLoSuficiente.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4785070134163023978, guid: f49ee90b201487a4990f125443e18689,
+        type: 3}
+      propertyPath: AlExplorarLoSuficiente.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 766416693}
+    - target: {fileID: 4785070134163023978, guid: f49ee90b201487a4990f125443e18689,
+        type: 3}
+      propertyPath: AlExplorarLoSuficiente.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4785070134163023978, guid: f49ee90b201487a4990f125443e18689,
+        type: 3}
+      propertyPath: AlExplorarLoSuficiente.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Cumplir
+      objectReference: {fileID: 0}
+    - target: {fileID: 4785070134163023978, guid: f49ee90b201487a4990f125443e18689,
+        type: 3}
+      propertyPath: AlExplorarLoSuficiente.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4785070134163023978, guid: f49ee90b201487a4990f125443e18689,
+        type: 3}
+      propertyPath: AlExplorarLoSuficiente.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4785070134163023978, guid: f49ee90b201487a4990f125443e18689,
+        type: 3}
+      propertyPath: AlExplorarLoSuficiente.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 8793668911854669389, guid: f49ee90b201487a4990f125443e18689,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -16623,6 +16687,21 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9dab2b7a6a48bbe4fa634bedb1f7e544, type: 3}
   - {fileID: 8300000, guid: d508041b405d2a046aad6864cfcb9235, type: 3}
   - {fileID: 8300000, guid: b24c06b8870d78b4c856d18f0aaf8ae5, type: 3}
+  AlLlegarALaUltima:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 766416693}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cumplir
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   botonSiguiente: {fileID: 874806753}
   botonAnterior: {fileID: 205466874}
   ocultarEnLugarDeApagar: 1
@@ -19180,6 +19259,79 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 756403293}
   m_CullTransparentMesh: 1
+--- !u!1 &766416691
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 766416692}
+  - component: {fileID: 766416693}
+  m_Layer: 0
+  m_Name: Guion_Reto2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &766416692
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766416691}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.012, y: 0, z: -2.745}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3817571384722755373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &766416693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766416691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d60eb74c4407f7a4e8da7b50f9cadef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titulo: PLANTA PILOTO
+  pasos:
+  - texto: "Revisa el carrusel hasta el \xFAltimo slide"
+    sangrado: 0
+  - texto: Recorre el pasteurizador 3D y consulta sus partes
+    sangrado: 0
+  - texto: Abre el cuestionario en el logo del proyecto
+    sangrado: 0
+  - texto: Responde las cinco preguntas
+    sangrado: 0
+  colocacion: 0
+  escala: 0.0018
+  ancla: {fileID: 0}
+  desplazamientoDelAncla: {x: 0, y: 1.8, z: 0}
+  giroSuavizado: 6
+  distancia: 1.2
+  altura: -0.3
+  holgura: 14
+  suavizado: 0.45
+  tamanoDeLetra: 44
+  marcaHecho: "\u2713"
+  marcaActual: "\u25B6"
+  empezarOculto: 1
+  ocultarAlTerminar: 1
+  segundosAntesDeOcultar: 2
+  AlTerminar:
+    m_PersistentCalls:
+      m_Calls: []
+  log: 1
 --- !u!1 &768128441
 GameObject:
   m_ObjectHideFlags: 0
@@ -22169,6 +22321,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 766416693}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cumplir
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
@@ -28359,6 +28523,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.Video.VideoPlayer, UnityEngine
         m_MethodName: Play
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1984606590}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cumplir
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -37669,6 +37845,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1984606590}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cumplir
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   AlTenerError:
     m_PersistentCalls:
       m_Calls:
@@ -41410,6 +41598,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1984606590}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cumplir
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
@@ -47125,6 +47325,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1984606590}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cumplir
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   AlTenerError:
     m_PersistentCalls:
       m_Calls:
@@ -49003,6 +49215,81 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1984606588
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1984606589}
+  - component: {fileID: 1984606590}
+  m_Layer: 0
+  m_Name: Guion_Reto1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1984606589
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984606588}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.4, y: 0, z: -6.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3817571384722755373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1984606590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984606588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d60eb74c4407f7a4e8da7b50f9cadef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titulo: ZONA DE ALISTAMIENTO
+  pasos:
+  - texto: "Ac\xE9rcate a la pantalla y reproduce el video"
+    sangrado: 0
+  - texto: "Ac\xE9rcate a las gafas RV y haz clic"
+    sangrado: 0
+  - texto: Guarda tus objetos personales
+    sangrado: 1
+  - texto: "Equipa tu dotaci\xF3n de bioseguridad"
+    sangrado: 1
+  - texto: "Realiza la higienizaci\xF3n de manos y botas"
+    sangrado: 1
+  colocacion: 0
+  escala: 0.0018
+  ancla: {fileID: 0}
+  desplazamientoDelAncla: {x: 0, y: 1.8, z: 0}
+  giroSuavizado: 6
+  distancia: 1.2
+  altura: -0.3
+  holgura: 14
+  suavizado: 0.45
+  tamanoDeLetra: 44
+  marcaHecho: "\u2713"
+  marcaActual: "\u25B6"
+  empezarOculto: 0
+  ocultarAlTerminar: 1
+  segundosAntesDeOcultar: 4
+  AlTerminar:
+    m_PersistentCalls:
+      m_Calls: []
+  log: 1
 --- !u!1 &1988741125
 GameObject:
   m_ObjectHideFlags: 0
@@ -50031,6 +50318,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1984606590}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cumplir
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -54154,7 +54453,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!33 &199290061335064526
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -74432,6 +74731,8 @@ Transform:
   - {fileID: 1782916815}
   - {fileID: 1260335689}
   - {fileID: 308927731}
+  - {fileID: 1984606589}
+  - {fileID: 766416692}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3834981708564198463
@@ -103010,7 +103311,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8641567455458417526}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a35f6cfbfba9b548aaa00d52cfe8a50, type: 3}
   m_Name: 
@@ -103059,6 +103360,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 766416693}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cumplir
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1

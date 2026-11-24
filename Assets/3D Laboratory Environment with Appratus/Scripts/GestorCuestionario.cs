@@ -116,7 +116,7 @@ public class GestorCuestionario : MonoBehaviour, IReiniciable
 
         if (enIntroduccion)
         {
-            textoPregunta.text = "<b>¡Bienvenido al Reto 2!</b>\n\nEste reto consiste en responder un cuestionario interactivo sobre los fundamentos y beneficios de la pasteurización, así como los componentes del equipo pasteurizador HTST.\n\n<i>Antes de iniciar el cuestionario, se recomienda explorar detalladamente el pasteurizador y el carrusel interactivo ubicado en la planta piloto.</i>";
+            textoPregunta.text = "<b>¡Bienvenido al Reto 2!</b>\n\nEste reto consiste en responder un cuestionario interactivo sobre los fundamentos y beneficios de la pasteurización, así como los componentes del equipo pasteurizador HTST.\n\n<i>Antes de iniciar el cuestionario, se recomienda explorar detalladamente el carrusel interactivo y después el pasteurizador 3D, ambos ubicados en la planta piloto.</i>";
             
             if (botonA != null) { botonA.image.enabled = false; botonA.interactable = false; botonA.GetComponentInChildren<TextMeshProUGUI>().text = ""; }
             if (botonB != null) { botonB.image.enabled = false; botonB.interactable = false; botonB.GetComponentInChildren<TextMeshProUGUI>().text = ""; }

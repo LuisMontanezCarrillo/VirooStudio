@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ControladorCarrusel : MonoBehaviour, IReiniciable
@@ -14,6 +15,17 @@ public class ControladorCarrusel : MonoBehaviour, IReiniciable
 
     [Tooltip("Coloca aquí los audios en el MISMO ORDEN que las imágenes")]
     public AudioClip[] audiosVoz;
+
+    [Header("Aviso de recorrido completo")]
+    [Tooltip("Se dispara la primera vez que se llega a la última diapositiva. " +
+             "Sirve para marcar el paso del guion que pide revisar el carrusel.")]
+    public UnityEvent AlLlegarALaUltima;
+
+    // Se avisa una sola vez por tanda. Sin esta marca, ir y volver entre las dos
+    // ultimas laminas repetiria el aviso, y quien escuche se lo creeria: el guion
+    // de pasos ignora los repetidos, pero un sonido o una locucion enganchada
+    // aqui no lo haria.
+    private bool _yaAvisoDelFinal;
 
     // Los limites ya estaban protegidos en Siguiente() y Anterior(), de modo que
     // pulsar de mas no rompia nada. El problema era otro: el boton seguia visible
@@ -65,6 +77,23 @@ public class ControladorCarrusel : MonoBehaviour, IReiniciable
         }
 
         ActualizarBotones();
+        AvisarSiEsLaUltima();
+    }
+
+    /// <summary>
+    /// Avisa, una sola vez por tanda, de que el carrusel se recorrió entero.
+    /// Se mide por haber llegado a la última lámina y no por haber pulsado N
+    /// veces: el estudiante puede ir y volver, y lo que interesa saber es que
+    /// vio el final.
+    /// </summary>
+    private void AvisarSiEsLaUltima()
+    {
+        if (_yaAvisoDelFinal) return;
+        if (diapositivas == null || diapositivas.Length == 0) return;
+        if (indiceActual < diapositivas.Length - 1) return;
+
+        _yaAvisoDelFinal = true;
+        AlLlegarALaUltima?.Invoke();
     }
 
     public void Anterior()
@@ -87,6 +116,7 @@ public class ControladorCarrusel : MonoBehaviour, IReiniciable
     {
         DetenerAudio();
         indiceActual = 0;
+        _yaAvisoDelFinal = false;
         if (pantalla != null && diapositivas != null && diapositivas.Length > 0)
             pantalla.sprite = diapositivas[0];
         ActualizarBotones();

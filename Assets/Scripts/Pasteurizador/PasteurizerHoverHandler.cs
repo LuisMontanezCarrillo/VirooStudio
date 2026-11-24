@@ -19,7 +19,7 @@ namespace ViroLab.Pasteurizador
     //
     // Tambien aplica un material highlight como overlay y dispara eventos.
     [DisallowMultipleComponent]
-    public class PasteurizerHoverHandler : MonoBehaviour
+    public class PasteurizerHoverHandler : MonoBehaviour, IReiniciable
     {
         [Header("Targets")]
         [Tooltip("Registro de partes. Si esta null se busca en el mismo GameObject.")]
@@ -64,6 +64,23 @@ namespace ViroLab.Pasteurizador
         public PartEvent OnHoverExit;
         public PartEvent OnPartPinned;
         public UnityEvent OnPinCleared;
+
+        [Header("Aviso de recorrido suficiente")]
+        [Tooltip("Cuántas partes DISTINTAS hay que fijar para dar por recorrido " +
+                 "el equipo. Con 1 equivale a OnPartPinned.")]
+        [Min(1)] public int partesParaDarPorExplorado = 3;
+
+        [Tooltip("Se dispara una sola vez, al fijar la parte número " +
+                 "'partesParaDarPorExplorado'. Sirve para marcar el paso del " +
+                 "guion que pide recorrer el pasteurizador.")]
+        public UnityEvent AlExplorarLoSuficiente;
+
+        // Se cuentan partes distintas y no clics. Un estudiante que pulse diez
+        // veces el mismo intercambiador no ha recorrido el equipo, y marcarle el
+        // paso por insistir seria peor que no marcarselo: le diria que ya vio lo
+        // que no ha visto.
+        private readonly HashSet<GameObject> _partesFijadas = new();
+        private bool _yaAvisoDeExploracion;
 
         [System.Serializable] public class PartEvent : UnityEvent<PartHitInfo> {}
 
@@ -381,6 +398,7 @@ namespace ViroLab.Pasteurizador
             {
                 ApplyTint(_pinned, pinColor);
                 OnPartPinned?.Invoke(BuildHit(_pinned));
+                ContarParteFijada(_pinned);
             }
             else
             {
@@ -389,6 +407,35 @@ namespace ViroLab.Pasteurizador
         }
 
         public void ClearPin() => SetPinned(null);
+
+        /// <summary>
+        /// Lleva la cuenta de las partes distintas que se han fijado y avisa
+        /// una sola vez al llegar al umbral.
+        /// </summary>
+        private void ContarParteFijada(GameObject parte)
+        {
+            if (_yaAvisoDeExploracion || parte == null) return;
+
+            _partesFijadas.Add(parte);
+            if (_partesFijadas.Count < Mathf.Max(1, partesParaDarPorExplorado)) return;
+
+            _yaAvisoDeExploracion = true;
+            AlExplorarLoSuficiente?.Invoke();
+        }
+
+        /// <summary>
+        /// Deja el equipo como al abrir la experiencia: sin parte fijada y sin
+        /// recorrido anotado. Lo llama ReinicioDeExperiencia entre una tanda y
+        /// la siguiente. Suelta el pin a propósito: una parte teñida sobreviviría
+        /// a la tanda y el estudiante nuevo la encontraría marcada sin saber
+        /// por qué.
+        /// </summary>
+        public void ReiniciarAlInicio()
+        {
+            SetPinned(null);
+            _partesFijadas.Clear();
+            _yaAvisoDeExploracion = false;
+        }
 
         private PartHitInfo BuildHit(GameObject go)
         {

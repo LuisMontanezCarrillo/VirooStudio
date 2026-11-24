@@ -52,9 +52,36 @@ namespace ViroLab.Multiusuario
     /// -----------------------------
     /// GuiaDeLaMarca si lo hace, y para un aviso de unos segundos esta bien. Un
     /// panel permanente soldado a la vista cansa: se mueve con cada microgiro de
-    /// la cabeza y no se deja leer. Aqui el panel se queda quieto mientras la
-    /// cabeza se mueve poco, y solo cuando el giro pasa de `holgura` va a buscar
-    /// la mirada, con retardo.
+    /// la cabeza y no se deja leer.
+    ///
+    /// Hay dos maneras de resolverlo y las dos estan implementadas, porque no
+    /// sirven para lo mismo:
+    ///
+    /// - FijoMirandoAlUsuario, que es la de serie. El panel es un tablero
+    ///   clavado en un punto de la sala que solo gira en yaw para quedar de
+    ///   frente a quien lo mira. Es el comportamiento del tablero de
+    ///   descripciones del pasteurizador (PasteurizerWorldCanvas, modo
+    ///   AnchorFacingUser) y se eligio por lo mismo: al no desplazarse no
+    ///   estorba el paso ni tapa el equipo, y al girar se lee desde cualquier
+    ///   punto. El precio es que el participante tiene que saber donde esta el
+    ///   tablero, y eso lo paga la locucion de entrada a la zona.
+    ///
+    /// - SigueLaMirada, el comportamiento anterior. El panel se queda quieto
+    ///   mientras la cabeza se mueve poco y solo cuando el giro pasa de
+    ///   `holgura` va a buscar la mirada, con retardo. Sirve en zonas donde no
+    ///   hay un punto franco donde colgar un tablero.
+    ///
+    /// POR QUE LA LETRA SE MIDE EN PIXELES Y NO EN METROS
+    /// -------------------------------------------------
+    /// El lienzo es un Canvas en World Space, asi que lo que se ve depende de
+    /// dos numeros multiplicados: `tamanoDeLetra`, en pixeles de la textura, y
+    /// `escala`, los metros que mide cada pixel. El alto real de la letra es el
+    /// producto de los dos, y de ahi sale la regla practica: un tablero que se
+    /// lee a cinco metros necesita una letra de unos ocho centimetros, porque
+    /// por debajo de medio grado de angulo visual el texto deja de resolverse
+    /// con las gafas puestas. El resto de las medidas de la placa se derivan de
+    /// `tamanoDeLetra`, de modo que subirla ensancha el tablero en vez de
+    /// partir las lineas.
     ///
     /// LO QUE NO SE HACE AQUI, Y POR QUE
     /// --------------------------------
@@ -79,6 +106,16 @@ namespace ViroLab.Multiusuario
             public bool sangrado;
         }
 
+        /// <summary>Dónde se pone el panel y cómo se comporta al moverse el usuario.</summary>
+        public enum Colocacion
+        {
+            /// <summary>Tablero clavado en un punto de la sala que gira para mirar al usuario.</summary>
+            FijoMirandoAlUsuario,
+
+            /// <summary>Acompaña la mirada con holgura y retardo. El comportamiento anterior.</summary>
+            SigueLaMirada
+        }
+
         // ================================================================
         //  Lo que se configura
         // ================================================================
@@ -90,21 +127,42 @@ namespace ViroLab.Multiusuario
         public List<Paso> pasos = new List<Paso>();
 
         [Header("Colocación")]
+        [Tooltip("Fijo en la sala girando hacia el usuario, o acompañando la mirada.")]
+        public Colocacion colocacion = Colocacion.FijoMirandoAlUsuario;
+
+        [Tooltip("Metros que mide cada píxel del lienzo. El alto de la letra es " +
+                 "este número por el tamaño de letra.")]
+        public float escala = 0.0018f;
+
+        [Header("Fijo mirando al usuario")]
+        [Tooltip("Dónde se clava el tablero. Si se deja vacío, se usa este mismo " +
+                 "objeto: basta con moverlo en la escena.")]
+        public Transform ancla;
+
+        [Tooltip("Metros respecto al ancla. La Y es la altura del centro del tablero.")]
+        public Vector3 desplazamientoDelAncla = new Vector3(0f, 1.80f, 0f);
+
+        [Tooltip("Velocidad del giro hacia el usuario. 0 lo deja instantáneo.")]
+        [Range(0f, 20f)] public float giroSuavizado = 6f;
+
+        [Header("Sigue la mirada")]
         [Tooltip("Metros por delante de los ojos.")]
         public float distancia = 1.2f;
 
         [Tooltip("Metros respecto al eje visual. Negativo baja el panel.")]
         public float altura = -0.30f;
 
-        [Tooltip("Tamaño del panel. Súbalo si no se lee, bájelo si tapa demasiado.")]
-        public float escala = 0.00075f;
-
-        [Header("Seguimiento")]
         [Tooltip("Grados que puede girar la cabeza antes de que el panel la siga.")]
         public float holgura = 14f;
 
         [Tooltip("Segundos que tarda el panel en alcanzar la mirada.")]
         public float suavizado = 0.45f;
+
+        [Header("Letra")]
+        [Tooltip("Alto de la letra en píxeles del lienzo. Las demás medidas de la " +
+                 "placa se derivan de este número, así que subirlo ensancha el " +
+                 "tablero en vez de partir las líneas.")]
+        public float tamanoDeLetra = 44f;
 
         [Header("Marcas")]
         // Estos dos son campos y no constantes a proposito. La fuente por
@@ -116,6 +174,12 @@ namespace ViroLab.Multiusuario
 
         [Tooltip("Signo del paso actual. Si sale un cuadrito vacío, ponga >.")]
         public string marcaActual = "▶";
+
+        [Header("Al empezar")]
+        [Tooltip("Marcado: el panel no se enciende solo; espera a que algo llame " +
+                 "a Mostrar(). Es lo que hace falta en los retos 2 y 3, que no " +
+                 "empiezan cuando empieza la experiencia.")]
+        public bool empezarOculto;
 
         [Header("Al terminar")]
         public bool ocultarAlTerminar = true;
@@ -150,13 +214,32 @@ namespace ViroLab.Multiusuario
         private bool _persiguiendo;
         private bool _reciencolocado;
 
+        // Con que medidas se construyo la placa que hay en pantalla. Sirven para
+        // rehacerla si se cambia el tamano de letra con la experiencia en marcha,
+        // que es como se ajusta esto de verdad: con las gafas puestas y mirando
+        // el tablero desde donde va a estar el participante.
+        private float _letraConstruida = -1f;
+        private int _pasosConstruidos = -1;
+
+        // Si alguien ya pidió encender este panel. Solo cuenta cuando
+        // `empezarOculto` está marcado.
+        private bool _yaMeEncendieron;
+
         // Medidas del lienzo en pixeles. El alto se calcula al construir, segun
         // cuantos pasos haya: una lista de tres y una de ocho no piden la misma
         // placa.
-        private const float Ancho = 900f;
-        private const float MargenVertical = 70f;
-        private const float AltoDeLinea = 52f;
-        private const float AltoDelTitulo = 76f;
+        //
+        // Las cuatro se derivan de `tamanoDeLetra` y no son constantes a
+        // proposito. Si el ancho se quedara fijo, subir la letra partiria las
+        // lineas largas en dos; derivandolo, el tablero se ensancha con la letra
+        // y la lista sigue cabiendo en un renglon por paso. El factor 25 sale de
+        // medir el paso mas largo de la zona de alistamiento: cuarenta y un
+        // caracteres mas la marca, que a media anchura de letra piden unas
+        // veintidos letras de espacio, y el resto es el margen lateral.
+        private float Ancho => tamanoDeLetra * 25f;
+        private float MargenVertical => tamanoDeLetra * 1.8f;
+        private float AltoDeLinea => tamanoDeLetra * 1.4f;
+        private float AltoDelTitulo => tamanoDeLetra * 2f;
 
         // Radio de las esquinas de la placa, en píxeles de la textura. Es
         // también el borde de los nueve trozos, de modo que las esquinas se
@@ -174,6 +257,13 @@ namespace ViroLab.Multiusuario
 
         private void OnEnable()
         {
+            // Los retos 2 y 3 no empiezan cuando empieza la experiencia. Su panel
+            // espera a que el grupo llegue a la zona, y quien lo enciende es el
+            // AvanceEnGrupo del reto anterior, llamando a Mostrar() en
+            // DespuesDelSalto. Sin esto, los tres paneles se encenderian a la vez
+            // en el minuto cero y el participante veria la lista de una zona en
+            // la que todavia no esta.
+            if (empezarOculto && !_yaMeEncendieron) return;
             Mostrar();
         }
 
@@ -188,8 +278,19 @@ namespace ViroLab.Multiusuario
 
             if (!_visible || _lienzo == null) return;
 
+            RehacerSiCambioLaMedida();
+            if (_lienzo == null) return;
+
             var cam = Camara();
             if (cam == null) return;
+
+            _lienzo.transform.localScale = Vector3.one * escala;
+
+            if (colocacion == Colocacion.FijoMirandoAlUsuario)
+            {
+                ColocarFijoMirandoAlUsuario(cam);
+                return;
+            }
 
             // El panel solo va a buscar la mirada cuando el giro de la cabeza
             // pasa de la holgura. Mientras tanto se queda donde esta, que es lo
@@ -220,8 +321,91 @@ namespace ViroLab.Multiusuario
             }
 
             _lienzo.transform.rotation = rot;
-            _lienzo.transform.localScale = Vector3.one * escala;
         }
+
+        /// <summary>
+        /// Posición fija, la del ancla, con el tablero girado para quedar de
+        /// frente a quien lo mira. Es el mismo convenio que usa el tablero de
+        /// descripciones del pasteurizador: el forward del Canvas apunta en
+        /// contra del observador, que es como se lee de frente una interfaz en
+        /// World Space.
+        ///
+        /// Solo gira en yaw. El vector hacia el usuario se aplana en el plano
+        /// horizontal para que el tablero se mantenga vertical y no se incline
+        /// cuando el participante mira hacia arriba o se agacha.
+        /// </summary>
+        private void ColocarFijoMirandoAlUsuario(Transform cam)
+        {
+            var baseAncla = ancla != null ? ancla : transform;
+
+            // Se respeta la orientacion del ancla pero no su escala. El tablero
+            // de descripciones usa TransformPoint, que si la aplica, y ahi no
+            // estorba porque su ancla vive sin escalar. Aqui el ancla puede
+            // acabar colgada de Planta_Piloto, que esta a 0,6, y entonces una
+            // altura de 1,80 se convertiria en 1,08 sin que nada lo avise.
+            Vector3 meta = baseAncla.position + baseAncla.rotation * desplazamientoDelAncla;
+            _lienzo.transform.position = meta;
+
+            Vector3 contra = meta - cam.position;
+            contra.y = 0f;
+
+            // El usuario, justo encima o debajo del tablero: no hay yaw que
+            // calcular, y conservar la orientacion anterior evita un giro brusco.
+            if (contra.sqrMagnitude < 0.0001f) return;
+
+            var objetivo = Quaternion.LookRotation(contra.normalized, Vector3.up);
+            _lienzo.transform.rotation = giroSuavizado > 0f && !_reciencolocado
+                ? Quaternion.Slerp(_lienzo.transform.rotation, objetivo,
+                                   Time.deltaTime * giroSuavizado)
+                : objetivo;
+            _reciencolocado = false;
+        }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// Dibuja el tablero a tamaño real en la vista de escena, para poder
+        /// colocarlo sin entrar en el visor. Sin esto hay que dar Play, mirar,
+        /// salir y corregir, y cada vuelta cuesta un par de minutos.
+        ///
+        /// Se dibuja con la orientación del ancla y no mirando a la cámara de la
+        /// escena: en ejecución el tablero gira en yaw, así que lo que importa
+        /// aquí es dónde se planta, cuánto ocupa y a qué altura llega, no hacia
+        /// dónde apunta.
+        /// </summary>
+        private void OnDrawGizmos()
+        {
+            if (colocacion != Colocacion.FijoMirandoAlUsuario) return;
+            if (pasos == null || pasos.Count == 0) return;
+
+            var baseAncla = ancla != null ? ancla : transform;
+            Vector3 centro = baseAncla.position + baseAncla.rotation * desplazamientoDelAncla;
+
+            float ancho = Ancho * escala;
+            float alto = AltoDelPanel() * escala;
+            float letra = tamanoDeLetra * escala;
+
+            // El poste imaginario: de dónde cuelga y hasta dónde sube.
+            Gizmos.color = new Color(1f, 0.76f, 0.29f, 0.9f);
+            Gizmos.DrawLine(baseAncla.position, centro);
+            Gizmos.DrawSphere(baseAncla.position, 0.06f);
+
+            var previa = Gizmos.matrix;
+            Gizmos.matrix = Matrix4x4.TRS(centro, baseAncla.rotation, Vector3.one);
+
+            Gizmos.color = new Color(0.04f, 0.07f, 0.10f, 0.35f);
+            Gizmos.DrawCube(Vector3.zero, new Vector3(ancho, alto, 0.01f));
+            Gizmos.color = new Color(1f, 0.76f, 0.29f, 1f);
+            Gizmos.DrawWireCube(Vector3.zero, new Vector3(ancho, alto, 0.01f));
+
+            // Una letra, a tamaño real, en el borde izquierdo. Es la medida que
+            // de verdad decide si se lee desde el otro extremo de la zona.
+            Gizmos.color = new Color(0.44f, 0.81f, 0.59f, 1f);
+            float x = -ancho * 0.5f - letra * 0.6f;
+            Gizmos.DrawLine(new Vector3(x, -letra * 0.5f, 0f), new Vector3(x, letra * 0.5f, 0f));
+
+            Gizmos.matrix = previa;
+        }
+#endif
 
         private void OnDestroy()
         {
@@ -277,7 +461,10 @@ namespace ViroLab.Multiusuario
         {
             if (pasos == null || pasos.Count == 0) return;
 
+            _yaMeEncendieron = true;
+
             Construir();
+            RehacerSiCambioLaMedida();
             if (_lienzo == null) return;
 
             if (!_visible)
@@ -310,6 +497,8 @@ namespace ViroLab.Multiusuario
             _hechos = new bool[pasos.Count];
             _yaTermine = false;
             _apagarEn = -1f;
+            _yaMeEncendieron = false;
+            if (empezarOculto) Ocultar();
             // Se repinta pero no se enciende: el reinicio corre con la pantalla
             // en negro, y lo que deba verse al llegar a la zona se enciende al
             // llegar a la zona.
@@ -331,6 +520,36 @@ namespace ViroLab.Multiusuario
             float alto = MargenVertical * 2f + pasos.Count * AltoDeLinea;
             if (!string.IsNullOrWhiteSpace(titulo)) alto += AltoDelTitulo;
             return alto;
+        }
+
+        /// <summary>
+        /// Rehace la placa si cambiaron las medidas con las que se construyó.
+        /// Se llama desde LateUpdate para que el ajuste del tamaño de letra se
+        /// vea sin salir del modo de juego.
+        /// </summary>
+        private void RehacerSiCambioLaMedida()
+        {
+            if (_lienzo == null) return;
+            if (Mathf.Approximately(_letraConstruida, tamanoDeLetra)
+                && _pasosConstruidos == pasos.Count) return;
+
+            // El sprite y la textura se generan en Construir, asi que hay que
+            // soltar los anteriores. Sin esto, cada ajuste del tamano de letra
+            // deja una textura huerfana en memoria.
+            Destroy(_lienzo.gameObject);
+            if (_placaSprite != null) Destroy(_placaSprite);
+            if (_placaTextura != null) Destroy(_placaTextura);
+            _lienzo = null;
+            _placa = null;
+            _texto = null;
+            _placaSprite = null;
+            _placaTextura = null;
+            Construir();
+            if (_lienzo != null)
+            {
+                _lienzo.gameObject.SetActive(_visible);
+                Repintar();
+            }
         }
 
         private void Construir()
@@ -378,12 +597,16 @@ namespace ViroLab.Multiusuario
             txt.transform.SetParent(obj.transform, false);
             _texto = txt.AddComponent<TextMeshProUGUI>();
             _texto.alignment = TextAlignmentOptions.TopLeft;
-            _texto.fontSize = 36;
-            _texto.lineSpacing = 18f;
+            _texto.fontSize = tamanoDeLetra;
+            _texto.lineSpacing = tamanoDeLetra * 0.45f;
             _texto.enableWordWrapping = true;
             _texto.raycastTarget = false;
             _texto.color = Color.white;
-            _texto.rectTransform.sizeDelta = new Vector2(Ancho - 100f, alto - 60f);
+            _texto.rectTransform.sizeDelta = new Vector2(
+                Ancho - tamanoDeLetra * 2.3f, alto - tamanoDeLetra * 1.4f);
+
+            _letraConstruida = tamanoDeLetra;
+            _pasosConstruidos = pasos.Count;
 
             _texto.fontMaterial.EnableKeyword("OUTLINE_ON");
             _texto.outlineWidth = 0.18f;
