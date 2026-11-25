@@ -1,0 +1,608 @@
+{
+  ".vscode/extensions.json": {
+    "mtime": 1776348919.410033,
+    "seen": 1794586653.8985496,
+    "ast_hash": "2c2bc546cba220f6651a152c8c1819d0",
+    "semantic_hash": "2c2bc546cba220f6651a152c8c1819d0"
+  },
+  ".vscode/launch.json": {
+    "mtime": 1776348919.415019,
+    "seen": 1794586653.8985546,
+    "ast_hash": "cf87354d3be05efced104408f9982438",
+    "semantic_hash": "cf87354d3be05efced104408f9982438"
+  },
+  ".vscode/settings.json": {
+    "mtime": 1776348919.420019,
+    "seen": 1794586653.898557,
+    "ast_hash": "1e6d71c7e5cd743112244374fd6389e0",
+    "semantic_hash": "1e6d71c7e5cd743112244374fd6389e0"
+  },
+  "Assets/3D Laboratory Environment with Appratus/Scripts/ControladorCarrusel.cs": {
+    "mtime": 1790253852.9065635,
+    "seen": 1794586653.898558,
+    "ast_hash": "5bb5fbd287b7c88876e27242dc92532e",
+    "semantic_hash": "5bb5fbd287b7c88876e27242dc92532e"
+  },
+  "Assets/3D Laboratory Environment with Appratus/Scripts/ControladorPuerta.cs": {
+    "mtime": 1790628410.103113,
+    "seen": 1794586653.8985586,
+    "ast_hash": "3f91a9e2704fdf9eaf503bc5282ce187",
+    "semantic_hash": "3f91a9e2704fdf9eaf503bc5282ce187"
+  },
+  "Assets/3D Laboratory Environment with Appratus/Scripts/ControlesVideoEsc3.cs": {
+    "mtime": 1790096281.6799037,
+    "seen": 1794586653.8985596,
+    "ast_hash": "e2a493942807adbcc0a7fc3ffdd5c9b3",
+    "semantic_hash": "e2a493942807adbcc0a7fc3ffdd5c9b3"
+  },
+  "Assets/3D Laboratory Environment with Appratus/Scripts/DestinoEscena3Multiusuario.cs": {
+    "mtime": 1790253869.5491593,
+    "seen": 1794586653.8985605,
+    "ast_hash": "957c069fe89be9e508c656fccd064b1d",
+    "semantic_hash": "957c069fe89be9e508c656fccd064b1d"
+  },
+  "Assets/3D Laboratory Environment with Appratus/Scripts/FadeOutVR.cs": {
+    "mtime": 1790253826.1034584,
+    "seen": 1794586653.8985612,
+    "ast_hash": "002d09686bfad0f1a5e5a0387bf35e13",
+    "semantic_hash": "002d09686bfad0f1a5e5a0387bf35e13"
+  },
+  "Assets/3D Laboratory Environment with Appratus/Scripts/GestorCuestionario.cs": {
+    "mtime": 1790347056.8313792,
+    "seen": 1794586653.8985622,
+    "ast_hash": "e65a8fea5ec7caa33c01a599f0a6d855",
+    "semantic_hash": "e65a8fea5ec7caa33c01a599f0a6d855"
+  },
+  "Assets/3D Laboratory Environment with Appratus/Scripts/GestorEscena3.cs": {
+    "mtime": 1790253852.9065635,
+    "seen": 1794586653.8985631,
+    "ast_hash": "d1bcb79678ece25907f009f459a7101a",
+    "semantic_hash": "d1bcb79678ece25907f009f459a7101a"
+  },
+  "Assets/3D Laboratory Environment with Appratus/Scripts/SplashFloatingController.cs": {
+    "mtime": 1790626353.6555767,
+    "seen": 1794586653.8985639,
+    "ast_hash": "8a722303484ddb64f27158ce4664628b",
+    "semantic_hash": "8a722303484ddb64f27158ce4664628b"
+  },
+  "Assets/3D Laboratory Environment with Appratus/Scripts/ValidadorSecuencia.cs": {
+    "mtime": 1790253836.0160942,
+    "seen": 1794586653.8985646,
+    "ast_hash": "c27b2e6851ee514135248bf7f2e645c5",
+    "semantic_hash": "c27b2e6851ee514135248bf7f2e645c5"
+  },
+  "Assets/3D Laboratory Environment with Appratus/Scripts/autoOcultar.cs": {
+    "mtime": 1790628432.5722883,
+    "seen": 1794586653.8985653,
+    "ast_hash": "d9c093ad5ecd4b2f3d884aa61766c224",
+    "semantic_hash": "d9c093ad5ecd4b2f3d884aa61766c224"
+  },
+  "Assets/Resources/Pasteurizador/subsystems.json": {
+    "mtime": 1786395832.1391277,
+    "seen": 1794586653.8985662,
+    "ast_hash": "56fc97de5ce30ec7201d8401068d7e77",
+    "semantic_hash": "56fc97de5ce30ec7201d8401068d7e77"
+  },
+  "Assets/Scripts/FundidoDePantalla.cs": {
+    "mtime": 1790344215.2385306,
+    "seen": 1794586653.898567,
+    "ast_hash": "46c51e1cdd6bdbbb7ed81d94f826b0f0",
+    "semantic_hash": "46c51e1cdd6bdbbb7ed81d94f826b0f0"
+  },
+  "Assets/Scripts/IReiniciable.cs": {
+    "mtime": 1790253595.502821,
+    "seen": 1794586653.8985677,
+    "ast_hash": "b8aff1594585659dab2804a93bb725d2",
+    "semantic_hash": "b8aff1594585659dab2804a93bb725d2"
+  },
+  "Assets/Scripts/MezcladorDeAudio.cs": {
+    "mtime": 1793222694.1999521,
+    "seen": 1794586653.8985684,
+    "ast_hash": "b3459d9f397b9eb158947b771477b99d",
+    "semantic_hash": "b3459d9f397b9eb158947b771477b99d"
+  },
+  "Assets/Scripts/Multiusuario/AvanceEnGrupo.cs": {
+    "mtime": 1790609162.9819276,
+    "seen": 1794586653.898569,
+    "ast_hash": "b3f323d84a240ed26f1b56c2505eda67",
+    "semantic_hash": "b3f323d84a240ed26f1b56c2505eda67"
+  },
+  "Assets/Scripts/Multiusuario/FotoDeLaEscena.cs": {
+    "mtime": 1790263462.1830232,
+    "seen": 1794586653.89857,
+    "ast_hash": "cb8618f46a8a31c316e462ee2b7831b7",
+    "semantic_hash": "cb8618f46a8a31c316e462ee2b7831b7"
+  },
+  "Assets/Scripts/Multiusuario/GuiaDeLaMarca.cs": {
+    "mtime": 1791989686.0351436,
+    "seen": 1794586653.8985708,
+    "ast_hash": "0ee5572c51431928b131001ea135a888",
+    "semantic_hash": "0ee5572c51431928b131001ea135a888"
+  },
+  "Assets/Scripts/Multiusuario/GuionDePasos.cs": {
+    "mtime": 1793305405.0884776,
+    "seen": 1794586653.8985715,
+    "ast_hash": "ed044661f2032d51fc0379ad05fa2dc1",
+    "semantic_hash": "ed044661f2032d51fc0379ad05fa2dc1"
+  },
+  "Assets/Scripts/Multiusuario/MandoDelModerador.cs": {
+    "mtime": 1790367963.1864123,
+    "seen": 1794586653.8985722,
+    "ast_hash": "73d93ff77a10f866dac00f60e96fd566",
+    "semantic_hash": "73d93ff77a10f866dac00f60e96fd566"
+  },
+  "Assets/Scripts/Multiusuario/ReinicioDeExperiencia.cs": {
+    "mtime": 1790286121.9602292,
+    "seen": 1794586653.8985734,
+    "ast_hash": "46ccc42768229809ccf9f83798b59132",
+    "semantic_hash": "46ccc42768229809ccf9f83798b59132"
+  },
+  "Assets/Scripts/Multiusuario/ReunionEnElCentro.cs": {
+    "mtime": 1791990582.8285778,
+    "seen": 1794586653.898574,
+    "ast_hash": "a699179d71ce05fb311af271509961f9",
+    "semantic_hash": "a699179d71ce05fb311af271509961f9"
+  },
+  "Assets/Scripts/Multiusuario/SesionViroo.cs": {
+    "mtime": 1790609147.7492945,
+    "seen": 1794586653.8985748,
+    "ast_hash": "1fc3964a2ef0bf87f0851526615f39c0",
+    "semantic_hash": "1fc3964a2ef0bf87f0851526615f39c0"
+  },
+  "Assets/Scripts/NarradorUnico.cs": {
+    "mtime": 1793135699.3080478,
+    "seen": 1794586653.8985755,
+    "ast_hash": "7f0c02bf4eb42cea2257ea518ca2b517",
+    "semantic_hash": "7f0c02bf4eb42cea2257ea518ca2b517"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/MoverPasteurizadorAEscena1.cs": {
+    "mtime": 1781299889.905489,
+    "seen": 1794586653.8985765,
+    "ast_hash": "0fbf92ea4469374b6497441ac25fcab5",
+    "semantic_hash": "0fbf92ea4469374b6497441ac25fcab5"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerBuilder.cs": {
+    "mtime": 1793293615.7835152,
+    "seen": 1794586653.8985772,
+    "ast_hash": "4f1381a11bef1ef33b8f9ae61f2efd50",
+    "semantic_hash": "4f1381a11bef1ef33b8f9ae61f2efd50"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerCollisionWalls.cs": {
+    "mtime": 1779714474.934762,
+    "seen": 1794586653.898578,
+    "ast_hash": "2eee695cd058dbd0a8872649e491c2b4",
+    "semantic_hash": "2eee695cd058dbd0a8872649e491c2b4"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerFBXReplacements.cs": {
+    "mtime": 1786740771.0629487,
+    "seen": 1794586653.8985786,
+    "ast_hash": "d7b53455eea86a73920542a8e30a90f0",
+    "semantic_hash": "d7b53455eea86a73920542a8e30a90f0"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerFxInstaller.cs": {
+    "mtime": 1785853178.8589036,
+    "seen": 1794586653.8985794,
+    "ast_hash": "fe4b2b666b14b47e981679cab0c6bf98",
+    "semantic_hash": "fe4b2b666b14b47e981679cab0c6bf98"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerHUDDiagnostics.cs": {
+    "mtime": 1779714474.936779,
+    "seen": 1794586653.8985803,
+    "ast_hash": "cdfe4be326bd347afaca60ad87248cac",
+    "semantic_hash": "cdfe4be326bd347afaca60ad87248cac"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerHUDStyler.cs": {
+    "mtime": 1785853178.8599033,
+    "seen": 1794586653.898581,
+    "ast_hash": "5c41e7a529a5982b277d2a295b891c79",
+    "semantic_hash": "5c41e7a529a5982b277d2a295b891c79"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerPlantGeometryFix.cs": {
+    "mtime": 1790100997.3243814,
+    "seen": 1794586653.8985817,
+    "ast_hash": "11b4ccddd7af43fc256ff03892698068",
+    "semantic_hash": "11b4ccddd7af43fc256ff03892698068"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerPrefabRestorer.cs": {
+    "mtime": 1781208102.9879558,
+    "seen": 1794586653.8985825,
+    "ast_hash": "b50280434f7a01516762d17bc6ead809",
+    "semantic_hash": "b50280434f7a01516762d17bc6ead809"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerSimDashboardBuilder.cs": {
+    "mtime": 1790089363.438919,
+    "seen": 1794586653.8985834,
+    "ast_hash": "7b5364103ed76517d8915cf593fc866d",
+    "semantic_hash": "7b5364103ed76517d8915cf593fc866d"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerSimPlantBuilder.cs": {
+    "mtime": 1790100939.8131304,
+    "seen": 1794586653.8985841,
+    "ast_hash": "36ab3c3087962a220d6f5f526431767a",
+    "semantic_hash": "36ab3c3087962a220d6f5f526431767a"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerUIBuilder.cs": {
+    "mtime": 1781299889.9398909,
+    "seen": 1794586653.8985846,
+    "ast_hash": "175dab8dad78f1e818d8147cdcf1aadd",
+    "semantic_hash": "175dab8dad78f1e818d8147cdcf1aadd"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerUIVRSetup.cs": {
+    "mtime": 1782831066.089386,
+    "seen": 1794586653.8985856,
+    "ast_hash": "e566079122a51bde8887333f09f0c98f",
+    "semantic_hash": "e566079122a51bde8887333f09f0c98f"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerVirooAdapter.cs": {
+    "mtime": 1785853178.8609037,
+    "seen": 1794586653.898586,
+    "ast_hash": "6ff223baaee1f41ec7a47b2076d6ffa1",
+    "semantic_hash": "6ff223baaee1f41ec7a47b2076d6ffa1"
+  },
+  "Assets/Scripts/Pasteurizador/Editor/PasteurizerVoiceGuideInstaller.cs": {
+    "mtime": 1785853178.8609037,
+    "seen": 1794586653.898587,
+    "ast_hash": "c59a36d4e1ffb5ce03b44f1ec2e51674",
+    "semantic_hash": "c59a36d4e1ffb5ce03b44f1ec2e51674"
+  },
+  "Assets/Scripts/Pasteurizador/GatilloComoSelect.cs": {
+    "mtime": 1791990203.192854,
+    "seen": 1794586653.898588,
+    "ast_hash": "7eb16e681af86ba4eb3b7f29953d0afb",
+    "semantic_hash": "7eb16e681af86ba4eb3b7f29953d0afb"
+  },
+  "Assets/Scripts/Pasteurizador/PasteurizationState.cs": {
+    "mtime": 1779714474.9407623,
+    "seen": 1794586653.8985887,
+    "ast_hash": "840a84eb4f42c861843a97185e676ff6",
+    "semantic_hash": "840a84eb4f42c861843a97185e676ff6"
+  },
+  "Assets/Scripts/Pasteurizador/PasteurizerDescriptionCard.cs": {
+    "mtime": 1787761376.2429059,
+    "seen": 1794586653.8985896,
+    "ast_hash": "d14a0021e757bfbbd63e455d66bc2667",
+    "semantic_hash": "d14a0021e757bfbbd63e455d66bc2667"
+  },
+  "Assets/Scripts/Pasteurizador/PasteurizerExplodedView.cs": {
+    "mtime": 1790628410.1040833,
+    "seen": 1794586653.8985903,
+    "ast_hash": "85ca2a398875ef76bac984fc452c49ca",
+    "semantic_hash": "85ca2a398875ef76bac984fc452c49ca"
+  },
+  "Assets/Scripts/Pasteurizador/PasteurizerFBXTankInfo.cs": {
+    "mtime": 1779714474.9437878,
+    "seen": 1794586653.898591,
+    "ast_hash": "7a3bd9290c7e48942f0101071a40513f",
+    "semantic_hash": "7a3bd9290c7e48942f0101071a40513f"
+  },
+  "Assets/Scripts/Pasteurizador/PasteurizerHoverHandler.cs": {
+    "mtime": 1787063721.3069499,
+    "seen": 1794586653.898592,
+    "ast_hash": "76bfcd2ef63c07b5f244eddce42366d2",
+    "semantic_hash": "76bfcd2ef63c07b5f244eddce42366d2"
+  },
+  "Assets/Scripts/Pasteurizador/PasteurizerMaterialAssigner.cs": {
+    "mtime": 1779714474.9447825,
+    "seen": 1794586653.8985927,
+    "ast_hash": "6a41b56a3f26257458aeedc488b95b55",
+    "semantic_hash": "6a41b56a3f26257458aeedc488b95b55"
+  },
+  "Assets/Scripts/Pasteurizador/PasteurizerPartsRegistry.cs": {
+    "mtime": 1793293615.294155,
+    "seen": 1794586653.8985934,
+    "ast_hash": "701e6bd5ea0e79629a7d33b740baec32",
+    "semantic_hash": "701e6bd5ea0e79629a7d33b740baec32"
+  },
+  "Assets/Scripts/Pasteurizador/PasteurizerSidePanel.cs": {
+    "mtime": 1786742016.4992628,
+    "seen": 1794586653.8985944,
+    "ast_hash": "b7d94c5647195a4402763e4517b5f658",
+    "semantic_hash": "b7d94c5647195a4402763e4517b5f658"
+  },
+  "Assets/Scripts/Pasteurizador/PasteurizerSubsystemDatabase.cs": {
+    "mtime": 1785853178.8629029,
+    "seen": 1794586653.898595,
+    "ast_hash": "61960c1c37729f42ed13ec62db92ba23",
+    "semantic_hash": "61960c1c37729f42ed13ec62db92ba23"
+  },
+  "Assets/Scripts/Pasteurizador/PasteurizerWorldCanvas.cs": {
+    "mtime": 1787944171.57321,
+    "seen": 1794586653.8985956,
+    "ast_hash": "ad7f344692ff346161a426b17569fe18",
+    "semantic_hash": "ad7f344692ff346161a426b17569fe18"
+  },
+  "Assets/Scripts/Pasteurizador/Simulator/PasteurizerFxController.cs": {
+    "mtime": 1790253890.9779327,
+    "seen": 1794586653.8985965,
+    "ast_hash": "a0c64235a8d7467e91f77122ee8fcb13",
+    "semantic_hash": "a0c64235a8d7467e91f77122ee8fcb13"
+  },
+  "Assets/Scripts/Pasteurizador/Simulator/PasteurizerSimDashboard.cs": {
+    "mtime": 1790624482.6386724,
+    "seen": 1794586653.898597,
+    "ast_hash": "764c79fadccb699faddf10c51ceb251a",
+    "semantic_hash": "764c79fadccb699faddf10c51ceb251a"
+  },
+  "Assets/Scripts/Pasteurizador/Simulator/PasteurizerSimEngine.cs": {
+    "mtime": 1790253890.9769561,
+    "seen": 1794586653.898598,
+    "ast_hash": "c7282e86bf043507e1f74ad6e98c5221",
+    "semantic_hash": "c7282e86bf043507e1f74ad6e98c5221"
+  },
+  "Assets/Scripts/Pasteurizador/Simulator/PasteurizerStartOverlay.cs": {
+    "mtime": 1790253890.9779327,
+    "seen": 1794586653.8985987,
+    "ast_hash": "6f35528c455a0178735133312cdf5298",
+    "semantic_hash": "6f35528c455a0178735133312cdf5298"
+  },
+  "Assets/Scripts/Pasteurizador/Simulator/PasteurizerVoiceGuide.cs": {
+    "mtime": 1790254290.8263576,
+    "seen": 1794586653.8985994,
+    "ast_hash": "91a2c451c958cbcf6599b835b63d2455",
+    "semantic_hash": "91a2c451c958cbcf6599b835b63d2455"
+  },
+  "Assets/Scripts/Pasteurizador/UnityPasteurizerController.cs": {
+    "mtime": 1779714474.9507618,
+    "seen": 1794586653.8986,
+    "ast_hash": "79a79bb7c3a5c27754feaf6ff52dfb4e",
+    "semantic_hash": "79a79bb7c3a5c27754feaf6ff52dfb4e"
+  },
+  "Assets/Scripts/VOManager.cs": {
+    "mtime": 1790285501.0355074,
+    "seen": 1794586653.898601,
+    "ast_hash": "c310dee806afc03755ffb10778e2d285",
+    "semantic_hash": "c310dee806afc03755ffb10778e2d285"
+  },
+  "Assets/TextMesh Pro/Sprites/EmojiOne.json": {
+    "mtime": 1761266753.493211,
+    "seen": 1794586653.8986018,
+    "ast_hash": "53408097aa38738c15b17ca34e13882a",
+    "semantic_hash": "53408097aa38738c15b17ca34e13882a"
+  },
+  "Data/arenas/arena.json": {
+    "mtime": 1761266753.515789,
+    "seen": 1794586653.8986025,
+    "ast_hash": "1042713c802a00d9e866f4c217c0bf91",
+    "semantic_hash": "1042713c802a00d9e866f4c217c0bf91"
+  },
+  "Data/arenas/arena00.json": {
+    "mtime": 1761266753.5163224,
+    "seen": 1794586653.8986032,
+    "ast_hash": "f27b51edf8a2400f2a918ef87278db67",
+    "semantic_hash": "f27b51edf8a2400f2a918ef87278db67"
+  },
+  "Data/arenas/arena01.json": {
+    "mtime": 1778538180.059565,
+    "seen": 1794586653.898604,
+    "ast_hash": "f27b51edf8a2400f2a918ef87278db67",
+    "semantic_hash": "f27b51edf8a2400f2a918ef87278db67"
+  },
+  "Herramientas/auditar_cableado.py": {
+    "mtime": 1790606747.0879462,
+    "seen": 1794586653.8986049,
+    "ast_hash": "3f3bf52a28a8a4a963d2e7d59192b714",
+    "semantic_hash": "3f3bf52a28a8a4a963d2e7d59192b714"
+  },
+  "Packages/manifest.json": {
+    "mtime": 1761266753.5174296,
+    "seen": 1794586653.8986056,
+    "ast_hash": "07af2a19976cbcdd05610792836382be",
+    "semantic_hash": "07af2a19976cbcdd05610792836382be"
+  },
+  "Packages/packages-lock.json": {
+    "mtime": 1761266753.5180173,
+    "seen": 1794586653.898606,
+    "ast_hash": "b20967fd35166b69197a7b3e881ff4e0",
+    "semantic_hash": "b20967fd35166b69197a7b3e881ff4e0"
+  },
+  "ProjectSettings/BurstAotSettings_Android.json": {
+    "mtime": 1761266753.5198784,
+    "seen": 1794586653.898607,
+    "ast_hash": "521789747bf011dec7d8684a9f9a06e6",
+    "semantic_hash": "521789747bf011dec7d8684a9f9a06e6"
+  },
+  "ProjectSettings/BurstAotSettings_StandaloneWindows.json": {
+    "mtime": 1761266753.5204103,
+    "seen": 1794586653.898608,
+    "ast_hash": "443d6bc8bd10d3dabec7d91c6a207618",
+    "semantic_hash": "443d6bc8bd10d3dabec7d91c6a207618"
+  },
+  "ProjectSettings/BurstAotSettings_WSAPlayer.json": {
+    "mtime": 1761266753.5209517,
+    "seen": 1794586653.8986084,
+    "ast_hash": "1927c9fa1a586c4b2c235d85240a08de",
+    "semantic_hash": "1927c9fa1a586c4b2c235d85240a08de"
+  },
+  "ProjectSettings/BurstAotSettings_WebGL.json": {
+    "mtime": 1761266753.5214818,
+    "seen": 1794586653.8986094,
+    "ast_hash": "521789747bf011dec7d8684a9f9a06e6",
+    "semantic_hash": "521789747bf011dec7d8684a9f9a06e6"
+  },
+  "ProjectSettings/BurstAotSettings_iOS.json": {
+    "mtime": 1761266753.5225663,
+    "seen": 1794586653.89861,
+    "ast_hash": "1a2fe0c59697ac8a9354a68cfe3d0fb8",
+    "semantic_hash": "1a2fe0c59697ac8a9354a68cfe3d0fb8"
+  },
+  "ProjectSettings/CommonBurstAotSettings.json": {
+    "mtime": 1761266753.5231051,
+    "seen": 1794586653.8986108,
+    "ast_hash": "9cfdbba3e015484784985f59b2d9ad04",
+    "semantic_hash": "9cfdbba3e015484784985f59b2d9ad04"
+  },
+  "ProjectSettings/Packages/com.unity.probuilder/Settings.json": {
+    "mtime": 1761266753.5312095,
+    "seen": 1794586653.8986118,
+    "ast_hash": "e9a8686ebdad3c293f0a8918ea64f1cd",
+    "semantic_hash": "e9a8686ebdad3c293f0a8918ea64f1cd"
+  },
+  "ProjectSettings/Packages/com.unity.services.core/Settings.json": {
+    "mtime": 1761266753.5312095,
+    "seen": 1794586653.8986125,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "ProjectSettings/Packages/com.unity.services.vivox/Settings.json": {
+    "mtime": 1761270220.0406713,
+    "seen": 1794586653.8986132,
+    "ast_hash": "f8c4ad1d31c6678edcc0c4fc534b46b8",
+    "semantic_hash": "f8c4ad1d31c6678edcc0c4fc534b46b8"
+  },
+  "ProjectSettings/Packages/com.unity.settings-manager/Settings.json": {
+    "mtime": 1761266753.533811,
+    "seen": 1794586653.898614,
+    "ast_hash": "b5f187b319a92ea11a3c4fb0a52df35f",
+    "semantic_hash": "b5f187b319a92ea11a3c4fb0a52df35f"
+  },
+  "ProjectSettings/Packages/com.viroo.sceneloader.applicationpublisher/Settings.json": {
+    "mtime": 1790629213.1057184,
+    "seen": 1794586653.8986146,
+    "ast_hash": "648b76d944d380d2590e8b3a47a8abed",
+    "semantic_hash": "648b76d944d380d2590e8b3a47a8abed"
+  },
+  "ProjectSettings/Packages/com.viroo.sceneloader.bootstrap.mock/Settings.json": {
+    "mtime": 1761271153.662216,
+    "seen": 1794586653.8986154,
+    "ast_hash": "1e670576a6103b7ceb7efe19bc321ef8",
+    "semantic_hash": "1e670576a6103b7ceb7efe19bc321ef8"
+  },
+  "ProjectSettings/Packages/com.viroo.sceneloader.scenepublisher/Settings.json": {
+    "mtime": 1761270530.0826342,
+    "seen": 1794586653.898616,
+    "ast_hash": "e2ef867a99e91f836b50b817176623f7",
+    "semantic_hash": "e2ef867a99e91f836b50b817176623f7"
+  },
+  "ProjectSettings/Packages/com.viroo/Settings.json": {
+    "mtime": 1778538599.381021,
+    "seen": 1794586653.8986168,
+    "ast_hash": "e6969b2d5940ba6b786b1bc6f5849a7f",
+    "semantic_hash": "e6969b2d5940ba6b786b1bc6f5849a7f"
+  },
+  "ProjectSettings/Packages/com.virtualware.localization/Settings.json": {
+    "mtime": 1761581920.9426148,
+    "seen": 1794586653.8986175,
+    "ast_hash": "8d18b68998edf2c5867bc027e698edeb",
+    "semantic_hash": "8d18b68998edf2c5867bc027e698edeb"
+  },
+  "ProjectSettings/Packages/com.virtualware.nuget/Settings.json": {
+    "mtime": 1761266753.540055,
+    "seen": 1794586653.8986187,
+    "ast_hash": "43dbabe2fb3a2d80d197c1fc0e587b15",
+    "semantic_hash": "43dbabe2fb3a2d80d197c1fc0e587b15"
+  },
+  "ProjectSettings/Packages/com.virtualware.resourcegenerator/Settings.json": {
+    "mtime": 1761581920.9415834,
+    "seen": 1794586653.8986192,
+    "ast_hash": "5e26d4446c8b39e332acd33bdacb6f14",
+    "semantic_hash": "5e26d4446c8b39e332acd33bdacb6f14"
+  },
+  "ProjectSettings/SceneTemplateSettings.json": {
+    "mtime": 1761266753.544134,
+    "seen": 1794586653.89862,
+    "ast_hash": "a523b010dbbae3f9b85e585e7ffdc670",
+    "semantic_hash": "a523b010dbbae3f9b85e585e7ffdc670"
+  },
+  "AUDITORIA_AJUSTES_TRAS_PRUEBAS.md": {
+    "mtime": 1793135200.4230497,
+    "seen": 1794586653.8986206,
+    "ast_hash": "0b3521c6d83242b2cb3f83019ecbf8d2",
+    "semantic_hash": "0b3521c6d83242b2cb3f83019ecbf8d2"
+  },
+  "Assets/Scripts/Multiusuario/CABLEADO.md": {
+    "mtime": 1790629611.3917427,
+    "seen": 1794586653.8986216,
+    "ast_hash": "af1f2738ca753854ff11ac02984d5399",
+    "semantic_hash": "af1f2738ca753854ff11ac02984d5399"
+  },
+  "Assets/Scripts/Pasteurizador/README.md": {
+    "mtime": 1779714474.9497783,
+    "seen": 1794586653.8986228,
+    "ast_hash": "a5e734dd89db0484a2a6cf8bccb02621",
+    "semantic_hash": "a5e734dd89db0484a2a6cf8bccb02621"
+  },
+  "Assets/TextMesh Pro/Fonts/LiberationSans - OFL.txt": {
+    "mtime": 1761266753.4269838,
+    "seen": 1794586653.8986235,
+    "ast_hash": "a0631122fee5a71a264609ff53bf5a23",
+    "semantic_hash": "a0631122fee5a71a264609ff53bf5a23"
+  },
+  "Assets/TextMesh Pro/Resources/LineBreaking Following Characters.txt": {
+    "mtime": 1761266753.4494379,
+    "seen": 1794586653.8986242,
+    "ast_hash": "345c77ed32179f5f982dcf8e2b1d92af",
+    "semantic_hash": "345c77ed32179f5f982dcf8e2b1d92af"
+  },
+  "Assets/TextMesh Pro/Resources/LineBreaking Leading Characters.txt": {
+    "mtime": 1761266753.4509192,
+    "seen": 1794586653.8986251,
+    "ast_hash": "d52dd40acd32a62df3bc764b1e783ddf",
+    "semantic_hash": "d52dd40acd32a62df3bc764b1e783ddf"
+  },
+  "Assets/TextMesh Pro/Sprites/EmojiOne Attribution.txt": {
+    "mtime": 1761266753.4912052,
+    "seen": 1794586653.8986259,
+    "ast_hash": "759264906d349d566518f06e38d06772",
+    "semantic_hash": "759264906d349d566518f06e38d06772"
+  },
+  "BLOQUE_A_CABLEADO_Y_COMPROBACION.md": {
+    "mtime": 1793134596.1574333,
+    "seen": 1794586653.8986266,
+    "ast_hash": "bc9ff2ca669a36922f1025fb7cd76a8e",
+    "semantic_hash": "bc9ff2ca669a36922f1025fb7cd76a8e"
+  },
+  "BLOQUE_B1_GUION_CABLEADO.md": {
+    "mtime": 1793306713.054553,
+    "seen": 1794586653.8986275,
+    "ast_hash": "265a127857496a7ea78e5050c8e161b0",
+    "semantic_hash": "265a127857496a7ea78e5050c8e161b0"
+  },
+  "BLOQUE_B2_AUDIO_CABLEADO.md": {
+    "mtime": 1793222225.4653535,
+    "seen": 1794586653.8986282,
+    "ast_hash": "4725a16abe4e9ef046691f1f684148a7",
+    "semantic_hash": "4725a16abe4e9ef046691f1f684148a7"
+  },
+  "Herramientas/LEEME.md": {
+    "mtime": 1790606747.1099052,
+    "seen": 1794586653.8986292,
+    "ast_hash": "c77a22eb0ecb2232bdbb7c7c53ddc734",
+    "semantic_hash": "c77a22eb0ecb2232bdbb7c7c53ddc734"
+  },
+  "PONENCIA_ECBTI_2026-11-03.md": {
+    "mtime": 1793315522.9558861,
+    "seen": 1794586653.89863,
+    "ast_hash": "f9b91fd2f6e306ce7b52577b2bbffdc7",
+    "semantic_hash": "f9b91fd2f6e306ce7b52577b2bbffdc7"
+  },
+  "PRUEBA_VIROO_CHECKLIST.md": {
+    "mtime": 1787944238.731412,
+    "seen": 1794586653.8986306,
+    "ast_hash": "560686001b7f3b01ad433f10d8d28a69",
+    "semantic_hash": "560686001b7f3b01ad433f10d8d28a69"
+  },
+  "ProjectSettings/ProjectVersion.txt": {
+    "mtime": 1761266753.5431342,
+    "seen": 1794586653.8986313,
+    "ast_hash": "ea5be764ce76569cb7db9552cc3e59be",
+    "semantic_hash": "ea5be764ce76569cb7db9552cc3e59be"
+  },
+  "Readme.md": {
+    "mtime": 1761266753.5484798,
+    "seen": 1794586653.898632,
+    "ast_hash": "99aeb6b316a35ee77a752bb4fa8a13fe",
+    "semantic_hash": "99aeb6b316a35ee77a752bb4fa8a13fe"
+  },
+  "handshake_ajustes_tras_pruebas.md": {
+    "mtime": 1791990443.0494945,
+    "seen": 1794586653.8986328,
+    "ast_hash": "89868b3fa8976cac2f4804a72fccc862",
+    "semantic_hash": "89868b3fa8976cac2f4804a72fccc862"
+  },
+  "handshake_ponencia_ecbti.md": {
+    "mtime": 1793310897.5433688,
+    "seen": 1794586653.8986337,
+    "ast_hash": "f8661d76fe0413de50b293b959fb18e8",
+    "semantic_hash": "f8661d76fe0413de50b293b959fb18e8"
+  }
+}

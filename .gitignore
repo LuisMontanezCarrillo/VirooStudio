@@ -83,3 +83,8 @@ crashlytics-build.properties
 
 # Backups locales del usuario (modelos corruptos movidos fuera)
 /VirooStudio_Backups/
+
+# Graphify: el cache intermedio y los punteros a la maquina local
+/graphify-out/cache/
+/graphify-out/.graphify_root
+/graphify-out/.graphify_python
