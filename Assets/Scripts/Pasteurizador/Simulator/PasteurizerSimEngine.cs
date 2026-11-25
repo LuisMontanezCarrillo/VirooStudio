@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace ViroLab.Pasteurizador.Simulator
 {
@@ -32,6 +33,13 @@ namespace ViroLab.Pasteurizador.Simulator
         public const float STEAM_PSI_MAX  = 30f;
 
         public enum Mode { Production, Cip }
+
+        [Header("Aviso de lote cerrado")]
+        [Tooltip("Se dispara al cerrarse un lote, es decir cuando el tanque de " +
+                 "entrada se vacia con la bomba de producto en marcha. Es el final " +
+                 "real del reto 3 y hasta ahora no lo anunciaba nadie: CloseBatch " +
+                 "solo escribia el resultado en la barra de avisos.")]
+        public UnityEvent AlCerrarElLote;
 
         [System.Serializable]
         public struct CipStep { public string name; public float duration; }
@@ -234,6 +242,11 @@ namespace ViroLab.Pasteurizador.Simulator
             batchActive = false;
             float yieldPct = vFilled > 0 ? (vFinal / vFilled) * 100f : 0f;
             hint = $"Lote cerrado. Procesado {vFilled:F1} L | Final {vFinal:F1} L | Rendimiento {yieldPct:F1}%";
+
+            // No se pone marca de "una sola vez": el estudiante puede procesar
+            // varios lotes seguidos con el boton Reiniciar Lote, y que avise en
+            // cada uno es lo correcto. El guion de pasos ignora los repetidos.
+            AlCerrarElLote?.Invoke();
         }
 
         private void ResetPlant()

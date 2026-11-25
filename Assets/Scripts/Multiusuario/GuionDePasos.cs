@@ -175,6 +175,21 @@ namespace ViroLab.Multiusuario
         [Tooltip("Signo del paso actual. Si sale un cuadrito vacío, ponga >.")]
         public string marcaActual = "▶";
 
+        [Tooltip("Marca de los pasos que quedaron sin hacer cuando el reto se "
+                 + "cerró. No dice que estén hechos: dice que ya no se pueden hacer.")]
+        public string marcaOmitido = "—";
+
+        [Header("Pasos saltados")]
+        [Tooltip("Marcado: cumplir un paso da por hechos todos los anteriores. "
+                 + "Sirve para los retos cuyos pasos van en el orden físico de la "
+                 + "zona, como el 1: el estudiante que se salta el video y va al "
+                 + "casillero ve el tablero al día y sabe qué sigue. "
+                 + "Desmárquelo donde los pasos sean actividades independientes: "
+                 + "en el reto 2, ir derecho al cuestionario daría por explorados "
+                 + "el carrusel y el pasteurizador, y eso es afirmar algo que no "
+                 + "ocurrió.")]
+        public bool cumplirMarcaLosAnteriores = true;
+
         [Header("Al empezar")]
         [Tooltip("Marcado: el panel no se enciende solo; espera a que algo llame " +
                  "a Mostrar(). Es lo que hace falta en los retos 2 y 3, que no " +
@@ -218,6 +233,13 @@ namespace ViroLab.Multiusuario
         // rehacerla si se cambia el tamano de letra con la experiencia en marcha,
         // que es como se ajusta esto de verdad: con las gafas puestas y mirando
         // el tablero desde donde va a estar el participante.
+        // Reto dado por terminado. Lo pone Cerrar() y lo suelta ReiniciarAlInicio().
+        private bool _cerrado;
+
+        // Pasos que el reto dejo atras sin que nadie los cumpliera. Se lleva en un
+        // arreglo aparte y no como un tercer valor de _hechos para no tocar nada de
+        // lo que ya funciona: _hechos sigue significando "hecho" y solo eso.
+        private bool[] _omitidos;
         private float _letraConstruida = -1f;
         private int _pasosConstruidos = -1;
 
@@ -436,6 +458,9 @@ namespace ViroLab.Multiusuario
 
             if (_hechos[indice]) return;
             _hechos[indice] = true;
+            if (_omitidos != null && indice < _omitidos.Length) _omitidos[indice] = false;
+
+            if (cumplirMarcaLosAnteriores) DarPorHechosLosAnteriores(indice);
 
             if (log)
             {
@@ -460,6 +485,7 @@ namespace ViroLab.Multiusuario
         public void Mostrar()
         {
             if (pasos == null || pasos.Count == 0) return;
+            if (_cerrado) return;
 
             _yaMeEncendieron = true;
 
@@ -489,15 +515,105 @@ namespace ViroLab.Multiusuario
         }
 
         /// <summary>
+        /// Da el reto por terminado: apaga el panel y lo deja apagado.
+        ///
+        /// Hace falta porque Ocultar() no basta. Los disparadores de un reto
+        /// siguen ahí cuando el grupo ya se fue al siguiente: el pasteurizador y
+        /// el carrusel del reto 2 siguen siendo pulsables durante el reto 3, y
+        /// Cumplir llama a Mostrar(), de modo que un panel apagado con Ocultar()
+        /// reaparecería en cuanto el estudiante toque uno de ellos.
+        ///
+        /// Los pasos se siguen apuntando: lo que se apaga es el panel, no el
+        /// registro. Así da igual en qué orden se invoquen las filas de un mismo
+        /// evento, porque Cumplir y Cerrar ya no se estorban.
+        /// </summary>
+        public void Cerrar()
+        {
+            if (_cerrado) return;
+            _cerrado = true;
+
+            MarcarLosOmitidos();
+            Repintar();
+
+            // Si el panel esta a la vista se queda los segundos configurados, para
+            // que el estudiante alcance a leer lo que se salto. Si estaba apagado
+            // no hay por que encenderlo ahora: el reto ya termino.
+            if (_visible && segundosAntesDeOcultar > 0f)
+                _apagarEn = Time.unscaledTime + segundosAntesDeOcultar;
+            else
+                Ocultar();
+        }
+
+        /// <summary>
+        /// Da por hechos los pasos anteriores al que se acaba de cumplir.
+        ///
+        /// Sin esto, el estudiante que se salta un paso ve el tablero congelado:
+        /// el paso saltado se queda resaltado como «el que toca» aunque ya haya
+        /// pasado de largo, y el que de verdad le toca no se distingue. Con esto
+        /// el tablero avanza con el, que es para lo que esta puesto.
+        ///
+        /// Tiene un coste y por eso es opcional: afirma que el estudiante hizo
+        /// algo que pudo no hacer.
+        /// </summary>
+        private void DarPorHechosLosAnteriores(int indice)
+        {
+            for (int i = 0; i < indice && i < _hechos.Length; i++)
+            {
+                if (_hechos[i]) continue;
+                _hechos[i] = true;
+                if (_omitidos != null && i < _omitidos.Length) _omitidos[i] = false;
+
+                if (log)
+                {
+                    string t = pasos[i] != null ? pasos[i].texto : "(sin texto)";
+                    Debug.Log($"[GuionDePasos] Paso {i} dado por hecho al cumplirse el " +
+                              $"{indice}: {t}", this);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Apunta como omitido todo lo que quedo sin cumplir. No los da por
+        /// hechos: en el reto 1 el video y las gafas no son requisito de los
+        /// pasos siguientes, de modo que un estudiante puede terminar el reto sin
+        /// haberlos tocado, y decir que los hizo seria falso.
+        /// </summary>
+        private void MarcarLosOmitidos()
+        {
+            if (_hechos == null || _hechos.Length != pasos.Count)
+                _hechos = new bool[pasos.Count];
+            if (_omitidos == null || _omitidos.Length != pasos.Count)
+                _omitidos = new bool[pasos.Count];
+
+            int cuantos = 0;
+            for (int i = 0; i < pasos.Count; i++)
+            {
+                if (_hechos[i] || _omitidos[i]) continue;
+                _omitidos[i] = true;
+                cuantos++;
+                if (log)
+                {
+                    string t = pasos[i] != null ? pasos[i].texto : "(sin texto)";
+                    Debug.Log($"[GuionDePasos] Paso {i} sin hacer al cerrar el reto: {t}", this);
+                }
+            }
+
+            if (log && cuantos == 0)
+                Debug.Log("[GuionDePasos] Reto cerrado con todos los pasos hechos.", this);
+        }
+
+        /// <summary>
         /// Deja la lista como al abrir la experiencia. Lo llama
         /// ReinicioDeExperiencia entre una tanda y la siguiente.
         /// </summary>
         public void ReiniciarAlInicio()
         {
             _hechos = new bool[pasos.Count];
+            _omitidos = new bool[pasos.Count];
             _yaTermine = false;
             _apagarEn = -1f;
             _yaMeEncendieron = false;
+            _cerrado = false;
             if (empezarOculto) Ocultar();
             // Se repinta pero no se enciende: el reinicio corre con la pantalla
             // en negro, y lo que deba verse al llegar a la zona se enciende al
@@ -671,12 +787,14 @@ namespace ViroLab.Multiusuario
             if (_texto == null) return;
             if (_hechos == null || _hechos.Length != pasos.Count)
                 _hechos = new bool[pasos.Count];
+            if (_omitidos == null || _omitidos.Length != pasos.Count)
+                _omitidos = new bool[pasos.Count];
 
             int actual = PrimeroSinHacer();
             var sb = new StringBuilder();
 
             if (!string.IsNullOrWhiteSpace(titulo))
-                sb.Append("<size=80%><color=#8FA9BC>").Append(titulo).Append("</color></size>\n\n");
+                sb.Append("<size=80%><color=#FFFFFF>").Append(titulo).Append("</color></size>\n\n");
 
             for (int i = 0; i < pasos.Count; i++)
             {
@@ -686,6 +804,13 @@ namespace ViroLab.Multiusuario
                 if (_hechos[i])
                     sb.Append("<color=#6FCF97>").Append(marcaHecho).Append("</color> ")
                       .Append(sangria).Append("<color=#7E939F>").Append(t).Append("</color>");
+                // El omitido va antes que el "en curso" a proposito: al cerrarse el
+                // reto, PrimeroSinHacer() sigue senalando el primer paso sin hacer,
+                // que ahora es uno omitido, y sin esta rama saldria resaltado en
+                // blanco como si todavia hubiera algo que hacer.
+                else if (_omitidos[i])
+                    sb.Append("<color=#6B7A84>").Append(marcaOmitido).Append("</color> ")
+                      .Append(sangria).Append("<color=#6B7A84>").Append(t).Append("</color>");
                 else if (i == actual)
                     sb.Append("<color=#FFC24B>").Append(marcaActual).Append("</color> ")
                       .Append(sangria).Append("<b><color=#FFFFFF>").Append(t).Append("</color></b>");

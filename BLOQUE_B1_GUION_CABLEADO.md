@@ -706,6 +706,72 @@ barata que tiene y le ahorra el reproceso.
 | ☐ | `locker room (3)` | XR Simple Interactable | Select Entered | **2** | 4 → 5 |
 | ☐ | `Maniqui` | **Validador Secuencia** | **Al Tener Exito** | **3** | 4 → 5 |
 | ☐ | `Lavamanos` | **Validador Secuencia** | **Al Tener Exito** | **4** | 5 → 6 |
+| ☐ | `Avance_Reto1` | Avance En Grupo | **Al Quedar En Espera** | — `Cerrar()` | 0 → 1 |
+
+---
+
+### 4.3 · La cascada: que el tablero avance con el estudiante
+
+Añadido tras las pruebas. Si el estudiante se salta el video y va al casillero,
+el tablero se quedaba congelado: el paso del video seguía resaltado en blanco
+como «el que toca» aunque ya hubiera pasado de largo, y el paso que de verdad le
+tocaba no se distinguía de los demás.
+
+El componente tiene ahora una casilla, **`Cumplir Marca Los Anteriores`**, en el
+apartado `Pasos saltados`. **Viene marcada**, de modo que en el reto 1 no hay que
+tocar nada: cumplir un paso da por hechos todos los anteriores y el resaltado
+blanco salta al siguiente. En la Console queda constancia de cada uno:
+
+```
+[GuionDePasos] Paso 0 dado por hecho al cumplirse el 2: Acércate a la pantalla y reproduce el video
+```
+
+**Aquí es correcta porque los cinco pasos van en el orden físico de la zona.**
+Para llegar al casillero hay que pasar por delante de la pantalla y de las gafas,
+así que darlos por vistos no es descabellado. Donde los pasos son actividades
+independientes la casilla hay que desmarcarla, y ese es el caso del reto 2: está
+explicado en su guía.
+
+---
+
+### 4.4 · Cerrar el reto: la fila que faltaba
+
+Añadido tras las pruebas de Play. Se vio que un estudiante puede saltarse el
+video y las gafas RV, ir derecho al casillero y terminar el reto: el guion no es
+requisito de nada. La salida la dispara `FadeOutVR`, que llama a
+`AnunciarQueTermine()` por su cuenta
+(`Assets/3D Laboratory Environment with Appratus/Scripts/FadeOutVR.cs:50`) sin
+consultar los pasos.
+
+El resultado era doble. Los dos pasos saltados se quedaban pendientes para
+siempre, y como `Ocultar Al Terminar` solo se dispara con los cinco hechos, **el
+tablero se quedaba encendido en la zona de alistamiento durante los retos 2 y
+3**.
+
+La fila va en **`Avance_Reto1` → `Avance En Grupo` → `Al Quedar En Espera`**, hoy
+vacía, con **`Guion_Reto1`** y el método **`GuionDePasos.Cerrar()`**. Sin
+argumento: no es `Cumplir`.
+
+**Por qué en esa lista y no en `Despues Del Salto`.** `Al Quedar En Espera` se
+dispara en el cliente de quien acaba de terminar, mientras espera a los demás
+(`AvanceEnGrupo.cs:195`): el estudiante sigue de pie en la zona de alistamiento,
+con el tablero delante. `Antes Del Salto` ya lleva `OscurecerAhora`, el fundido a
+negro, de modo que cualquier cosa posterior se vería con la pantalla apagada y
+`Despues Del Salto` ocurre cuando el estudiante ya está en la planta piloto, de
+espaldas al tablero.
+
+**Qué hace `Cerrar()` ahora.** Marca los pasos que quedaron sin hacer con una
+raya en gris, los deja a la vista los `Segundos Antes De Ocultar` del panel —en
+el reto 1 son 4— y después apaga el tablero. En la Console queda constancia:
+
+```
+[GuionDePasos] Paso 0 sin hacer al cerrar el reto: Acércate a la pantalla y reproduce el video
+```
+
+**No los da por hechos, y es deliberado.** En el reto 1 el video y las gafas no
+son requisito de los pasos siguientes, así que un estudiante puede terminar sin
+haberlos tocado y decir que los hizo sería falso. La raya dice otra cosa: que ya
+no se pueden hacer.
 
 ---
 

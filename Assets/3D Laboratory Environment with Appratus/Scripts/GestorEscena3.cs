@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Video;
 
 public class GestorEscena3 : MonoBehaviour, IReiniciable
@@ -10,6 +11,17 @@ public class GestorEscena3 : MonoBehaviour, IReiniciable
     public GameObject canvasVideo; 
     [Tooltip("El componente Video Player encargado de reproducir el tutorial")]
     public VideoPlayer reproductorTutorial;
+
+    [Header("Aviso de video visto")]
+    [Tooltip("Se dispara una sola vez cuando el video se da por visto, sea porque " +
+             "termino solo o porque el estudiante lo cerro. Sirve para marcar el " +
+             "primer paso del guion del reto 3.")]
+    public UnityEvent AlDarPorVistoElVideo;
+
+    // Una sola vez por tanda. El video no se puede volver a reproducir: lo arranca
+    // el cuestionario al llegar y no hay boton que lo repita, de modo que un aviso
+    // repetido no tendria de donde salir. La marca esta por si en el futuro lo hay.
+    private bool _yaAvisoDelVideo;
 
     void Start()
     {
@@ -61,6 +73,23 @@ public class GestorEscena3 : MonoBehaviour, IReiniciable
             reproductorTutorial.frame = 0;
         }
         if (canvasVideo != null) canvasVideo.SetActive(false);
+        _yaAvisoDelVideo = false;
+    }
+
+    /// <summary>
+    /// Da el video por visto y avisa una sola vez.
+    ///
+    /// Se mide por "dejo de estar delante" y no por "lo vio entero" a proposito.
+    /// El estudiante puede cerrarlo con el boton CERRAR de ControlesVideoEsc3, y
+    /// despues de cerrarlo no hay forma de volver a verlo. Si el aviso exigiera
+    /// llegar al final, quien lo cierre en el segundo tres se quedaria con el paso
+    /// sin marcar y sin manera de arreglarlo.
+    /// </summary>
+    public void DarPorVistoElVideo()
+    {
+        if (_yaAvisoDelVideo) return;
+        _yaAvisoDelVideo = true;
+        AlDarPorVistoElVideo?.Invoke();
     }
 
     void OcultarVideo(VideoPlayer vp)
@@ -71,5 +100,6 @@ public class GestorEscena3 : MonoBehaviour, IReiniciable
             canvasVideo.SetActive(false);
         }
         Debug.Log("<color=green>[GestorEscena3] Video tutorial finalizado. Simulador liberado para el estudiante.</color>");
+        DarPorVistoElVideo();
     }
 }

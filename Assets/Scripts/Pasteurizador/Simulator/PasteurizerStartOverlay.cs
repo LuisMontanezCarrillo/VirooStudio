@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace ViroLab.Pasteurizador.Simulator
@@ -28,6 +29,16 @@ namespace ViroLab.Pasteurizador.Simulator
                  "pulsar los botones del tablero a través de la ventana, sin haber " +
                  "pulsado EMPEZAR.")]
         public bool elVeloBloqueaElRayo = true;
+
+        [Header("Aviso de arranque")]
+        [Tooltip("Se dispara la primera vez de la tanda que se pulsa EMPEZAR. " +
+                 "Sirve para marcar el paso del guion del reto 3 que pide arrancar " +
+                 "el simulador.")]
+        public UnityEvent AlPulsarEmpezar;
+
+        // Una sola vez por tanda. El boton Reiniciar Lote devuelve la ventana, de
+        // modo que EMPEZAR se puede pulsar varias veces en la misma sesion.
+        private bool _yaAvisoDelArranque;
 
         void Awake()
         {
@@ -71,6 +82,10 @@ namespace ViroLab.Pasteurizador.Simulator
             if (guide == null) guide = FindObjectOfType<PasteurizerVoiceGuide>();
             if (guide != null) guide.StartGuide();
             if (panel != null) panel.SetActive(false);
+
+            if (_yaAvisoDelArranque) return;
+            _yaAvisoDelArranque = true;
+            AlPulsarEmpezar?.Invoke();
         }
 
         /// <summary>
@@ -82,7 +97,14 @@ namespace ViroLab.Pasteurizador.Simulator
         /// Devuelve el cartel de EMPEZAR delante del tablero. Sin esto, la tanda
         /// siguiente encontraria el simulador ya arrancado.
         /// </summary>
-        public void ReiniciarAlInicio() { ShowAgain(); }
+        public void ReiniciarAlInicio()
+        {
+            // La marca se suelta aqui y no en ShowAgain, que tambien la llama el
+            // boton Reiniciar Lote: dentro de una misma tanda el arranque ya se
+            // aviso y no hay por que repetirlo.
+            _yaAvisoDelArranque = false;
+            ShowAgain();
+        }
 
         public void ShowAgain()
         {

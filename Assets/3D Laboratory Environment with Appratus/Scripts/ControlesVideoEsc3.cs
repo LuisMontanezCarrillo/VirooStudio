@@ -16,6 +16,10 @@ public class ControlesVideoEsc3 : MonoBehaviour
     [Tooltip("El Canvas que se apaga al cerrar (Canvas_VideoEsc3)")]
     public GameObject canvasVideo;
 
+    [Tooltip("El GestorEscena3, para avisarle de que el video se dio por visto. " +
+             "Si se deja vacio se busca solo al arrancar; no hay que cablearlo.")]
+    public GestorEscena3 gestor;
+
     [Header("Botones")]
     public Button botonPlayPausa;
     public TMP_Text etiquetaPlayPausa;
@@ -29,6 +33,11 @@ public class ControlesVideoEsc3 : MonoBehaviour
     {
         if (botonPlayPausa != null) botonPlayPausa.onClick.AddListener(AlternarPlayPausa);
         if (botonCerrar != null) botonCerrar.onClick.AddListener(Cerrar);
+
+        // Se busca aqui y no se exige cablearlo: este objeto vive dentro del canvas
+        // del video y el gestor esta fuera, de modo que es facil olvidarlo y el
+        // olvido no daria ningun error, solo un paso del guion que no se marca.
+        if (gestor == null) gestor = FindFirstObjectByType<GestorEscena3>();
     }
 
     private void OnEnable()
@@ -62,5 +71,10 @@ public class ControlesVideoEsc3 : MonoBehaviour
         if (reproductor != null) reproductor.Stop();
         if (canvasVideo != null) canvasVideo.SetActive(false);
         Debug.Log("<color=green>[ControlesVideoEsc3] Video cerrado por el estudiante.</color>");
+
+        // Cerrar a mano cuenta igual que verlo hasta el final. Si no contara, el
+        // estudiante que cierra el video se quedaria con el primer paso del reto 3
+        // sin marcar, y no hay boton que vuelva a reproducirlo.
+        if (gestor != null) gestor.DarPorVistoElVideo();
     }
 }

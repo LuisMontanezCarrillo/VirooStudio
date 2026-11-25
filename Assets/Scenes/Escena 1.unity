@@ -7819,7 +7819,19 @@ MonoBehaviour:
   esperaMaxima: 45
   AlQuedarEnEspera:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1984606590}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cerrar
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   AlCambiarLaCuenta:
     m_PersistentCalls:
       m_Calls: []
@@ -19325,6 +19337,8 @@ MonoBehaviour:
   tamanoDeLetra: 44
   marcaHecho: "\u2713"
   marcaActual: "\u25B6"
+  marcaOmitido: "\u2014"
+  cumplirMarcaLosAnteriores: 0
   empezarOculto: 1
   ocultarAlTerminar: 1
   segundosAntesDeOcultar: 2
@@ -22337,6 +22351,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 766416693}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cerrar
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!82 &857495569
 AudioSource:
   m_ObjectHideFlags: 0
@@ -23893,6 +23919,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reproductor: {fileID: 2096714515}
   canvasVideo: {fileID: 2096714514}
+  gestor: {fileID: 0}
   botonPlayPausa: {fileID: 900001003}
   etiquetaPlayPausa: {fileID: 900001008}
   botonCerrar: {fileID: 900002003}
@@ -31217,6 +31244,21 @@ MonoBehaviour:
   showAgainOnReset: 1
   reiniciarGuiaAlReiniciar: 1
   elVeloBloqueaElRayo: 1
+  AlPulsarEmpezar:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1454351757}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cumplir
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1231326080
 GameObject:
   m_ObjectHideFlags: 0
@@ -33271,6 +33313,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caa80dcc16a93fc489774cec620bf4c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlCerrarElLote:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1454351757}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cumplir
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   energyOn: 0
   running: 0
   mode: 0
@@ -34071,6 +34128,30 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 766416693}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cumplir
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 766416693}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cerrar
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -36894,6 +36975,79 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1452260712}
   m_CullTransparentMesh: 1
+--- !u!1 &1454351755
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1454351756}
+  - component: {fileID: 1454351757}
+  m_Layer: 0
+  m_Name: Guion_Reto3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1454351756
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1454351755}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3817571384722755373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1454351757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1454351755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d60eb74c4407f7a4e8da7b50f9cadef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titulo: SIMULADOR HTST
+  pasos:
+  - texto: Mira el video del procedimiento
+    sangrado: 0
+  - texto: Pulsa EMPEZAR en el simulador
+    sangrado: 0
+  - texto: Procesa un lote hasta vaciar el tanque
+    sangrado: 0
+  colocacion: 0
+  escala: 0.0018
+  ancla: {fileID: 374619245}
+  desplazamientoDelAncla: {x: 2.75, y: 1.2, z: -1}
+  giroSuavizado: 6
+  distancia: 1.2
+  altura: -0.3
+  holgura: 14
+  suavizado: 0.45
+  tamanoDeLetra: 44
+  marcaHecho: "\u2713"
+  marcaActual: "\u25B6"
+  marcaOmitido: "\u2014"
+  cumplirMarcaLosAnteriores: 1
+  empezarOculto: 1
+  ocultarAlTerminar: 1
+  segundosAntesDeOcultar: 2
+  AlTerminar:
+    m_PersistentCalls:
+      m_Calls: []
+  log: 1
 --- !u!4 &1455435213 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fb0b01455e191c24b87848c181088517,
@@ -49283,6 +49437,8 @@ MonoBehaviour:
   tamanoDeLetra: 44
   marcaHecho: "\u2713"
   marcaActual: "\u25B6"
+  marcaOmitido: "\u2014"
+  cumplirMarcaLosAnteriores: 1
   empezarOculto: 0
   ocultarAlTerminar: 1
   segundosAntesDeOcultar: 4
@@ -51435,6 +51591,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvasVideo: {fileID: 2096714514}
   reproductorTutorial: {fileID: 2096714515}
+  AlDarPorVistoElVideo:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1454351757}
+        m_TargetAssemblyTypeName: ViroLab.Multiusuario.GuionDePasos, Assembly-CSharp
+        m_MethodName: Cumplir
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2067910563
 GameObject:
   m_ObjectHideFlags: 0
@@ -74733,6 +74904,7 @@ Transform:
   - {fileID: 308927731}
   - {fileID: 1984606589}
   - {fileID: 766416692}
+  - {fileID: 1454351756}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3834981708564198463

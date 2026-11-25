@@ -132,6 +132,7 @@ Con `Guion_Reto2` seleccionado, `Add Component` → busque **`Guion de pasos`**.
 
 | Campo | Valor |
 |---|---|
+| `Cumplir Marca Los Anteriores` | **desmarcado** |
 | `Empezar Oculto` | **marcado** |
 
 Esa casilla es la diferencia de fondo con el reto 1. Si se queda sin marcar, el
@@ -497,6 +498,9 @@ Escriba **`3`**.
 | ☐ | `Pasteurizador` | Pasteurizer Hover Handler | `Al Explorar Lo Suficiente` | **1** | 0 → 1 | sin partir |
 | ☐ | `Logo proyecto 3D (Esc2)` | XR Simple Interactable | `Select Entered` | **2** | 1 → 2 | **partido** |
 | ☐ | `Canvas_Cuestionario` | Gestor Cuestionario | `On Transition Complete` | **3** | 1 → 2 | sin partir |
+| ☐ | `Canvas_Cuestionario` | Gestor Cuestionario | `On Transition Complete` | — `Cerrar()` | 2 → 3 | sin partir |
+| ☐ | `Avance_Reto2` | Avance En Grupo | `Despues Del Salto` | **3** | 3 → 4 | sin partir |
+| ☐ | `Avance_Reto2` | Avance En Grupo | `Despues Del Salto` | — `Cerrar()` | 4 → 5 | sin partir |
 
 **Si la cuenta de ③ no coincide con lo que ve en pantalla, pare: está en el
 objeto equivocado o en la lista equivocada.**
@@ -555,11 +559,84 @@ solo, incluso desactivados.
 
 ---
 
+## Añadido después de las pruebas: cerrar el tablero al pasar al reto 3
+
+En Play se vio que el tablero del reto 2 seguía visible durante el reto 3. Pasa
+cuando el estudiante llega al cuestionario sin haber recorrido el pasteurizador o
+el carrusel: como quedan pasos sin marcar, `Ocultar Al Terminar` no se dispara y
+el panel se queda puesto para siempre.
+
+La fila que lo arregla va en la misma lista que el paso 3:
+
+**`Canvas_Cuestionario` → `Gestor Cuestionario` → `On Transition Complete`**, una
+segunda fila con **`Guion_Reto2`** y el método **`GuionDePasos.Cerrar()`**. La
+lista pasa de 2 a 3 entradas. El menú del punto ⑥ sale sin partir, y `Cerrar()`
+no lleva casilla numérica: no es `Cumplir`.
+
+**No es `Ocultar()`, y la diferencia importa.** Los disparadores del reto 2 siguen
+ahí cuando el grupo ya está en el reto 3: el pasteurizador y el carrusel de la
+planta piloto siguen siendo pulsables. Como `Cumplir` llama a `Mostrar()`, un
+panel apagado con `Ocultar()` reaparecería en cuanto el estudiante tocara uno de
+los dos. `Cerrar()` lo apaga y lo deja apagado hasta el reinicio de la
+experiencia.
+
+**El orden de la fila dentro de la lista da igual.** `Cerrar()` apaga el panel
+pero no borra el registro: `Cumplir` sigue apuntando los pasos aunque el reto
+esté cerrado. Así que lo mismo da que esta fila quede antes o después de la del
+paso 3.
+
+### Por qué aquí la cascada va desmarcada
+
+`Cumplir Marca Los Anteriores` viene marcado por omisión y en el reto 1 es lo
+que se quiere: allí los cinco pasos van en el orden físico de la zona, de modo
+que llegar al casillero significa que el estudiante ya pasó por delante de la
+pantalla y de las gafas, y el tablero puede avanzar con él.
+
+Aquí no. Los cuatro pasos del reto 2 son actividades **independientes**: el
+carrusel y el pasteurizador están en sitios distintos de la planta y se pueden
+hacer en cualquier orden, o no hacerse. Con la cascada marcada, un estudiante que
+fuera derecho al logo del cuestionario dejaría el tablero diciendo que exploró el
+pasteurizador y revisó el carrusel. Eso es afirmar algo que no ocurrió.
+
+Lo que sí ocurre al pasar al reto 3 es que esos pasos se pintan con la raya gris
+de «omitido», que dice la verdad: ya no se pueden hacer.
+
+---
+
+### Y hace falta repetirlas en el otro camino, porque ese es el que corre
+
+En la segunda ronda de pruebas el tablero seguía visible. La razón es que
+**`On Transition Complete` no se invoca nunca** con la configuración actual. En
+`GestorCuestionario.cs:231`, si el campo `reunion` está lleno el método sale por
+`yield break` en la línea 241 y no llega a la 290, que es donde está el
+`OnTransitionComplete?.Invoke()`. Y en la escena `reunion` está lleno: apunta al
+`ReunionEnElCentro` de `Avance_Reto2`.
+
+El reto 3 arranca igual porque `Canvas_Esc3` también se enciende desde el otro
+camino, de modo que el fallo no se veía. Lo que no corría era el resto: ni se
+marcaba el paso 3, ni se cerraba el tablero.
+
+La lista que sí corre es **`Avance_Reto2` → `Avance En Grupo` →
+`Despues Del Salto`**, y la cadena real es: cuestionario superado →
+`reunion.Convocar()` → `AvanceEnGrupo` → esa lista. Ahí van las dos filas, con
+`Guion_Reto2`: **`Cumplir (int)` con un `3`** y **`Cerrar()`**. La lista pasa de 3
+a 5 entradas.
+
+**No quite las filas de `On Transition Complete`.** Quedan como respaldo: si algún
+día se vacía el campo `reunion`, ese camino vuelve a ser el bueno. Es la misma
+precaución que toma el tablero del simulador, que por código se suscribe a los dos
+(`PasteurizerSimDashboard.cs:292` y `:301`).
+
+---
+
 ## Lo que queda después
 
-- La lista de pasos del **reto 3**, que todavía no tiene disparadores
-  identificados.
-- `Avance_Reto2` no lo invoca nadie desde un evento: hoy el salto al reto 3 lo
-  encadena `GestorCuestionario` por código. Conviene confirmarlo en Play.
+- La lista de pasos del **reto 3** ya está resuelta, en
+  [BLOQUE_B3_GUION_RETO3.md](BLOQUE_B3_GUION_RETO3.md). Lleva tres pasos y no
+  seis, porque el simulador ya guía los seis del procedimiento por su cuenta.
+- ~~`Avance_Reto2` no lo invoca nadie desde un evento.~~ **Resuelto.** Sí se
+  invoca: `GestorCuestionario` llama a `reunion.Convocar()` y la reunión encadena
+  su `AvanceEnGrupo`. El campo `reunion` está cableado en la escena, y por eso
+  `On Transition Complete` queda sin ejecutar.
 - Los avisos de TextMeshPro sobre `enableWordWrapping`, que son obsolescencia y
   no error.
